@@ -8,7 +8,7 @@ import RenderTree from '../context/RenderrTree';
 
 
 
-export default function CourseTreeView(course: RenderTree) {
+export default function CourseTree(course: RenderTree) {
   const renderTree = (nodes: RenderTree) => (
     <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} onClick={() => {
       if(nodes.page){
