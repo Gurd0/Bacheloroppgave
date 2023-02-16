@@ -5,8 +5,8 @@ import { useParams } from 'react-router';
 import CourseTree from './components/CourseTree';
 
 type ChapterType = {
-  Pages: any[],
-  ChapterName: string,
+  Pages: any,
+  ChapterName: string
 }
 
 type CourseType = {
@@ -25,10 +25,8 @@ const Index = () => {
         const fetchPost = async () => {
             //get course ref from id (slug)
             const docRef = doc(db, "Courses", slug)
-            console.log(slug)
             //get the data from the ref as courseTpe 
             const course = (await getDoc(docRef)).data() as CourseType
-            console.log(course)
             const chapters = await Promise.all(
               // get data for all chapters
               course.Chapters.map(async (chapterRef: any) => {
@@ -40,7 +38,6 @@ const Index = () => {
             )
             setChapterObj(chapters)
             setCourseObj(course)
-         
         }
         fetchPost();
     }, [])
@@ -59,14 +56,14 @@ const Index = () => {
         
       ]
      }
-     console.log(chapterObj)
      chapterObj.map(chapter => {
         if(chapter){
-          const p: RenderTree[] = []
-         Object.keys(chapter.Pages).forEach(t => {
-          p.push({name: t, id: t, page: true})
-         })
-          t.children?.push({name: chapter.ChapterName, id: chapter.ChapterName, children: p})
+          const childrenPages: RenderTree[] = []
+          for (const [key, value] of Object.entries(chapter.Pages)) {
+            const keyAsAny = value as any
+            childrenPages.push({name: key, id: keyAsAny.id, page: true})
+          }
+          t.children?.push({name: chapter.ChapterName, id: chapter.ChapterName, children: childrenPages})
         }
      })
      return t
@@ -84,10 +81,9 @@ const Index = () => {
   return (
     <>
     {slug}
+
     <CourseTree {...tree()}/>
     </>
   )
 }
 export default Index
-
-
