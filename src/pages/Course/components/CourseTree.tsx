@@ -31,7 +31,7 @@ export default function CourseTree(course: RenderTree) {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpanded={['root']}
         defaultExpandIcon={<ChevronRightIcon />}
-        sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        sx={{ height: 500, flexGrow: 1, maxWidth: "100%"}}
       >
         {renderTree(course)}
       </TreeView>
