@@ -4,6 +4,8 @@ import { collection, getDoc, doc, getDocs } from "firebase/firestore";
 import { useParams } from 'react-router';
 import CourseTree from './components/CourseTree';
 
+import Grid from '@mui/material/Grid';
+
 type ChapterType = {
   Pages: any,
   ChapterName: string
@@ -80,9 +82,21 @@ const Index = () => {
   
   return (
     <>
-    {slug}
-
-    <CourseTree {...tree()}/>
+    <Grid container spacing={2}>
+    <Grid item xs={8}>
+      <div style={{
+        border: '1px solid black',
+      }}>
+      Hei  
+      </div>
+    </Grid>
+    <Grid item xs={4}>
+      <CourseTree {...tree()}/>
+    </Grid>
+   
+  </Grid>
+    
+   
     </>
   )
 }
