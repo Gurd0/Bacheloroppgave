@@ -1,17 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
 import Admin from './pages/Admin';
+import Course from './pages/Course';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/SignUp';
-import Course from './pages/Course'
-
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router>
+        <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
@@ -19,7 +20,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/course/:slug" element={<Course />} />
         </Routes>
-      </BrowserRouter>
+        <Footer />
+      </Router>
     </div>
   );
 }
