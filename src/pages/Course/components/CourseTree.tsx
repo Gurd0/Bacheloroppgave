@@ -6,13 +6,18 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import RenderTree from '../context/RenderrTree';
 
+//add state for selected row clicked. 
 
+interface ToggleProps {
+  ClickHandler: (id: string) => void
+  tree: RenderTree
+}
 
-export default function CourseTree(course: RenderTree) {
+export default function CourseTree(Props: ToggleProps) {
   const renderTree = (nodes: RenderTree) => (
     <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} onClick={() => {
       if(nodes.page){
-        alert("hei")
+        Props.ClickHandler(nodes.id)
       }
     }}
     >
@@ -33,7 +38,7 @@ export default function CourseTree(course: RenderTree) {
         defaultExpandIcon={<ChevronRightIcon />}
         sx={{ height: 500, flexGrow: 1, maxWidth: "100%"}}
       >
-        {renderTree(course)}
+        {renderTree(Props.tree)}
       </TreeView>
     );
 }
