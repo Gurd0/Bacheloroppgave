@@ -1,4 +1,8 @@
+import { EditorState } from "react-draft-wysiwyg";
+import { EnumDeclaration } from "typescript";
+
 export type ChapterType = {
+    id: string,
     Pages: any,
     ChapterName: string
   }
@@ -14,7 +18,7 @@ export  type FullCourse = {
   }
 export type PageType = {
     Type: string; 
-    Value: string;
+    Value?: EditorState;
     id: string;
   }
   export type  RenderTree = {
@@ -28,3 +32,4 @@ export type PageType = {
     newPage?: boolean;
     course?: boolean;
   }
+  
