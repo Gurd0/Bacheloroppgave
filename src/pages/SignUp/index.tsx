@@ -32,7 +32,7 @@ function Signup() {
   return (
     <div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
-        Signup
+        Registrer deg!
       </Button>
       <ModalDialog open={open} handleClose={handleClose} />
     </div>

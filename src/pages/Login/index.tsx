@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import Signup from "../SignUp";
 
 export default function SignIn() {
   const theme = createTheme();
@@ -74,10 +75,13 @@ export default function SignIn() {
               Logg inn
             </Button>
             <Grid container>
-              <Grid item>
+              <Grid item xs>
                 <Link href="/signup" variant="body2">
-                  {"Ingen konto? Registrer deg her!"}
+                  {"Glemt passordet ditt?"}
                 </Link>
+              </Grid>
+              <Grid item>
+                <Signup />
               </Grid>
             </Grid>
           </Box>
