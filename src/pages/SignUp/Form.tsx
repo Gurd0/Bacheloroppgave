@@ -3,9 +3,9 @@ import { createStyles, makeStyles, Theme } from "@mui/material/styles";
 import { display } from "@mui/system";
 import userEvent from "@testing-library/user-event";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { redirect, Route } from "react-router-dom";
+import { redirect, Route, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import Home from "../Home";
 
@@ -39,18 +39,18 @@ const Form = (props: props) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: any) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(auth.currentUser?.email); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
-        // console.log("User created ");
+        console.log(user); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
+        console.log("User created " + auth.currentUser?.displayName);
         // console.log(firstName + " " + lastName + " " + email + " " + password);
       })
       .catch((error) => {
-        const errorMessage = error.message;
-        const errorCode = error.code;
+        setError(error.message);
         //console.log(errorMessage + " " + errorCode);
       });
     props.handleClose();
