@@ -1,16 +1,19 @@
+import { Alert } from "@mui/lab";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import React, { useState } from "react";
 import { auth } from "../../firebase";
 import Signup from "../SignUp";
 
@@ -21,27 +24,52 @@ export default function SignIn() {
   const theme = createTheme();
 
   const handleSubmit = async (e: any) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredentials) => {
-          const user = userCredentials.user;
-          console.log(auth.currentUser?.email); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
-          console.log("User logged in: " + user);
-          console.log(email + " " + password);
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          const errorCode = error.code;
-          //console.log(errorMessage + " " + errorCode);
-        });
-    } catch (error) {
-      console.log(error);
+    if (!auth.currentUser) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password)
+          .then((userCredentials) => {
+            const user = userCredentials.user;
+            console.log(user?.email); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
+            console.log("User logged in: " + user);
+          })
+          .finally(() => {
+            window.location.href = "/";
+          })
+          .catch((error) => {
+            return <Alert>{error.code}</Alert>;
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("Hello, " + auth.currentUser.email);
     }
     e.preventDefault();
   };
 
+  const signOutButton = async (e: any) => {
+    if (auth.currentUser) {
+      await signOut(auth)
+        .then(() => {
+          console.log("Logged out");
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    } else {
+      console.log("No user logged in");
+    }
+  };
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log("Authstate changed: " + user?.email);
+    });
+  }, [auth.currentUser]);
+
   return (
     <ThemeProvider theme={theme}>
+      <Button onClick={signOutButton}>Sign out</Button>
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
