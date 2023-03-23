@@ -9,19 +9,35 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { auth } from "../../firebase";
 import Signup from "../SignUp";
 
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const theme = createTheme();
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          console.log(auth.currentUser?.email); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
+          console.log("User logged in: " + user);
+          console.log(email + " " + password);
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          const errorCode = error.code;
+          //console.log(errorMessage + " " + errorCode);
+        });
+    } catch (error) {
+      console.log(error);
+    }
     e.preventDefault();
-    const data = new FormData(e.currentTarget); // TODO: handle login form with authentication from firebase
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   return (
@@ -40,12 +56,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Logg inn
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -55,6 +66,7 @@ export default function SignIn() {
               name="email" /* Form entry*/
               autoComplete="email"
               autoFocus
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -65,12 +77,13 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, backgroundColor: "blue" }}
+              onClick={handleSubmit}
             >
               Logg inn
             </Button>
