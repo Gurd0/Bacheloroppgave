@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from 'draft-js';
+import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { PageType } from '../../../../context/context';
 //import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -17,7 +17,13 @@ function TextEdit (props: ToggleProps) {
   const [editorState, setEditorState] = React.useState(
     () => {
       if(props.pageValue){
-        return EditorState.createWithContent(props.pageValue)
+       
+        try{
+          const converted = convertFromRaw(JSON.parse(props.pageValue))
+          return EditorState.createWithContent(converted)
+        }catch{
+
+        }
       }else{
        return  EditorState.createEmpty()
       }
@@ -25,12 +31,12 @@ function TextEdit (props: ToggleProps) {
   );
   useEffect(() => {
     if(props.pageValue){
-      setEditorState(EditorState.createWithContent(props.pageValue))
+      setEditorState(EditorState.createWithContent(convertFromRaw(props.pageValue)))
     }  
   },[props.selectedPage])
 
       const onEditorStateChange: (any: any) => void = (editorState: EditorState) => {
-        props.setPageValue(editorState.getCurrentContent())
+        props.setPageValue(convertToRaw(editorState.getCurrentContent()))
         setEditorState(editorState)
       }; 
     
