@@ -13,10 +13,10 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
 import { CourseType, FullCourse } from "../Course/context/context";
-import { useFullCourse, useGetCollection } from "../Course/queries";
+import { useFullCourse, useGetCollection } from "../../hooks/queries";
 export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);
-  const fullCourse = useGetCollection("Courses");
+  const fullCourse = useGetCollection("Courses", false);
 
   useEffect(() => {
     if (!fullCourse.isLoading) {
