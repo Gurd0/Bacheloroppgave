@@ -1,8 +1,7 @@
 import { Button, TextField } from "@mui/material";
-import { createStyles, makeStyles, Theme } from "@mui/material/styles";
-import { display } from "@mui/system";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useState } from "react";
-import ReactDOM from "react-dom/client";
+import { auth } from "../../firebase";
 
 interface props {
   handleClose: () => void;
@@ -34,15 +33,36 @@ const Form = (props: props) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(firstName + " " + lastName + " " + email + " " + password); // TODO: Add functionality for firebase authentication, and usercreation
+  //TODO: Need to update profile with given firstname and lastname
+  const handleSubmit = async (e: any) => {
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = auth.currentUser;
+        console.log(user); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
+        console.log("User created " + auth.currentUser?.displayName);
+        console.log(firstName + " " + lastName + " " + email + " " + password);
+      })
+      .then((userCredentials) => {
+        if (auth.currentUser) {
+          updateProfile(auth.currentUser, {
+            displayName: firstName + " " + lastName,
+          });
+        } else {
+          console.log(error);
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+        //console.log(errorMessage + " " + errorCode);
+      });
     props.handleClose();
   };
 
   return (
-    <form style={formStyle} onSubmit={handleSubmit}>
+    //onSubmit={handleSubmit} TODO: On submit with button type="submit" results in error in regards to firebase.
+    <form style={formStyle}>
       <TextField
         sx={sxStyleTextField}
         label="First Name"
@@ -69,7 +89,7 @@ const Form = (props: props) => {
         onChange={(e) => setEmail(e.target.value)} // TODO: Add popup if an invalid email is provided
       />
       <TextField
-        sx={sxStyleTextField}
+        sx={sxStyleTextField} //TODO: Add error handling if password is under 6 characters, this is already implemented in firebase libraries.
         label="Password"
         variant="filled"
         type="password"
@@ -86,10 +106,10 @@ const Form = (props: props) => {
           Cancel
         </Button>
         <Button
-          type="submit"
           variant="contained"
           color="primary"
           sx={sxStyleButton}
+          onClick={handleSubmit} // TODO: Add popup if an invalid, that implies empty textfields
         >
           Submit
         </Button>

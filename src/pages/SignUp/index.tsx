@@ -1,7 +1,5 @@
 import { Button, Dialog, TextField } from "@mui/material";
-import { makeStyles } from "@mui/material/styles";
 import React, { useState } from "react";
-import ReactDOM from "react-dom/client";
 import Form from "./Form";
 
 interface props {
@@ -32,7 +30,7 @@ function Signup() {
   return (
     <div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
-        Signup
+        Registrer deg!
       </Button>
       <ModalDialog open={open} handleClose={handleClose} />
     </div>
