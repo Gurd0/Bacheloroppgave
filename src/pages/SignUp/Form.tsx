@@ -1,13 +1,7 @@
 import { Button, TextField } from "@mui/material";
-import { createStyles, makeStyles, Theme } from "@mui/material/styles";
-import { display } from "@mui/system";
-import userEvent from "@testing-library/user-event";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import React, { useContext, useState } from "react";
-import ReactDOM from "react-dom/client";
-import { redirect, Route, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import React, { useState } from "react";
 import { auth } from "../../firebase";
-import Home from "../Home";
 
 interface props {
   handleClose: () => void;
@@ -41,13 +35,23 @@ const Form = (props: props) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  //TODO: Need to update profile with given firstname and lastname
   const handleSubmit = async (e: any) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        const user = userCredentials.user;
+        const user = auth.currentUser;
         console.log(user); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
         console.log("User created " + auth.currentUser?.displayName);
-        // console.log(firstName + " " + lastName + " " + email + " " + password);
+        console.log(firstName + " " + lastName + " " + email + " " + password);
+      })
+      .then((userCredentials) => {
+        if (auth.currentUser) {
+          updateProfile(auth.currentUser, {
+            displayName: firstName + " " + lastName,
+          });
+        } else {
+          console.log(error);
+        }
       })
       .catch((error) => {
         setError(error.message);
