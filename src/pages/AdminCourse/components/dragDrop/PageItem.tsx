@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import styled, { css } from "styled-components";
 import { PageType } from "../../../../context/context";
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid, Popper, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 interface ToggleProps {
@@ -15,6 +15,7 @@ interface ToggleProps {
     pageId: string
     setSelectedPage: any
     selected: boolean
+    changePageName: (chapterId: string, pageId: string, name: string) => void
 }
 
 let StyleDiv = styled.div`
@@ -30,6 +31,9 @@ let StyleDiv = styled.div`
 
  function PageItem(Props: ToggleProps) {
   const [color, setColor] = useState<string>("black")
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false)
+  const [textInput, setTextInput] = useState("")
     // Check for click type 
     const handleClick = (e: any) => {
         switch (e.detail) {
@@ -66,12 +70,30 @@ let StyleDiv = styled.div`
         <Grid item xs={8} >
         <div style={{
           color: color
-        }}>{Props.item.Type}</div>
+        }}>{Props.item.Name}   :   {Props.item.Type}</div>
         </Grid>
-        <Grid item xs={4}>
-         <button onClick={() => {
+        <Grid item xs={4} >
+        
+        <button onClick={() => {
             Props.removeItem(Props.chapterId, Props.pageId)
          }}>Remove</button>
+         <button onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+           // Props.changePageName(Props.chapterId, Props.pageId)
+           setOpen(!open)
+           setAnchorEl(event.currentTarget);
+         }}>Change Name</button>
+          <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
+            <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
+            <TextField id="standard-basic" label="Page Name" variant="standard" onChange={(event) =>{
+                setTextInput(event.target.value);
+            }}/>
+            <Button onClick={() => {
+                setOpen(!open)
+                Props.changePageName(Props.chapterId, Props.pageId, textInput)
+            }}>Ok</Button>
+            </Box>
+        </Popper>
+         
         </Grid>
       </Grid>
     </StyleDiv>
