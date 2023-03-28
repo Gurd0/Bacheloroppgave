@@ -1,3 +1,4 @@
+
 import { LoadingButton } from "@mui/lab";
 import { CircularProgress, LinearProgress } from "@mui/material";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -11,6 +12,8 @@ import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
+import AdminCourse from './pages/AdminCourse'
+
 
 function App() {
   const [user, setUser] = useState<User>();
@@ -39,6 +42,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path='/admin/new' element={<AdminCourse />} />
+            <Route path='/admin/edit/:slug' element={<AdminCourse />} />
             <Route path="/login" element={<Login user={user} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/course/:slug" element={<Course />} />

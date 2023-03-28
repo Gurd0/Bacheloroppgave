@@ -1,6 +1,7 @@
 export type ChapterType = {
     Pages: any,
     ChapterName: string
+    id: string
   }
   
  export type CourseType = {

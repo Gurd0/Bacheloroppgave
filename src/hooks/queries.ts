@@ -6,16 +6,18 @@ import {
   DocumentReference,
   getDoc,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { resolve } from "path";
 import { useQuery } from "react-query";
-import { db } from "../../firebase";
+import { db } from "../firebase";
 import {
   ChapterType,
   CourseType,
   FullCourse,
   PageType,
-} from "./context/context";
+} from "../context/context";
 
 const fetchCurrentPageFromFirebase = async (id: string, collection: string) => {
   if (id !== "" && collection !== "") {
@@ -27,6 +29,7 @@ const fetchCurrentPageFromFirebase = async (id: string, collection: string) => {
   // TODO lægg tel home page på kurs når du åpne.
   else {
     const emptyPag: PageType = {
+      Name: "null",
       Type: "null",
       Value: "null",
       id: "",
@@ -61,24 +64,25 @@ const fetchFullCourseFromFirestore = async (ref: any) => {
   });
 };
 
-const fetchCourseContentFromFirebase = async (docCollection: string) => {
+const fetchCourseContentFromFirebase = async (docCollection: string, draft: boolean) => {
   if (docCollection !== "") {
     return new Promise(async (resolve, reject) => {
-      await getDocs(collection(db, docCollection)).then((res) => {
-        resolve(
-          res.docs.map((ref) => {
-            const courseData: CourseType = ref.data() as CourseType;
-            courseData.id = ref.id;
-            return courseData;
-          })
-        );
-      });
+      let t: Array<CourseType> = []
+      const q = query(collection(db, docCollection), where("draft", "==", draft))
+      const querrySnapshot = await getDocs(q)
+      querrySnapshot.forEach((course) => {
+        const courseData: CourseType = course.data() as CourseType;
+            courseData.id = course.id;
+            t.push(courseData);
+      })
+      resolve(t)
     });
   }
   // TODO lægg tel home page på kurs når du åpne.
   else {
     const emptyCourse: CourseType = {
       Name: "string",
+      draft: true,
       Chapters: [],
       id: "string",
     };
@@ -107,13 +111,14 @@ export const useCurrentPage = (id: string, collection: string) => {
     { refetchOnWindowFocus: false }
   );
 };
-
-export const useGetCollection = (collection: string) => {
+//TODO fiks query key
+export const useGetCollection = (collection: string, draft: boolean) => {
   return useQuery(
-    [collection],
+    [collection, draft],
     async () => {
-      return await Promise.resolve(fetchCourseContentFromFirebase(collection));
+      return await Promise.resolve(fetchCourseContentFromFirebase(collection, draft));
     },
     { refetchOnWindowFocus: false }
   );
 };
+
