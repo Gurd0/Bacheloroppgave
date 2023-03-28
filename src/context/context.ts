@@ -11,14 +11,16 @@ export type ChapterType = {
     Name: string; 
     Chapters: any[];
     id: string;
+    draft: boolean;
   }
 export  type FullCourse = {
     Course: string;
     Chapters: ChapterType[];
   }
 export type PageType = {
+    Name: string;
     Type: string; 
-    Value?: EditorState;
+    Value?: any;
     id: string;
   }
   export type  RenderTree = {
