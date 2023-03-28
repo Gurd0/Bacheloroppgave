@@ -17,10 +17,23 @@ import TextEdit from './components/courseEdit/textEdit';
 import ImageEdit from './components/courseEdit/imageEdit';
 import VideoEdit from './components/courseEdit/videoEdit';
 import QuizEdit from './components/courseEdit/quizEdit';
+import {
+  collection,
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
+import {db} from "../../firebase"
+import { convertToRaw } from 'draft-js';
+import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
+
+
 
 function Index(){
   const { slug }: any = useParams();
-  
   const [chapters, setChapters] = useState<ChapterType[]>([])
 
   const [selectedPage, setSelectedPage] = useState<PageType>()
@@ -29,13 +42,77 @@ function Index(){
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [textInput, setTextInput] = useState("")
+  
 
-  const [course, setCourse] = useState<CourseType>({
-    Name: "Course",
-    Chapters: chapters,
-    id: "jkljlk" //TODO add random id / eller slug mæ random slug på ny 
+  const [course, setCourse] = useState<CourseType>( {
+        Name: "Course",
+        draft: true,
+        Chapters: chapters,
+        id: Math.random().toString(36).substring(2,7)
   })
-     
+ 
+   
+  useEffect(() => {
+    const test = async () => {
+        let chapters: ChapterType[] = [];
+        let courseD: CourseType;
+        return new Promise(async (resolve, reject) => {
+          await getDoc(doc(db, "Courses", slug))
+            .then((course) => course.data() as CourseType)
+            .then(async (courseData) => {
+              courseD = courseData;
+              chapters = await Promise.all(
+                courseData.Chapters.map(async (ref:DocumentReference) => {
+                  return getDoc(ref).then((chapter) => chapter.data() as ChapterType);
+                })
+              );
+            })
+            .catch((err) => {
+              console.log("Error : " + err);
+            })
+            .then(() => {
+              
+              chapters.map((chapter, index) => {
+                console.log(chapter)
+                chapter.Pages.map(async (pageRef: Map<string, DocumentReference>, pageIndex: number) => {
+                
+              //   console.log(pageRef)
+              
+                 // console.log(first)
+                  
+                 chapters[index].Pages[pageIndex] =  (await getDoc(Object.values(pageRef)[0])).data() as PageType
+                })
+              })
+            }).catch((err) => {
+              console.log("error : " + err)
+            }).finally(() => {
+              const course: CourseType = {
+                Name: courseD.Name,
+                draft: courseD.draft,
+                id: slug,
+                Chapters: chapters,
+              };
+              console.log(course)
+              console.log(chapters)
+              setCourse({...course})
+              setChapters([...chapters])
+             
+            })
+        });
+       // console.log(chapters)
+    } 
+    test()
+  },[slug])
+
+  const saveToDraft = async () => {
+    const c: CourseType = {
+      Name: course.Name,
+      id: course.id,
+      draft: course.draft,
+      Chapters: chapters
+    }
+    addCourseToFirebase(c)
+  }
   const addChapter = () =>{
     const t: ChapterType =  {
       Pages:  [],
@@ -66,7 +143,7 @@ function Index(){
   const setPageValue = (value: any) => {
     if(selectedPage){
     //  console.log("setPageValue : " + value)
-    console.log(value)
+   // console.log(value)
       let chapterClone = chapters
       let selectedPageClone = selectedPage
       chapters.map((chapter, index) => {
@@ -111,7 +188,7 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
-    <h2>{course.Name }
+    <h2>{course.Name } + {course.id}
     <button onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
       setOpen(!open)
       setAnchorEl(event.currentTarget);
@@ -142,6 +219,16 @@ function Index(){
     }
     </Grid>
   </Grid>
+  <button onClick={() =>{
+    saveToDraft()
+  }}>Save</button>
+  <button onClick={() =>{
+    changeDraft(course.id, !course.draft)
+    console.log(course.draft)
+    const courseClone = course
+    courseClone.draft = !course.draft
+    setCourse({...courseClone})
+  }}>draft {course.draft.toString()}</button>
     </>
   )
 }
