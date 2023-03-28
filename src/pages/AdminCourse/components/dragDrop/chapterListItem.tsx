@@ -18,6 +18,7 @@ interface ToggleProps {
     removePage: (chapterId: string, pageId: string) => void
     setSelectedPage: any
     selectedPage: any
+    changePageName: (chapterId: string, pageId: string, name: string) => void
 }
 const DragItem = styled.div`
   padding: 10px;
@@ -86,6 +87,7 @@ const DragItem = styled.div`
                                 pageId={page.id}
                                 setSelectedPage={Props.setSelectedPage}
                                 selected={Props.selectedPage == page}
+                                changePageName={Props.changePageName}
                             />
                             )}  
                         </Draggable>  
