@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 import { CourseType, PageType } from "../../../../context/context";
 import ListItem from "./PageItem";
-import { ChapterType } from "../../../Course/context/context";
+import { ChapterType } from "../../../../context/context";
 import { Box, Button, Popper, TextField } from "@mui/material";
 
 interface ToggleProps {

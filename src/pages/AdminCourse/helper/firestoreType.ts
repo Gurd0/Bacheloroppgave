@@ -3,7 +3,7 @@ import { collection, doc, DocumentReference, setDoc, updateDoc } from 'firebase/
 import React from 'react'
 import { CourseType, PageType } from '../../../context/context'
 import { db } from '../../../firebase'
-import { ChapterType } from '../../Course/context/context'
+import { ChapterType } from '../../../context/context'
 
 export const changeDraft = async (courseId: string, draft: boolean) => {
     console.log(courseId)

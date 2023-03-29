@@ -14,7 +14,7 @@ export type ChapterType = {
     draft: boolean;
   }
 export  type FullCourse = {
-    Course: string;
+    Course: CourseType;
     Chapters: ChapterType[];
   }
 export type PageType = {

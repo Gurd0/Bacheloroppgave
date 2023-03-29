@@ -39,12 +39,12 @@ const fetchCurrentPageFromFirebase = async (id: string, collection: string) => {
 };
 const fetchFullCourseFromFirestore = async (ref: any) => {
   let chapters: ChapterType[] = [];
-  let courseName: string;
+  let course: CourseType;
   return new Promise(async (resolve, reject) => {
     await getDoc(ref)
       .then((course) => course.data() as CourseType)
       .then(async (courseData) => {
-        courseName = courseData.Name;
+        course = courseData;
         chapters = await Promise.all(
           courseData.Chapters.map(async (ref: DocumentReference<unknown>) => {
             return getDoc(ref).then((chapter) => chapter.data() as ChapterType);
@@ -56,7 +56,7 @@ const fetchFullCourseFromFirestore = async (ref: any) => {
       })
       .finally(() => {
         const fullCourse: FullCourse = {
-          Course: courseName,
+          Course: course,
           Chapters: chapters,
         };
         resolve(fullCourse);

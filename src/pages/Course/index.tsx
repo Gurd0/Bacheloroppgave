@@ -51,8 +51,8 @@ const Index = () => {
     useEffect(() => {
       if(course != undefined){
         let tree: RenderTree = {
-          id: "courseObj.id",
-          name: course.Course,
+          id: course.Course.id,
+          name: course.Course.Name,
           children: [
            
          ]
