@@ -6,12 +6,23 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { useTheme } from '@mui/material/styles';
+import { ChapterType } from '../../../context/context';
 
-const CourseMobileStep = () => {
-    const [activeStep, setActiveStep] = React.useState(0);
+interface propsInterface {
+  currentChapter: ChapterType,
+  currentPageIndex: number,
+  setCurrentPageByIndex: (index: number) => void
+}
 
-    let maxSteps = 4
+const CourseMobileStep = (Props: propsInterface) => {
+    const [activeStep, setActiveStep] = React.useState(Props.currentPageIndex);
+
+    let maxSteps = Props.currentChapter.Pages.length
     const theme = useTheme();
+
+    useEffect(() => {
+      setActiveStep(Props.currentPageIndex)
+    },[Props.currentPageIndex])
   return (
     <div>
          <MobileStepper
@@ -23,6 +34,9 @@ const CourseMobileStep = () => {
           <Button
             size="small"
             disabled={activeStep === maxSteps - 1}
+            onClick={() => {
+              Props.setCurrentPageByIndex(activeStep +1)
+            }}
           >
             Next
             {theme.direction === 'rtl' ? (
@@ -33,7 +47,13 @@ const CourseMobileStep = () => {
           </Button>
         }
         backButton={
-          <Button size="small" disabled={activeStep === 0}>
+          <Button 
+          size="small" 
+          disabled={activeStep === 0}
+          onClick={() => {
+            Props.setCurrentPageByIndex(activeStep -1)
+          }}
+          >
             {theme.direction === 'rtl' ? (
               <KeyboardArrowRight />
             ) : (

@@ -14,6 +14,7 @@ import { SxProps } from '@mui/material/styles';
 interface ToggleProps {
   ClickHandler: (id: string) => void
   tree: RenderTree
+  selectedNode: string[]
 }
 const StyledTreeView ={
 //  marginLeft: 0,
@@ -26,7 +27,7 @@ const StyledTreeItem = {
 
 export default function CourseTree(Props: ToggleProps) {
   const [expanded, setExpanded] = React.useState<string[]>([]);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<string[]>(Props.selectedNode);
 
   React.useEffect(() => {
     const t = selected.join("")
