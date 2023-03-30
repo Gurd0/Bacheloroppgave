@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
 import { Box } from '@mui/system';
 import { useQuery } from 'react-query';
-import { FullCourse, PageType } from '../../context/context';
+import { ChapterType, FullCourse, PageType } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
 
 const Index = () => {
@@ -17,6 +17,8 @@ const Index = () => {
     
     const [currentPageId, setCurrentPageId] = useState("")
     const [currentPage, setCurrentPage] = useState<PageType>()
+    const [currentChapter, setCurrentChapter] = useState<ChapterType>()
+    const [currentPageIndex, setCurrentPageIndex] = useState<number>()
     const [course, setCourse] = useState<FullCourse>()
     
     //queries hooks
@@ -66,8 +68,7 @@ const Index = () => {
                 childrenPages.push({name: key, id: keyAsAny.id, page: true})
               }
              })
-             
-             tree.children?.push({name: chapter.ChapterName, id: chapter.ChapterName, children: childrenPages})
+             tree.children?.push({name: chapter.ChapterName, id: chapter.id, children: childrenPages})
         })
         //console.log(t)
         setTree(tree)
@@ -77,8 +78,35 @@ const Index = () => {
     const onPageClick = async (id: string) => {
       setCurrentPageId(id)
       console.log(page)
-      
+      if(course){
+        course.Chapters.map((chapter, chapterIndex) => {
+          chapter.Pages.map((pageMap: Array<Map<string, DocumentReference>>, indexPages: number) => {
+            for (const [key, value] of Object.entries(pageMap)) {
+              //make key type any to get objects
+              const valueAsAny: PageType = value as any
+              if(id === valueAsAny.id){
+                  console.log(indexPages)
+                  setCurrentChapter(course.Chapters[chapterIndex])
+                  setCurrentPageIndex(indexPages)
+                }
+            }
+           })
+          console.log("current page index : " + currentPageIndex)
+          console.log("current chapter : " + currentChapter?.id)
+        })
     }
+  }
+  const setCurrentPageByIndex = (index: number) =>{
+    if(currentChapter){
+      for (const [key, value] of Object.entries(currentChapter.Pages[index])) {
+        const valueAsAny: PageType = value as any
+        setCurrentPageId(valueAsAny.id)
+        console.log(valueAsAny)
+      }
+     
+      setCurrentPageIndex(index)
+    }
+  }
 
   interface RenderTree {
     id: string;
@@ -111,12 +139,15 @@ const Index = () => {
           Quiz
         </h2>
       }
+      {(currentPageIndex != null  && currentChapter != null ) &&
+       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
+      }
       </Box>  
-      <CourseMobileStep />  
+
       </div>
     </Grid>
     <Grid item xs={4}>
-      <CourseTree tree={tree} ClickHandler={onPageClick}/>
+      <CourseTree tree={tree} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
     </Grid>
   </Grid>
  
