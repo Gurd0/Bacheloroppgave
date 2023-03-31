@@ -121,8 +121,13 @@ const Index = () => {
     <Grid item xs={8}>
       <div style={{
         border: '1px solid black',
+        width: "100%",
+        maxHeight: "40em",
+        minHeight: "40em",
+        overflow: "auto"
       }}>
-      <Box>
+      <Box style={{}}>
+      
       {currentPage?.Type === "Text" &&
         <CourseText currentPage={currentPage}/>
       }
@@ -139,15 +144,33 @@ const Index = () => {
           Quiz
         </h2>
       }
+      
+      </Box>  
+      
+      </div>
+      <div style={{
+       // position: "absolute",
+        bottom: 0,
+      }}>
       {(currentPageIndex != null  && currentChapter != null ) &&
        <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
       }
-      </Box>  
-
       </div>
     </Grid>
     <Grid item xs={4}>
-      <CourseTree tree={tree} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
+      <div style={{
+        overflow: "auto",
+        display: "flex",
+        flexDirection: 'column',
+        alignContent: "flex-start",
+        
+      }}>
+      <h2 style={{paddingTop: "0px",
+        margin: "0px",}}>{tree.name}</h2>
+      {tree.children?.map((chap) => (
+        <CourseTree tree={chap} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
+      ))}
+      </div>
     </Grid>
   </Grid>
  

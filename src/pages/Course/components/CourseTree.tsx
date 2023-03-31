@@ -36,6 +36,11 @@ export default function CourseTree(Props: ToggleProps) {
     } 
     console.log(t)
   },[selected])
+  React.useEffect(() => {
+    const expandedClone = expanded
+    expandedClone.push(Props.tree.id)
+    setExpanded(expandedClone)
+  },[Props.tree])
 
   const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
     setExpanded(nodeIds);
@@ -50,7 +55,7 @@ export default function CourseTree(Props: ToggleProps) {
     sx={ style }
     key={nodes.id} 
     nodeId={nodes.id} 
-    label={nodes.name} 
+    label={nodes.name}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node, StyledTreeItem))
@@ -71,11 +76,10 @@ export default function CourseTree(Props: ToggleProps) {
         selected={selected}
         onNodeToggle={handleToggle}
         onNodeSelect={handleSelect}
-        //expanded={expanded}
         sx={{ 
-          height: 500,
+        
           flexGrow: 1,
-          maxWidth: "100%",}}
+          maxWidth: "90%",}}
       >
         {renderTree(Props.tree, StyledTreeView)}
       </TreeView>
