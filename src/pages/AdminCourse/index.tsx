@@ -175,11 +175,11 @@ function Index(){
       {selectedPage?.Type === "Text" &&
           <TextEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
-      {selectedPage?.Type === "Image" &&
-          <ImageEdit />
-      }
       {selectedPage?.Type === "Video" &&
-          <VideoEdit />
+          <VideoEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
+      }
+      {selectedPage?.Type === "Image" &&
+          <ImageEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
       {selectedPage?.Type === "Quiz" &&
           <QuizEdit />

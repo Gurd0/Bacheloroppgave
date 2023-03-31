@@ -11,6 +11,8 @@ import { Box } from '@mui/system';
 import { useQuery } from 'react-query';
 import { ChapterType, FullCourse, PageType } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
+import CourseVideo from './components/CourseContent/CourseVideo';
+import CourseImage from './components/CourseContent/CourseImage';
 
 const Index = () => {
     const { slug }: any = useParams();
@@ -132,12 +134,10 @@ const Index = () => {
         <CourseText currentPage={currentPage}/>
       }
       {currentPage?.Type === "Image" &&
-        <h2>Image</h2>
+        <CourseImage currentPage={currentPage} />
       }
       {currentPage?.Type === "Video" &&
-        <h2>
-          Video
-        </h2>
+        <CourseVideo currentPage={currentPage} />
       }
       {currentPage?.Type === "Quiz" &&
         <h2>
