@@ -1,4 +1,4 @@
-import { Alert } from "@mui/lab";
+import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -14,7 +14,7 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import Signup from "../SignUp";
@@ -53,7 +53,7 @@ export default function SignIn(user: userProp) {
           })
           .catch((error) => {
             console.log(error.code);
-            return <Alert>{error.code}</Alert>;
+            return <Alert severity="error">{error.code}</Alert>;
           });
       } catch (error) {
         console.log(error);
