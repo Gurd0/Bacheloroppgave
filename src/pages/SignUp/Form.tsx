@@ -1,7 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 interface props {
   handleClose: () => void;
@@ -39,10 +40,12 @@ const Form = (props: props) => {
   const handleSubmit = async (e: any) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        const user = auth.currentUser;
-        console.log(user); //TODO: Send to profilepage, can be done with react-router-dom or window.location.href
-        console.log("User created " + auth.currentUser?.displayName);
-        console.log(firstName + " " + lastName + " " + email + " " + password);
+        const name = firstName + " " + lastName;
+        setDoc(doc(db, "Users", userCredentials.user.uid), {
+          displayName: name,
+          email: userCredentials.user.email,
+        });
+        console.log("USER REGISTERED!");
       })
       .then((userCredentials) => {
         if (auth.currentUser) {
