@@ -6,13 +6,15 @@ interface PropsType {
 }
 const CourseImage = (props: PropsType) => {
   return (
-    <img src={props.currentPage.Value} alt="Logo" style={{
+    // img or div background ?????
+    <img src={props.currentPage.Value} alt={props.currentPage.Name} style={{
       display: "block",
       background: "#000",
       border: "none",
-      height: "calc(100vh - 30px)",
+      //height: "100%",
       width: "100%",
-    }} />
+      objectFit: "contain"
+    }} /> 
   )
 }
 

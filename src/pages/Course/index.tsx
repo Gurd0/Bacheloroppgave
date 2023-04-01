@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {db} from "../../firebase"
 import { collection, getDoc, doc, getDocs, DocumentReference, DocumentData } from "firebase/firestore";
 import { useParams } from 'react-router';
@@ -13,6 +13,8 @@ import { ChapterType, FullCourse, PageType } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
 import CourseVideo from './components/CourseContent/CourseVideo';
 import CourseImage from './components/CourseContent/CourseImage';
+import Card from '@mui/material/Card';
+import { Drawer, Paper } from '@mui/material';
 
 const Index = () => {
     const { slug }: any = useParams();
@@ -26,6 +28,13 @@ const Index = () => {
     //queries hooks
     const fullCourse = (useFullCourse(slug, "Courses"))
     const page = (useCurrentPage(currentPageId, "Pages"))
+
+    //open for drawer
+    const [xsSize, setXsSize] = useState<number>(8)
+    const [open, setOpen] = useState<boolean>(false);
+    const [drawerHeigt, setDrawerHeigt] = useState<number>(0)
+    const containerRef = useRef<HTMLDivElement>(null);
+    
     
     //TODO lægg tel animasjon når lastes
     const [tree, setTree] = useState<RenderTree>({
@@ -35,6 +44,16 @@ const Index = () => {
        
      ]
     })
+    useEffect(() => {
+      console.log(containerRef)
+      if(open &&  containerRef != null  && containerRef.current != null && containerRef.current.clientHeight != null){
+        setDrawerHeigt(containerRef.current.clientHeight - 64);
+        setXsSize(8)
+      } else {
+        setDrawerHeigt(0)
+        setXsSize(12)
+      }
+    },[open])
     useEffect(() => {
       if(!page.isLoading){
         setCurrentPage(page.data as PageType)
@@ -119,13 +138,18 @@ const Index = () => {
   
   return (
     <>
+    <button onClick={() => {
+        setOpen(!open)
+      }}>Hei</button>
     <Grid container spacing={2}>
-    <Grid item xs={8}>
+
+    <Grid item xs={xsSize}>
       <div style={{
         border: '1px solid black',
-        width: "100%",
-        maxHeight: "40em",
-        minHeight: "40em",
+        width: "95%",
+        paddingLeft: "5px",
+       //maxHeight: "40em",
+        //minHeight: "40em",
         overflow: "auto"
       }}>
       <Box style={{}}>
@@ -158,18 +182,36 @@ const Index = () => {
       </div>
     </Grid>
     <Grid item xs={4}>
-      <div style={{
-        overflow: "auto",
-        display: "flex",
-        flexDirection: 'column',
-        alignContent: "flex-start",
+      <div ref={containerRef} style={{
+        
+        minHeight: "500px",
+        paddingRight: "3vh",
+        position: 'relative',
         
       }}>
-      <h2 style={{paddingTop: "0px",
-        margin: "0px",}}>{tree.name}</h2>
-      {tree.children?.map((chap) => (
-        <CourseTree tree={chap} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
-      ))}
+      
+      <Drawer open={open} anchor={"right"} 
+       sx={{
+       // position: "relative",
+        marginLeft: "auto",
+        width: 200,
+         "& .MuiBackdrop-root": {
+          display: "none"
+        },
+          '& .MuiDrawer-paper': {
+            width: "100%",
+            position: "absolute",
+            height: {drawerHeigt},
+            transition: "none !important"
+          },
+        }}
+        variant="persistent" onClose={() => setOpen(false)}>
+          {tree.children?.map((chap) => (
+            <CourseTree tree={chap} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
+          ))}
+      
+      </Drawer>
+      
       </div>
     </Grid>
   </Grid>
