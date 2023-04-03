@@ -32,7 +32,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
       course.Chapters.map((chapter) => {
         
         const arrayMap = chapter.Pages.map((page: any) => {
-            return { [page.Name]: doc(db, "Pages/" + page.id) }
+            return { [page.Name + "&&" + page.Type]: doc(db, "Pages/" + page.id) }
            })
        // const budgets = pageMap.map((obj: any)=> {return Object.assign({}, obj)});
         const c= {
