@@ -8,10 +8,10 @@ const CourseVideo = (props: PropsType) => {
   
   return (
     <iframe style={{
-      display: "block",
+      //display: "block",
       background: "#000",
       border: "none",
-      height: "calc(100vh - 30px)",
+      height: "40em",
       width: "100%",
     }}
     src={props.currentPage.Value}>
