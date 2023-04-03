@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
 import { Box } from '@mui/system';
 import { useQuery } from 'react-query';
-import { ChapterType, FullCourse, PageType } from '../../context/context';
+import { ChapterType, FullCourse, PageType, RenderTree } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
 import CourseVideo from './components/CourseContent/CourseVideo';
 import CourseImage from './components/CourseContent/CourseImage';
@@ -31,8 +31,8 @@ const Index = () => {
 
     //open for drawer
     const [xsSize, setXsSize] = useState<number>(8)
-    const [open, setOpen] = useState<boolean>(false);
-    const [drawerHeigt, setDrawerHeigt] = useState<number>(0)
+    const [open, setOpen] = useState<boolean>(true);
+    const [height, setHeight] = useState<string>("40em")
     const containerRef = useRef<HTMLDivElement>(null);
     
     
@@ -40,6 +40,7 @@ const Index = () => {
     const [tree, setTree] = useState<RenderTree>({
       id: "error",
       name: "error",
+      type: "error",
       children: [
        
      ]
@@ -47,10 +48,10 @@ const Index = () => {
     useEffect(() => {
       console.log(containerRef)
       if(open &&  containerRef != null  && containerRef.current != null && containerRef.current.clientHeight != null){
-        setDrawerHeigt(containerRef.current.clientHeight - 64);
+        setHeight("40em");
         setXsSize(8)
       } else {
-        setDrawerHeigt(0)
+        setHeight("0em")
         setXsSize(12)
       }
     },[open])
@@ -76,6 +77,7 @@ const Index = () => {
         let tree: RenderTree = {
           id: course.Course.id,
           name: course.Course.Name,
+          type: "course",
           children: [
            
          ]
@@ -86,12 +88,22 @@ const Index = () => {
               for (const [key, value] of Object.entries(pageMap)) {
                 //make key type any to get objects
                 const keyAsAny: PageType = value as any
-                childrenPages.push({name: key, id: keyAsAny.id, page: true})
+                const NameAndType = key.split("&&");
+                if(NameAndType[1]){
+                  childrenPages.push({
+                    name: NameAndType[0], id: keyAsAny.id, type: NameAndType[1],
+                  })
+                }else{
+                  childrenPages.push({
+                    name: key, id: keyAsAny.id, type: "error",
+                  })
+                }
+                
               }
              })
-             tree.children?.push({name: chapter.ChapterName, id: chapter.id, children: childrenPages})
+             tree.children?.push({name: chapter.ChapterName, id: chapter.id, type: "chapter", children: childrenPages})
         })
-        //console.log(t)
+        console.log(tree)
         setTree(tree)
     }
     },[course])
@@ -128,28 +140,23 @@ const Index = () => {
       setCurrentPageIndex(index)
     }
   }
-
-  interface RenderTree {
-    id: string;
-    name: string;
-    children?: RenderTree[];
-    page?: boolean;
-  }
   
   return (
     <>
     <button onClick={() => {
         setOpen(!open)
       }}>Hei</button>
-    <Grid container spacing={2}>
+    <Grid container spacing={2} style={{
+      backgroundColor: "#e8e8e8",
+    }}>
 
     <Grid item xs={xsSize}>
       <div style={{
         border: '1px solid black',
         width: "95%",
         paddingLeft: "5px",
-       //maxHeight: "40em",
-        //minHeight: "40em",
+        maxHeight: "40em",
+        minHeight: "40em",
         overflow: "auto"
       }}>
       <Box style={{}}>
@@ -168,31 +175,25 @@ const Index = () => {
           Quiz
         </h2>
       }
-      
       </Box>  
       
       </div>
-      <div style={{
-       // position: "absolute",
-        bottom: 0,
-      }}>
-      {(currentPageIndex != null  && currentChapter != null ) &&
-       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
-      }
-      </div>
+      
     </Grid>
-    <Grid item xs={4}>
+    <Grid item xs={4} style={{paddingRight: "1em"}}>
       <div ref={containerRef} style={{
         
-        minHeight: "500px",
-        paddingRight: "3vh",
+        //minHeight: "500px",
+       // paddingRight: "3em",
         position: 'relative',
+        
         
       }}>
       
       <Drawer open={open} anchor={"right"} 
        sx={{
-       // position: "relative",
+       // position: "relative",´
+        backgroundColor: "transparent",
         marginLeft: "auto",
         width: 200,
          "& .MuiBackdrop-root": {
@@ -201,19 +202,30 @@ const Index = () => {
           '& .MuiDrawer-paper': {
             width: "100%",
             position: "absolute",
-            height: {drawerHeigt},
-            transition: "none !important"
+            height: {height},
+            transition: "none !important",
+            backgroundColor: "transparent",
           },
         }}
         variant="persistent" onClose={() => setOpen(false)}>
+        <Paper  variant="outlined" elevation={10} sx={{p: '50px', borderRadius: '20px', borderColor: 'black'}}>
           {tree.children?.map((chap) => (
             <CourseTree tree={chap} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
           ))}
-      
+      </Paper>
       </Drawer>
       
       </div>
     </Grid>
+    <div style={{
+       // position: "absolute",
+        width: "100%",
+        bottom: 0,
+      }}>
+      {(currentPageIndex != null  && currentChapter != null ) &&
+       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
+      }
+      </div>
   </Grid>
  
     </>
