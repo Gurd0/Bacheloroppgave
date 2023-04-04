@@ -1,14 +1,14 @@
 import { convertToRaw } from 'draft-js'
-import { collection, doc, DocumentReference, setDoc, updateDoc } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, collection, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
 import React from 'react'
 import { CourseType, PageType } from '../../../context/context'
 import { db } from '../../../firebase'
 import { ChapterType } from '../../../context/context'
 
 export const changeDraft = async (courseId: string, draft: boolean) => {
-    console.log(courseId)
+
     const courseRef = doc(db, "Courses", courseId);
-    console.log(courseId + " : " + draft)
+
     try{
         await updateDoc(courseRef, {
             
@@ -49,6 +49,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
         Name: course.Name,
         id: course.id,
         draft: course.draft,
+        Topic: course.Topic,
         Chapters: 
         course.Chapters.map((chapter: any) => {
             return doc(db, "Chapter/" + chapter.id)
@@ -59,10 +60,10 @@ export const addCourseToFirebase = async (course: CourseType) => {
         Name: courseT.Name,
         draft: courseT.draft,
         id: courseT.id,
-        Chapters: courseT.Chapters
-
+        Chapters: courseT.Chapters,
+        Topic: courseT.Topic
     })
-    
+    await addCourseTopicToTopic(courseT, doc(db, "Courses/" + courseT.id))
 }
  const addChapterToFirebase = async (chapter: ChapterType) => {
    // console.log(chapter)
@@ -91,4 +92,39 @@ export const addCourseToFirebase = async (course: CourseType) => {
     }
     
 }
+    const addCourseTopicToTopic = async (course: CourseType, courseRef: DocumentReference)  => {
+        console.log(course.Topic)
+        let ref
+        if(course.Topic != null){
+            ref = doc(db, "Topic", course.Topic)
+            const document = await getDoc(ref)
+            // if document add course ref 
+            if(document.data()){
+                    console.log("HEI ")
+                    await updateDoc(doc(db, "Topic", document.id), {
+                        "Courses": arrayUnion(courseRef),
+                })
+            // else make a new document
+            }else{
+                console.log("HUH?")
+                await setDoc(doc(db, "Topic", course.Topic),{
+                    Name: course.Topic,
+                    Courses:  [courseRef]
+                })
+            }
+        }
+        // Remove course ref from old topic if any.
+        const q = query(collection(db, "Topic"), where("Courses", "array-contains-any", [courseRef]))
+        const querrySnapshot = await getDocs(q)
+        querrySnapshot.forEach(async (topic) => {
+            console.log("bø!")
+            if(topic.id != course.Topic){
+            console.log("bø2")
+            await updateDoc(doc(db, "Topic", topic.id), {
+                "Courses": arrayRemove(courseRef),
+            })
+            }
+          })
+        
 
+    }
