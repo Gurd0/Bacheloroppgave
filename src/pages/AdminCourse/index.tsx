@@ -166,9 +166,9 @@ function Index(){
     <Grid item xs={8} >
       <div style={{
         border: '1px solid black',
-        height: '100%'
+        height: "40em"
       }}>
-      <Box>
+      <Box >
        {selectedPage?.Type === "new" &&
           <NewPage setPageType={setPageType}/>
       }
