@@ -1,31 +1,37 @@
-
-import { LoadingButton } from "@mui/lab";
-import { CircularProgress, LinearProgress } from "@mui/material";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { IdTokenResult, onAuthStateChanged, User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Header from "./Components/Header/Header";
 import { auth } from "./firebase";
 import Admin from "./pages/Admin";
+import MakeAdmin from "./pages/Admin/addAdmin";
+import AdminCourse from "./pages/AdminCourse";
 import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import ProfilePage from "./pages/Profile";
 import Signup from "./pages/SignUp";
-import AdminCourse from './pages/AdminCourse'
-
 
 function App() {
   const [user, setUser] = useState<User>();
+  const [token, setToken] = useState<string>("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unSubscribeAuth = onAuthStateChanged(
       auth,
       async (authenticatedUser) => {
         if (authenticatedUser) {
           setUser(authenticatedUser);
+          authenticatedUser.getIdToken(true).then((token) => setToken(token));
         } else {
           setUser(undefined);
+          setToken("");
         }
       }
     );
@@ -33,17 +39,23 @@ function App() {
     return unSubscribeAuth;
   }, [user]);
 
+  function getToken() {
+    console.log(user?.uid);
+  }
   return (
     <div className="App">
       {user ? (
         <Router>
+          {/* <MakeAdmin /> */}
           <Header />
-          {<p>HELLO, {user.displayName}</p>}
+          <h1>HELLO, {user?.displayName}</h1>
+          <button onClick={getToken}> GET TOKEN APP</button>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<ProfilePage user={user} />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path='/admin/new' element={<AdminCourse />} />
-            <Route path='/admin/edit/:slug' element={<AdminCourse />} />
+            <Route path="/admin/new" element={<AdminCourse />} />
+            <Route path="/admin/edit/:slug" element={<AdminCourse />} />
             <Route path="/login" element={<Login user={user} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/course/:slug" element={<Course />} />
@@ -51,7 +63,13 @@ function App() {
           <Footer />
         </Router>
       ) : (
-        <Login user={user} />
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/*" element={<Login user={user} />} />
+          </Routes>
+          <Footer />
+        </Router>
       )}
     </div>
   );
