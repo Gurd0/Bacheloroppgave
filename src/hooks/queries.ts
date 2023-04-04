@@ -19,6 +19,20 @@ import {
   PageType,
 } from "../context/context";
 
+const fetchTopicNames = async () => {
+  let topicList: string[] = []
+ // const c = collection(db, "Topic")
+  return new Promise(async (resolve, reject) => { 
+    await getDocs(collection(db, "Topic")).then((documents) => {
+      documents.forEach((document) => {
+        topicList.push(document.data().Name)
+      })
+    }).finally(() => {
+     // console.log(topicList)
+      resolve(topicList)
+    })
+  }) 
+}
 const fetchCurrentPageFromFirebase = async (id: string, collection: string) => {
   if (id !== "" && collection !== "") {
     const docRef = doc(db, collection, id);
@@ -111,7 +125,7 @@ export const useCurrentPage = (id: string, collection: string) => {
     { refetchOnWindowFocus: false }
   );
 };
-//TODO fiks query key
+//TODO fiks query key og her brukes fetch course, bør bytt navn
 export const useGetCollection = (collection: string, draft: boolean) => {
   return useQuery(
     [collection, draft],
@@ -121,4 +135,15 @@ export const useGetCollection = (collection: string, draft: boolean) => {
     { refetchOnWindowFocus: false }
   );
 };
+export const useGetTopicName = () => {
+  return useQuery(
+    ["topicName"],
+    async () => {
+      return await Promise.resolve(fetchTopicNames());
+    },
+    { refetchOnWindowFocus: false }
+  );
+};
+
+
 

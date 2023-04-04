@@ -4,7 +4,8 @@ import { EnumDeclaration } from "typescript";
 export type ChapterType = {
     id: string,
     Pages: any,
-    ChapterName: string
+    ChapterName: string,
+    
   }
   
  export type CourseType = {
@@ -12,6 +13,7 @@ export type ChapterType = {
     Chapters: any[];
     id: string;
     draft: boolean;
+    Topic?: string, 
   }
 export  type FullCourse = {
     Course: CourseType;

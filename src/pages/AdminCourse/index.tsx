@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, ChangeEventHandler} from 'react';
 import ReactDOM from 'react-dom/client';
 import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
@@ -10,7 +10,7 @@ import { CourseType, FullCourse, RenderTree } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Button, Popper, TextField } from '@mui/material';
+import { Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
@@ -29,12 +29,15 @@ import {
 import {db} from "../../firebase"
 import { convertToRaw } from 'draft-js';
 import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
+import { useGetTopicName } from '../../hooks/queries';
 
 
 
 function Index(){
   const { slug }: any = useParams();
   const [chapters, setChapters] = useState<ChapterType[]>([])
+  const [topic, setTopic] = useState<string>("")
+  const [menuItemTopic, setMenuItemTopic] = useState<string[]>(["test1", "test2"])
 
   const [selectedPage, setSelectedPage] = useState<PageType>()
   const [selectedChapter, setSelectedChapter] = useState<ChapterType>()
@@ -50,6 +53,14 @@ function Index(){
         Chapters: chapters,
         id: Math.random().toString(36).substring(2,7)
   })
+  const topicName = useGetTopicName();
+
+  useEffect(() => {
+    if (!topicName.isLoading && topicName.status == "success") {
+      setMenuItemTopic([...topicName.data as unknown as string[]]);
+      console.log(topicName.data);
+    }
+  }, [topicName.data]);
  
    
   useEffect(() => {
@@ -73,13 +84,8 @@ function Index(){
             .then(() => {
               
               chapters.map((chapter, index) => {
-                console.log(chapter)
-                chapter.Pages.map(async (pageRef: Map<string, DocumentReference>, pageIndex: number) => {
                 
-              //   console.log(pageRef)
-              
-                 // console.log(first)
-                  
+                chapter.Pages.map(async (pageRef: Map<string, DocumentReference>, pageIndex: number) => {    
                  chapters[index].Pages[pageIndex] =  (await getDoc(Object.values(pageRef)[0])).data() as PageType
                 })
               })
@@ -92,14 +98,11 @@ function Index(){
                 id: slug,
                 Chapters: chapters,
               };
-              console.log(course)
-              console.log(chapters)
               setCourse({...course})
               setChapters([...chapters])
              
             })
         });
-       // console.log(chapters)
     } 
     test()
   },[slug])
@@ -109,7 +112,8 @@ function Index(){
       Name: course.Name,
       id: course.id,
       draft: course.draft,
-      Chapters: chapters
+      Chapters: chapters,
+      Topic: topic
     }
     addCourseToFirebase(c)
   }
@@ -121,7 +125,6 @@ function Index(){
     }
     let chapterClone: ChapterType[] = chapters
     chapterClone.push(t)
-    //console.log(chapterClone)
     setChapters([...chapterClone])
   }
   const setPageType = (type: string) => {
@@ -142,8 +145,6 @@ function Index(){
   }
   const setPageValue = (value: any) => {
     if(selectedPage){
-    //  console.log("setPageValue : " + value)
-   // console.log(value)
       let chapterClone = chapters
       let selectedPageClone = selectedPage
       chapters.map((chapter, index) => {
@@ -156,10 +157,42 @@ function Index(){
             }
          })
       })
-      //console.log(chapters)
     }
   }
-  
+ 
+  const handleChangeTopicSelect = (event: SelectChangeEvent) => {
+    setTopic(event.target.value as string);
+  };
+  const getMenuItem = () => {
+    return (
+      <>
+    <FormControl sx={{ m: 1 }} variant="standard">
+      <InputLabel  htmlFor="demo-customized-textbox">Topic</InputLabel>
+      <Input value={topic} onChange={(event) =>{
+        setTopic(event.target.value);
+      }}></Input>
+    </FormControl>
+    <FormControl sx={{ m: 1 }} variant="standard">
+        <InputLabel id="demo-customized-select-label">Topic</InputLabel>
+        <Select
+          labelId="demo-customized-select-label"
+          id="demo-customized-select"
+          value={topic}
+          onChange={handleChangeTopicSelect}
+        >
+         <MenuItem value="">
+            <em>New</em>
+          </MenuItem>
+          {menuItemTopic.map((topic) => {
+            return ( <MenuItem value={topic}>{topic}</MenuItem>)
+          })}
+          
+         
+        </Select>
+      </FormControl>
+      </>)
+    
+  }
   return(
     <>
     <Grid container spacing={2}>
@@ -188,6 +221,9 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
+    
+    {getMenuItem()}
+    
     <h2>{course.Name } + {course.id}
     <button onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
       setOpen(!open)
@@ -197,7 +233,8 @@ function Index(){
     </button>
      <button onClick = {() =>{
           addChapter()
-        }} >Add Chapter</button></h2>
+        }} >Add Chapter</button>
+     </h2>
 
     <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
       <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
