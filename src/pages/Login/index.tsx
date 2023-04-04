@@ -1,4 +1,4 @@
-import { Alert } from "@mui/lab";
+import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -14,17 +14,17 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import Signup from "../SignUp";
 
 type userProp = {
   user?: User;
+  token?: IdTokenResult;
 };
 
-export default function SignIn(user: userProp) {
+export default function LogIn(user: userProp, tokenProp: IdTokenResult) {
   const [token, setToken] = useState<IdTokenResult>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,25 +36,15 @@ export default function SignIn(user: userProp) {
       try {
         await signInWithEmailAndPassword(auth, email, password)
           .then((userCredentials) => {
-            // const user = userCredentials.user;
-            const user = auth.currentUser;
+            const user = userCredentials.user;
             console.log(user);
           })
-          .then((user) => {
-            if (auth.currentUser) {
-              auth.currentUser
-                .getIdTokenResult(true)
-                .then((token) => setToken(token));
-            } else {
-              console.log("ELSE, NO TOKEN");
-            }
-          })
           .finally(() => {
-            <Navigate to="/" />;
+            window.location.href = "/";
+            console.log("NAVIGATING");
           })
           .catch((error) => {
             console.log(error.code);
-            return <Alert>{error.code}</Alert>;
           });
       } catch (error) {
         console.log(error);
@@ -65,7 +55,7 @@ export default function SignIn(user: userProp) {
     e.preventDefault();
   };
 
-  const signOutButton = async (e: any) => {
+  const signOut = async (e: any) => {
     if (auth.currentUser) {
       await signOut(auth)
         .then(() => {
@@ -82,19 +72,14 @@ export default function SignIn(user: userProp) {
     }
   };
 
-  const seeToken = (e: any) => {
-    console.log(token);
-  };
-
   const seeName = (e: any) => {
-    console.log(auth.currentUser?.displayName);
+    console.log(user.user?.displayName);
   };
 
   return (
     <>
-      <Button onClick={signOutButton}>Sign out</Button>
-      <Button onClick={seeToken}>See token</Button>
       <Button onClick={seeName}>See Name</Button>
+      <Button onClick={signOut}>SIGN OUT</Button>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <Box
