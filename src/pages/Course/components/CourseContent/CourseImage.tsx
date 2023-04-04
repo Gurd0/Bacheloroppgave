@@ -1,9 +1,20 @@
 import React from 'react'
+import { PageType } from '../../../../context/context'
 
-
-const CourseImage = () => {
+interface PropsType {
+  currentPage: PageType
+}
+const CourseImage = (props: PropsType) => {
   return (
-    <div>CourseText</div>
+    // img or div background ?????
+    <img src={props.currentPage.Value} alt={props.currentPage.Name} style={{
+      display: "block",
+      background: "#000",
+      border: "none",
+      height: "40em",
+      width: "100%",
+      objectFit: "contain"
+    }} /> 
   )
 }
 

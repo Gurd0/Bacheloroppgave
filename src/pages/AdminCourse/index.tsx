@@ -166,20 +166,20 @@ function Index(){
     <Grid item xs={8} >
       <div style={{
         border: '1px solid black',
-        height: '100%'
+        height: "40em"
       }}>
-      <Box>
+      <Box >
        {selectedPage?.Type === "new" &&
           <NewPage setPageType={setPageType}/>
       }
       {selectedPage?.Type === "Text" &&
           <TextEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
-      {selectedPage?.Type === "Image" &&
-          <ImageEdit />
-      }
       {selectedPage?.Type === "Video" &&
-          <VideoEdit />
+          <VideoEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
+      }
+      {selectedPage?.Type === "Image" &&
+          <ImageEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
       {selectedPage?.Type === "Quiz" &&
           <QuizEdit />

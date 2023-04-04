@@ -2,6 +2,6 @@ interface RenderTree {
     id: string;
     name: string;
     children?: RenderTree[];
-    page?: boolean;
+    type: string;
   }
   export default RenderTree

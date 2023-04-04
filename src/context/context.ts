@@ -14,7 +14,7 @@ export type ChapterType = {
     draft: boolean;
   }
 export  type FullCourse = {
-    Course: string;
+    Course: CourseType;
     Chapters: ChapterType[];
   }
 export type PageType = {
@@ -26,9 +26,8 @@ export type PageType = {
   export type  RenderTree = {
     id: string;
     name: string;
-    children: RenderTree[];
-    
-    page?: boolean;
+    children?: RenderTree[];
+    type: string,
     //TODO add enum så bære ein e mulig på samme tid
     newChapter?: boolean;
     newPage?: boolean;

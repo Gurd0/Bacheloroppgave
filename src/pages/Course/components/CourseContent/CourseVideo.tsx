@@ -1,9 +1,21 @@
 import React from 'react'
+import { PageType } from '../../../../context/context'
 
-
-const CourseVideo = () => {
+interface PropsType {
+  currentPage: PageType
+}
+const CourseVideo = (props: PropsType) => {
+  
   return (
-    <div>CourseText</div>
+    <iframe style={{
+      //display: "block",
+      background: "#000",
+      border: "none",
+      height: "40em",
+      width: "100%",
+    }}
+    src={props.currentPage.Value}>
+    </iframe>
   )
 }
 

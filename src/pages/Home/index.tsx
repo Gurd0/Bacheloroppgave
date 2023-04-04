@@ -12,7 +12,7 @@ import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
-import { CourseType, FullCourse } from "../Course/context/context";
+import { CourseType, FullCourse } from "../../context/context";
 import { useFullCourse, useGetCollection } from "../../hooks/queries";
 export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);

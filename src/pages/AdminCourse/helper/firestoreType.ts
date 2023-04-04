@@ -3,7 +3,7 @@ import { collection, doc, DocumentReference, setDoc, updateDoc } from 'firebase/
 import React from 'react'
 import { CourseType, PageType } from '../../../context/context'
 import { db } from '../../../firebase'
-import { ChapterType } from '../../Course/context/context'
+import { ChapterType } from '../../../context/context'
 
 export const changeDraft = async (courseId: string, draft: boolean) => {
     console.log(courseId)
@@ -32,7 +32,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
       course.Chapters.map((chapter) => {
         
         const arrayMap = chapter.Pages.map((page: any) => {
-            return { [page.Name]: doc(db, "Pages/" + page.id) }
+            return { [page.Name + "&&" + page.Type]: doc(db, "Pages/" + page.id) }
            })
        // const budgets = pageMap.map((obj: any)=> {return Object.assign({}, obj)});
         const c= {
