@@ -40,10 +40,7 @@ export default function Home() {
           setCoursesTopicMap(courseTopicMap.set(c.Topic, [c]))
         }
       })
-      //console.log(myMap)
-      console.log(myMap)
       setCoursesTopicMap(myMap)
-      console.log(courseTopicMap)
   },[courses])
   return (
     <Box>
