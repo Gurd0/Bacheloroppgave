@@ -3,6 +3,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { ContentState, convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { PageType } from '../../../../context/context';
+import { auth } from '../../../../firebase';
 //import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 // https://jpuri.github.io/react-draft-wysiwyg/#/docs?_k=jjqinp
@@ -45,6 +46,10 @@ function TextEdit (props: ToggleProps) {
 
         <Editor
         editorState={editorState}
+        editorStyle={{
+          overflow: 'auto',
+          maxHeight: "34em"
+        }}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
         editorClassName="editorClassName"
