@@ -83,7 +83,7 @@ export default function Home() {
               return (
                 <Grid item xs={12} sm={6} md={4}>
 
-                <CardActionArea href={"/course/" + course.id}>
+                <CardActionArea href={"/admin/edit/" + course.id}>
                   <Card>
                     <CardHeader title={course.Name} />
                     <CardMedia component="img" height="200" image="#" alt="#" />
