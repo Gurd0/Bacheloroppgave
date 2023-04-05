@@ -14,7 +14,7 @@ import CourseText from './components/CourseContent/CourseText';
 import CourseVideo from './components/CourseContent/CourseVideo';
 import CourseImage from './components/CourseContent/CourseImage';
 import Card from '@mui/material/Card';
-import { Drawer, Paper } from '@mui/material';
+import { Button, Drawer, Paper } from '@mui/material';
 
 const Index = () => {
     const { slug }: any = useParams();
@@ -143,9 +143,6 @@ const Index = () => {
   
   return (
     <>
-    <button onClick={() => {
-        setOpen(!open)
-      }}>Hei</button>
     <Grid container spacing={2} style={{
       backgroundColor: "#e8e8e8",
     }}>
@@ -176,18 +173,24 @@ const Index = () => {
         </h2>
       }
       </Box>  
-      
+  
       </div>
-      
+      <Button style={{
+        bottom: "50%",
+        float: 'right',
+      }}
+      onClick={() => {
+        setOpen(!open)
+      }}>{open.toString()}</Button>
     </Grid>
+    
+
     <Grid item xs={4} style={{paddingRight: "1em"}}>
       <div ref={containerRef} style={{
         
         //minHeight: "500px",
        // paddingRight: "3em",
         position: 'relative',
-        
-        
       }}>
       
       <Drawer open={open} anchor={"right"} 
