@@ -117,9 +117,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
         const q = query(collection(db, "Topic"), where("Courses", "array-contains-any", [courseRef]))
         const querrySnapshot = await getDocs(q)
         querrySnapshot.forEach(async (topic) => {
-            console.log("bø!")
-            if(topic.id != course.Topic){
-            console.log("bø2")
+            if(topic.id != course.Topic){ 
             await updateDoc(doc(db, "Topic", topic.id), {
                 "Courses": arrayRemove(courseRef),
             })
