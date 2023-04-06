@@ -24,12 +24,14 @@ export type PageType = {
     Type: string; 
     Value?: any;
     id: string;
+    Completed?: boolean;
   }
   export type  RenderTree = {
     id: string;
     name: string;
     children?: RenderTree[];
     type: string,
+    completed?: boolean,
     //TODO add enum så bære ein e mulig på samme tid
     newChapter?: boolean;
     newPage?: boolean;
