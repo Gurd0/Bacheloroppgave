@@ -15,6 +15,7 @@ import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import OndemandVideoOutlinedIcon from '@mui/icons-material/OndemandVideoOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
+import DoneIcon from '@mui/icons-material/Done';
 
 //add state for selected row clicked. 
 
@@ -61,8 +62,9 @@ export default function CourseTree(Props: ToggleProps) {
     setSelected([...nodeIds]);
   };
 
-  const renderTree = (nodes: RenderTree, style?: SxProps) => (
-    
+  const renderTree = (nodes: RenderTree, style?: SxProps) => {
+    console.log(nodes)
+  return(
     <TreeItem 
     sx={ style }
     key={nodes.id} 
@@ -76,22 +78,9 @@ export default function CourseTree(Props: ToggleProps) {
       
     </TreeItem>
     
-  );
+  )};
   const renderTreeChild = (nodes: RenderTree, style?: SxProps) => {
-    let logo;
-    if(nodes.type == "Text"){
-      logo = TextSnippetOutlinedIcon
-    }
-    if(nodes.type == "Image"){
-      logo = ImageOutlinedIcon
-    }
-    if(nodes.type == "Video"){
-      logo = OndemandVideoOutlinedIcon
-    }
-    else{
-      logo = TextSnippetOutlinedIcon
-    }
-    console.log("Type ! : " + nodes.type)
+    console.log(nodes)
     return(
     <TreeItem 
     sx={ style }
@@ -100,7 +89,9 @@ export default function CourseTree(Props: ToggleProps) {
     label={<div>
       <p style={{display: 'flex', justifyContent: 'space-between'}}>
       {nodes.name}
-      
+      {nodes.completed && 
+        <DoneIcon/>
+      }
       {nodes.type == "Text" &&
         <TextSnippetOutlinedIcon/>
       }
