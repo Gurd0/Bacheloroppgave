@@ -113,6 +113,15 @@ const fetchCompletedPages = async (courseId: string, userId: string, docRef: Doc
       }
     })
 }
+const fetchCompletedCourses = async (docRef: DocumentReference) => {
+  return new Promise(async (resolve, reject) => {
+    const doc = await getDoc(docRef)
+    if(doc.data()){
+      const completedCourseList = doc.data() as any
+      resolve(completedCourseList.courseIds)
+    }
+  })
+}
 export const useFullCourse = (id: string, collection: string) => {
   const docRef = doc(db, collection, id);
   return useQuery(
@@ -161,6 +170,17 @@ export const useGetCompletedPages = (courseId: string, userId: string) => {
     ["s"],
     async () => {
       return await Promise.resolve(fetchCompletedPages(courseId, userId, docRef));
+    },
+    { refetchOnWindowFocus: false }
+  );
+}
+//TODO dokumente heite test i firestore, bør finn nå nytt
+export const useGetCompletedCourses = (userId: string) => {
+  const docRef = doc(db, "course_progress", userId, "completed_courses", "test")
+  return useQuery(
+    ["s"],
+    async () => {
+      return await Promise.resolve(fetchCompletedCourses(docRef));
     },
     { refetchOnWindowFocus: false }
   );
