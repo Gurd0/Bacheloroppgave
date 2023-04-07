@@ -15,7 +15,7 @@ import AdminCourse from "./pages/AdminCourse";
 import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import ProfilePage from "./pages/Profile";
+//import ProfilePage from "./pages/Profile";
 import Signup from "./pages/SignUp";
 
 function App() {
@@ -51,14 +51,14 @@ function App() {
           <h1>HELLO, {user?.displayName}</h1>
           <button onClick={getToken}> GET TOKEN APP</button>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<ProfilePage user={user} />} />
+            <Route path="/" element={<Home user={user}/>} />
+           
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/new" element={<AdminCourse />} />
             <Route path="/admin/edit/:slug" element={<AdminCourse />} />
             <Route path="/login" element={<Login user={user} />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/course/:slug" element={<Course />} />
+            <Route path="/course/:slug" element={<Course user={user} />} />
           </Routes>
           <Footer />
         </Router>
