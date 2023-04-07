@@ -33,12 +33,11 @@ export default function Home(props: userProp) {
   useEffect(() => {
     if (!fullCourse.isLoading && !completedCourses.isLoading) {
       const coursesData = fullCourse.data as CourseType[]
-      
+      //setCourses(coursesData)
       const completedCoursesIdList = completedCourses.data as string[]
       console.log(completedCoursesIdList)
-      courses.map((c, index) => {
+      coursesData.map((c, index) => {
         if(completedCoursesIdList.some(e => e === c.id)){
-          console.log("bø")
           coursesData[index].Completed = true
         }
         setCourses(coursesData)
