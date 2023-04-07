@@ -3,7 +3,7 @@ import {db} from "../../firebase"
 import { collection, getDoc, doc, getDocs, DocumentReference, DocumentData } from "firebase/firestore";
 import { useParams } from 'react-router';
 import CourseTree from './components/CourseTree';
-import { useFullCourse, useCurrentPage } from '../../hooks/queries';
+import { useFullCourse, useCurrentPage, useGetCompletedPages } from '../../hooks/queries';
 
 import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
@@ -15,8 +15,16 @@ import CourseVideo from './components/CourseContent/CourseVideo';
 import CourseImage from './components/CourseContent/CourseImage';
 import Card from '@mui/material/Card';
 import { Button, Drawer, Paper } from '@mui/material';
+import { checkIfCourseIsCompleted, completePage, setCourseAsCompleted } from './helper/firebase';
+import { IdTokenResult, User } from 'firebase/auth';
 
-const Index = () => {
+
+type userProp = {
+  user: User;
+  token?: IdTokenResult;
+};
+
+const Index = (props: userProp) => {
     const { slug }: any = useParams();
     
     const [currentPageId, setCurrentPageId] = useState("")
@@ -28,6 +36,7 @@ const Index = () => {
     //queries hooks
     const fullCourse = (useFullCourse(slug, "Courses"))
     const page = (useCurrentPage(currentPageId, "Pages"))
+    const completedPages = (useGetCompletedPages(slug, props.user.uid))
 
     //open for drawer
     const [xsSize, setXsSize] = useState<number>(8)
@@ -47,6 +56,11 @@ const Index = () => {
     })
     useEffect(() => {
       console.log(containerRef)
+     /* if(props.user)
+      {
+        console.log("save")
+        setCourseAsCompleted(props.user?.uid, slug)
+      } */
       if(open &&  containerRef != null  && containerRef.current != null && containerRef.current.clientHeight != null){
         setHeight("40em");
         setXsSize(8)
@@ -61,6 +75,29 @@ const Index = () => {
         console.log(currentPage)
       }
     },[page])
+    //kan lag meir effektiv løkke
+    useEffect(() => {
+      if(!completedPages.isLoading){
+       const list = completedPages.data as string[]
+       console.log(list)
+       let courseClone = course
+       //kjøre 16 gång, bør nok fix
+       list.map((page: string) => {
+          course?.Chapters.map((chapter, indexChapter) => {
+            chapter.Pages.map((p: PageType, indexPage: number) => {
+              console.log("næi")
+              for (const [key, value] of Object.entries(p)) {
+                if(value.id == page && courseClone){
+                  courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
+               }
+              }
+               
+            })
+          })
+       })
+       setCourse(courseClone)
+      }
+    },[completedPages]) 
     useEffect(()=> {
       if(fullCourse.isError) console.log("error")
       if(fullCourse.isLoading) console.log("l")
@@ -85,19 +122,25 @@ const Index = () => {
         course.Chapters.map(chapter => {
              const childrenPages: RenderTree[] = []
              chapter.Pages.map((pageMap: Array<Map<string, DocumentReference>>) => {
+              console.log(pageMap)
+              const pageMapClone: any = pageMap
               for (const [key, value] of Object.entries(pageMap)) {
                 //make key type any to get objects
                 const keyAsAny: PageType = value as any
                 const NameAndType = key.split("&&");
-                if(NameAndType[1]){
+                if(NameAndType[1] && keyAsAny.id){
+                  console.log("********************")
+                  console.log(pageMapClone.Completed)
+                  console.log("***********************")
                   childrenPages.push({
-                    name: NameAndType[0], id: keyAsAny.id, type: NameAndType[1],
-                  })
-                }else{
-                  childrenPages.push({
-                    name: key, id: keyAsAny.id, type: "error",
+                    name: NameAndType[0], id: keyAsAny.id, type: NameAndType[1], completed: pageMapClone.Completed
                   })
                 }
+                /*else{
+                  childrenPages.push({
+                    name: key, id: keyAsAny.id, type: "error", completed: keyAsAny.Completed
+                  }) 
+                } */
                 
               }
              })
@@ -230,6 +273,12 @@ const Index = () => {
       }
       </div>
   </Grid>
+  <Button onClick={() => {
+    if(currentPage && props.user && course){
+      completePage(props.user.uid, currentPage?.id, slug)
+      checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
+    }
+  }}>complete</Button>
  
     </>
   )

@@ -103,7 +103,16 @@ const fetchCourseContentFromFirebase = async (docCollection: string, draft: bool
     return emptyCourse;
   }
 };
-
+const fetchCompletedPages = async (courseId: string, userId: string, docRef: DocumentReference) => {
+ 
+    return new Promise(async (resolve, reject) => {
+      const doc = await getDoc(docRef)
+      if(doc.data()){
+        const completedPageList = doc.data() as any
+        resolve(completedPageList.pagesId)
+      }
+    })
+}
 export const useFullCourse = (id: string, collection: string) => {
   const docRef = doc(db, collection, id);
   return useQuery(
@@ -135,6 +144,7 @@ export const useGetCollection = (collection: string, draft: boolean) => {
     { refetchOnWindowFocus: false }
   );
 };
+//TODO fix name
 export const useGetTopicName = () => {
   return useQuery(
     ["topicName"],
@@ -144,6 +154,17 @@ export const useGetTopicName = () => {
     { refetchOnWindowFocus: false }
   );
 };
+export const useGetCompletedPages = (courseId: string, userId: string) => {
+  const docRef = doc(db, "course_progress", userId, "completed_pages", courseId)
+  console.log("jkljkljl")
+  return useQuery(
+    ["s"],
+    async () => {
+      return await Promise.resolve(fetchCompletedPages(courseId, userId, docRef));
+    },
+    { refetchOnWindowFocus: false }
+  );
+}
 
 
 

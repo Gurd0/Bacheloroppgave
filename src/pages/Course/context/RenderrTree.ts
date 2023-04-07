@@ -3,5 +3,6 @@ interface RenderTree {
     name: string;
     children?: RenderTree[];
     type: string;
+    completed?: boolean;
   }
   export default RenderTree
