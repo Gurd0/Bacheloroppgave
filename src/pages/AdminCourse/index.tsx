@@ -10,7 +10,7 @@ import { CourseType, FullCourse, RenderTree } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
@@ -29,9 +29,13 @@ import {
 import {db} from "../../firebase"
 import { convertToRaw } from 'draft-js';
 import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
-import { useGetTopicName } from '../../hooks/queries';
+import { useGetCollection, useGetTopicName } from '../../hooks/queries';
 
 
+interface autoFill {
+  label: string,
+  id: string,
+}
 
 function Index(){
   const { slug }: any = useParams();
@@ -54,6 +58,8 @@ function Index(){
         id: Math.random().toString(36).substring(2,7)
   })
   const topicName = useGetTopicName();
+  const fullCourse = useGetCollection("Courses", false);
+  const [coursNameAndId, setCourseNameAndId] = useState<autoFill[]>([])
 
   useEffect(() => {
     if (!topicName.isLoading && topicName.status == "success") {
@@ -62,6 +68,22 @@ function Index(){
     }
   }, [topicName.data]);
  
+  useEffect(() => {
+    
+    if(!fullCourse.isLoading && fullCourse.status == "success"){
+      let list: autoFill[] = []
+      console.log("d")
+      const coursesData = fullCourse.data as CourseType[]
+      coursesData.map((c) => {
+      const t: autoFill = {
+        label: c.Name,
+        id: c.id,
+      }
+       list.push(t)
+      })
+      setCourseNameAndId(list)
+    }
+  },[fullCourse.data])
    
   useEffect(() => {
     const test = async () => {
@@ -113,7 +135,8 @@ function Index(){
       id: course.id,
       draft: course.draft,
       Chapters: chapters,
-      Topic: topic
+      Topic: topic,
+      Prerequisite: course.Prerequisite
     }
     addCourseToFirebase(c)
   }
@@ -221,6 +244,22 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
+
+    <Autocomplete
+      onChange={(event, newValue) => {
+        const courseClone = course
+        if(newValue){
+          courseClone.Prerequisite = newValue.id
+          setCourse(courseClone)
+        }
+        
+      }}
+      disablePortal
+      id="combo-box-demo"
+      options={coursNameAndId}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Prerequisite" />}
+    />
     
     {getMenuItem()}
     

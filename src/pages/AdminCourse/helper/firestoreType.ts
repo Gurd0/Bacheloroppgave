@@ -50,18 +50,21 @@ export const addCourseToFirebase = async (course: CourseType) => {
         id: course.id,
         draft: course.draft,
         Topic: course.Topic,
+        Prerequisite: course.Prerequisite,
         Chapters: 
         course.Chapters.map((chapter: any) => {
             return doc(db, "Chapter/" + chapter.id)
         }),
       
     }
+    console.log(courseT.Prerequisite)
     await setDoc(doc(db, "Courses", courseT.id), {
         Name: courseT.Name,
         draft: courseT.draft,
         id: courseT.id,
         Chapters: courseT.Chapters,
-        Topic: courseT.Topic
+        Topic: courseT.Topic,
+        Prerequisite: courseT.Prerequisite
     })
     await addCourseTopicToTopic(courseT, doc(db, "Courses/" + courseT.id))
 }
@@ -117,9 +120,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
         const q = query(collection(db, "Topic"), where("Courses", "array-contains-any", [courseRef]))
         const querrySnapshot = await getDocs(q)
         querrySnapshot.forEach(async (topic) => {
-            console.log("bø!")
-            if(topic.id != course.Topic){
-            console.log("bø2")
+            if(topic.id != course.Topic){ 
             await updateDoc(doc(db, "Topic", topic.id), {
                 "Courses": arrayRemove(courseRef),
             })
