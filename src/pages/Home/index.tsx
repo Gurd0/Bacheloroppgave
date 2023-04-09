@@ -17,6 +17,7 @@ import { CourseType, FullCourse } from "../../context/context";
 import { useFullCourse, useGetCollection, useGetCompletedCourses } from "../../hooks/queries";
 
 import DoneIcon from '@mui/icons-material/Done';
+import LockIcon from '@mui/icons-material/Lock';
 
 type userProp = {
   user: User;
@@ -26,6 +27,7 @@ type userProp = {
 export default function Home(props: userProp) {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseTopicMap, setCoursesTopicMap] = useState<Map<string, CourseType[]>>(new Map())
+  const [completedCourseList, setCompletedCourseList] = useState<string[]>([])
 
   const fullCourse = useGetCollection("Courses", false);
   const completedCourses = useGetCompletedCourses(props.user.uid)
@@ -34,10 +36,11 @@ export default function Home(props: userProp) {
     if (!fullCourse.isLoading && !completedCourses.isLoading) {
       const coursesData = fullCourse.data as CourseType[]
       //setCourses(coursesData)
-      const completedCoursesIdList = completedCourses.data as string[]
-      console.log(completedCoursesIdList)
+      setCompletedCourseList(completedCourses.data as string[])
+      
+      console.log(completedCourseList)
       coursesData.map((c, index) => {
-        if(completedCoursesIdList.some(e => e === c.id)){
+        if(completedCourseList.some(e => e === c.id)){
           coursesData[index].Completed = true
         }
         setCourses(coursesData)
@@ -91,9 +94,23 @@ export default function Home(props: userProp) {
                 spacing={3}
               >
               {courseTopicMap.get(k)?.map((course) => {
+                
                 return (
+                  
                   <Grid item xs={12} sm={6} md={4}>
-                  <CardActionArea href={"/course/" + course.id}>
+                  
+                  {(course.Prerequisite && !completedCourseList.includes(course.Prerequisite)) ? 
+                     <CardActionArea href={"/course/" + course.id} disabled={true}>
+                     <Card>
+                       <CardHeader title={course.Name } />
+                       <CardMedia component="img" height="200" image="#" alt="#" />
+                     </Card>
+                    
+                      <LockIcon />   
+                              
+                   </CardActionArea>
+                    :
+                    <CardActionArea href={"/course/" + course.id}>
                     <Card>
                       <CardHeader title={course.Name} />
                       <CardMedia component="img" height="200" image="#" alt="#" />
@@ -102,6 +119,7 @@ export default function Home(props: userProp) {
                       <DoneIcon/>
                     }
                   </CardActionArea>
+                    }
                 </Grid> 
                 )
               })}
