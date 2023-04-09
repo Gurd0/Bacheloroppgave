@@ -15,6 +15,7 @@ export type ChapterType = {
     draft: boolean;
     Topic?: string, 
     Completed? : boolean,
+    Prerequisite?: string,
   }
 export  type FullCourse = {
     Course: CourseType;

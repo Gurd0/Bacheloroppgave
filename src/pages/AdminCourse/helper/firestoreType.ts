@@ -50,18 +50,21 @@ export const addCourseToFirebase = async (course: CourseType) => {
         id: course.id,
         draft: course.draft,
         Topic: course.Topic,
+        Prerequisite: course.Prerequisite,
         Chapters: 
         course.Chapters.map((chapter: any) => {
             return doc(db, "Chapter/" + chapter.id)
         }),
       
     }
+    console.log(courseT.Prerequisite)
     await setDoc(doc(db, "Courses", courseT.id), {
         Name: courseT.Name,
         draft: courseT.draft,
         id: courseT.id,
         Chapters: courseT.Chapters,
-        Topic: courseT.Topic
+        Topic: courseT.Topic,
+        Prerequisite: courseT.Prerequisite
     })
     await addCourseTopicToTopic(courseT, doc(db, "Courses/" + courseT.id))
 }
