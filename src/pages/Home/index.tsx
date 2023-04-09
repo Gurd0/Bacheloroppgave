@@ -23,7 +23,6 @@ type userProp = {
   user: User;
   token?: IdTokenResult;
 };
-
 export default function Home(props: userProp) {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseTopicMap, setCoursesTopicMap] = useState<Map<string, CourseType[]>>(new Map())
@@ -33,20 +32,20 @@ export default function Home(props: userProp) {
   const completedCourses = useGetCompletedCourses(props.user.uid)
   //Spør om dæ e bra å ha to i ein eller om e bør ha to useEffects
   useEffect(() => {
-    if (!fullCourse.isLoading && !completedCourses.isLoading) {
+    if (!fullCourse.isLoading && completedCourses.status == "success" && (completedCourses.data as string[]).length != 0) {
       const coursesData = fullCourse.data as CourseType[]
-      //setCourses(coursesData)
-      setCompletedCourseList(completedCourses.data as string[])
+      setCompletedCourseList([...completedCourses.data as string[]])
+      const courseCompletedList = completedCourses.data as string[]
       
-      console.log(completedCourseList)
       coursesData.map((c, index) => {
-        if(completedCourseList.some(e => e === c.id)){
+        if(courseCompletedList.some(e => e === c.id)){
           coursesData[index].Completed = true
         }
-        setCourses(coursesData)
       })
+      console.log(coursesData)
+      setCourses([...coursesData])
     }
-  }, [fullCourse.isLoading, completedCourses.isLoading]);
+  }, [fullCourse.isLoading, completedCourses.status]);
 
   useEffect(() => {
     let myMap = new Map<string, CourseType[]>();
@@ -67,7 +66,7 @@ export default function Home(props: userProp) {
     <Box>
       
         
-        {fullCourse.isLoading ? (
+        {fullCourse.isLoading && completedCourses.isLoading? (
           <CircularProgress />
         ) : (
           
@@ -105,9 +104,7 @@ export default function Home(props: userProp) {
                        <CardHeader title={course.Name } />
                        <CardMedia component="img" height="200" image="#" alt="#" />
                      </Card>
-                    
-                      <LockIcon />   
-                              
+                      <LockIcon />       
                    </CardActionArea>
                     :
                     <CardActionArea href={"/course/" + course.id}>
