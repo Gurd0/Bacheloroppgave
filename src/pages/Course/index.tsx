@@ -255,21 +255,37 @@ const Index = (props: userProp) => {
       }
       </div>
   </Grid>
-  <Button onClick={() => {
+  <Button onClick={async () => {
     if(currentPage && props.user && course){
-      completePage(props.user.uid, currentPage?.id, slug)
-      const currentPageClone = currentPage
-      currentPageClone.Completed = true
-      setCurrentPage({...currentPageClone})
-      course.Chapters.map((c, index) => {
-        
-        if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
-          const courseClone = course
-          courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
-          setCourse({...courseClone})
+      await completePage(props.user.uid, currentPage?.id, slug).then(() => {
+        const currentPageClone = currentPage
+        currentPageClone.Completed = true
+        setCurrentPage({...currentPageClone})
+        course.Chapters.map((c, index) => {
+          
+          if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
+            const courseClone = course
+            courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
+            setCourse({...courseClone})
+          }
+        })
+        let comp = 0
+        let pageAmount = 0
+        course.Chapters.map((c) => {
+          c.Pages.map((p: PageType) => {
+            pageAmount++
+            if(p.Completed){
+              comp++
+            }
+          })
+        })
+        if(comp == pageAmount){
+          checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
         }
+        
       })
-      checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
+     
+      
     }
   }}>complete</Button>
  
