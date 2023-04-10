@@ -1,7 +1,10 @@
 import { TextField } from "@mui/material";
 import React from "react";
 import { PageType } from "../../../../context/context";
-import ImageSelector from "./imageSelector";
+import {
+  default as ImageSelector,
+  default as ImageUploader,
+} from "./imageUploader";
 
 interface ToggleProps {
   setPageValue: (value: any) => void;
@@ -29,6 +32,7 @@ const ImageEdit = (props: ToggleProps) => {
     if (textField) props.setPageValue(textField);
   }, [textField]);
 
+  //TODO: Add the choice between add from source, and add from local storage->db
   return (
     <div
       style={{
@@ -37,7 +41,7 @@ const ImageEdit = (props: ToggleProps) => {
     >
       <h2>Image Url</h2>
       <TextField value={props.pageValue} onChange={handleTextInputChange} />
-      <ImageSelector setPageValue={props.setPageValue} />
+      <ImageUploader setPageValue={props.setPageValue} />
     </div>
   );
 };
