@@ -129,25 +129,16 @@ const Index = (props: userProp) => {
                 const keyAsAny: PageType = value as any
                 const NameAndType = key.split("&&");
                 if(NameAndType[1] && keyAsAny.id){
-                  console.log("********************")
-                  console.log(pageMapClone.Completed)
-                  console.log("***********************")
                   childrenPages.push({
                     name: NameAndType[0], id: keyAsAny.id, type: NameAndType[1], completed: pageMapClone.Completed
                   })
                 }
-                /*else{
-                  childrenPages.push({
-                    name: key, id: keyAsAny.id, type: "error", completed: keyAsAny.Completed
-                  }) 
-                } */
-                
               }
              })
              tree.children?.push({name: chapter.ChapterName, id: chapter.id, type: "chapter", children: childrenPages})
         })
         console.log(tree)
-        setTree(tree)
+        setTree({...tree})
     }
     },[course])
     
@@ -167,8 +158,6 @@ const Index = (props: userProp) => {
                 }
             }
            })
-          console.log("current page index : " + currentPageIndex)
-          console.log("current chapter : " + currentChapter?.id)
         })
     }
   }
@@ -276,6 +265,16 @@ const Index = (props: userProp) => {
   <Button onClick={() => {
     if(currentPage && props.user && course){
       completePage(props.user.uid, currentPage?.id, slug)
+      const currentPageClone = currentPage
+      currentPageClone.Completed = true
+      setCurrentPage({...currentPageClone})
+      course.Chapters.map((c, index) => {
+        if (currentPageIndex && currentChapter && c.id == currentChapter.id){
+          const courseClone = course
+          courseClone.Chapters[index].Pages[currentPageIndex] = currentPageClone
+          setCourse({...courseClone})
+        }
+      })
       checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
     }
   }}>complete</Button>
@@ -284,6 +283,3 @@ const Index = (props: userProp) => {
   )
 }
 export default Index
-/* 
- 
-*/
