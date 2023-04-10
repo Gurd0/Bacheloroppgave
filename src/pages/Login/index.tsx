@@ -21,18 +21,17 @@ import Signup from "../SignUp";
 
 type userProp = {
   user?: User;
-  token?: IdTokenResult;
 };
 
-export default function LogIn(user: userProp, tokenProp: IdTokenResult) {
+export default function LogIn(user: userProp) {
   const [token, setToken] = useState<IdTokenResult>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const theme = createTheme();
 
-  const handleSubmit = async (e: any) => {
-    if (!auth.currentUser) {
+  const signInUser = async (e: any) => {
+    if (!user.user) {
       try {
         await signInWithEmailAndPassword(auth, email, password)
           .then((userCredentials) => {
@@ -50,26 +49,31 @@ export default function LogIn(user: userProp, tokenProp: IdTokenResult) {
         console.log(error);
       }
     } else {
-      console.log("Hello, " + auth.currentUser?.displayName);
+      console.log("Hello, " + user.user?.displayName);
     }
     e.preventDefault();
   };
 
-  const signOut = async (e: any) => {
-    if (auth.currentUser) {
-      await signOut(auth)
-        .then(() => {
-          console.log("Logged out");
-        })
-        .then(() => {
-          setToken(undefined);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    } else {
-      console.log("No user logged in");
+  const signOutUser = async (e: any) => {
+    try {
+      if (user.user) {
+        await signOut(auth)
+          .then(() => {
+            console.log("Logged out");
+          })
+          .then(() => {
+            setToken(undefined);
+          })
+          .catch((error) => {
+            setError(error.message);
+          });
+      } else {
+        console.log("No user logged in");
+      }
+    } catch (error) {
+      console.log(error);
     }
+    e.preventDefault();
   };
 
   const seeName = (e: any) => {
@@ -79,7 +83,7 @@ export default function LogIn(user: userProp, tokenProp: IdTokenResult) {
   return (
     <>
       <Button onClick={seeName}>See Name</Button>
-      <Button onClick={signOut}>SIGN OUT</Button>
+      <Button onClick={signOutUser}>SIGN OUT</Button>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <Box
@@ -122,7 +126,7 @@ export default function LogIn(user: userProp, tokenProp: IdTokenResult) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2, backgroundColor: "blue" }}
-                onClick={handleSubmit}
+                onClick={signInUser}
               >
                 Logg inn
               </Button>
