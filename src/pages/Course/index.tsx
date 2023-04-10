@@ -55,12 +55,6 @@ const Index = (props: userProp) => {
      ]
     })
     useEffect(() => {
-      console.log(containerRef)
-     /* if(props.user)
-      {
-        console.log("save")
-        setCourseAsCompleted(props.user?.uid, slug)
-      } */
       if(open &&  containerRef != null  && containerRef.current != null && containerRef.current.clientHeight != null){
         setHeight("40em");
         setXsSize(8)
@@ -72,20 +66,19 @@ const Index = (props: userProp) => {
     useEffect(() => {
       if(!page.isLoading){
         setCurrentPage(page.data as PageType)
-        console.log(currentPage)
       }
     },[page])
     //kan lag meir effektiv løkke
     useEffect(() => {
       if(!completedPages.isLoading){
        const list = completedPages.data as string[]
-       console.log(list)
+   
        let courseClone = course
        //kjøre 16 gång, bør nok fix
        list.map((page: string) => {
           course?.Chapters.map((chapter, indexChapter) => {
             chapter.Pages.map((p: PageType, indexPage: number) => {
-              console.log("næi")
+         
               for (const [key, value] of Object.entries(p)) {
                 if(value.id == page && courseClone){
                   courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
@@ -101,8 +94,7 @@ const Index = (props: userProp) => {
     useEffect(()=> {
       if(fullCourse.isError) console.log("error")
       if(fullCourse.isLoading) console.log("l")
-    
-      //console.log(c)
+
       if(!fullCourse.isLoading){
         setCourse(fullCourse.data as FullCourse)
       }
@@ -122,7 +114,7 @@ const Index = (props: userProp) => {
         course.Chapters.map(chapter => {
              const childrenPages: RenderTree[] = []
              chapter.Pages.map((pageMap: Array<Map<string, DocumentReference>>) => {
-              console.log(pageMap)
+            
               const pageMapClone: any = pageMap
               for (const [key, value] of Object.entries(pageMap)) {
                 //make key type any to get objects
@@ -137,24 +129,26 @@ const Index = (props: userProp) => {
              })
              tree.children?.push({name: chapter.ChapterName, id: chapter.id, type: "chapter", children: childrenPages})
         })
-        console.log(tree)
+       
         setTree({...tree})
     }
     },[course])
     
     const onPageClick = async (id: string) => {
       setCurrentPageId(id)
-      console.log(page)
+   
       if(course){
         course.Chapters.map((chapter, chapterIndex) => {
           chapter.Pages.map((pageMap: Array<Map<string, DocumentReference>>, indexPages: number) => {
             for (const [key, value] of Object.entries(pageMap)) {
               //make key type any to get objects
               const valueAsAny: PageType = value as any
+            
               if(id === valueAsAny.id){
-                  console.log(indexPages)
-                  setCurrentChapter(course.Chapters[chapterIndex])
+                  console.log("jaaaa?")
+                  setCurrentChapter({...course.Chapters[chapterIndex]})
                   setCurrentPageIndex(indexPages)
+                 // console.log(indexPages)
                 }
             }
            })
@@ -166,7 +160,6 @@ const Index = (props: userProp) => {
       for (const [key, value] of Object.entries(currentChapter.Pages[index])) {
         const valueAsAny: PageType = value as any
         setCurrentPageId(valueAsAny.id)
-        console.log(valueAsAny)
       }
      
       setCurrentPageIndex(index)
@@ -262,20 +255,37 @@ const Index = (props: userProp) => {
       }
       </div>
   </Grid>
-  <Button onClick={() => {
+  <Button onClick={async () => {
     if(currentPage && props.user && course){
-      completePage(props.user.uid, currentPage?.id, slug)
-      const currentPageClone = currentPage
-      currentPageClone.Completed = true
-      setCurrentPage({...currentPageClone})
-      course.Chapters.map((c, index) => {
-        if (currentPageIndex && currentChapter && c.id == currentChapter.id){
-          const courseClone = course
-          courseClone.Chapters[index].Pages[currentPageIndex] = currentPageClone
-          setCourse({...courseClone})
+      await completePage(props.user.uid, currentPage?.id, slug).then(() => {
+        const currentPageClone = currentPage
+        currentPageClone.Completed = true
+        setCurrentPage({...currentPageClone})
+        course.Chapters.map((c, index) => {
+          
+          if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
+            const courseClone = course
+            courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
+            setCourse({...courseClone})
+          }
+        })
+        let comp = 0
+        let pageAmount = 0
+        course.Chapters.map((c) => {
+          c.Pages.map((p: PageType) => {
+            pageAmount++
+            if(p.Completed){
+              comp++
+            }
+          })
+        })
+        if(comp == pageAmount){
+          checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
         }
+        
       })
-      checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
+     
+      
     }
   }}>complete</Button>
  

@@ -46,7 +46,7 @@ export default function CourseTree(Props: ToggleProps) {
     if(selected){
       Props.ClickHandler(t)
     } 
-    console.log(t)
+
   },[selected])
   React.useEffect(() => {
     const expandedClone = expanded
@@ -63,7 +63,7 @@ export default function CourseTree(Props: ToggleProps) {
   };
 
   const renderTree = (nodes: RenderTree, style?: SxProps) => {
-    console.log(nodes)
+
   return(
     <TreeItem 
     sx={ style }
@@ -80,7 +80,7 @@ export default function CourseTree(Props: ToggleProps) {
     
   )};
   const renderTreeChild = (nodes: RenderTree, style?: SxProps) => {
-    console.log(nodes)
+
     return(
     <TreeItem 
     sx={ style }
@@ -108,7 +108,7 @@ export default function CourseTree(Props: ToggleProps) {
     </TreeItem>
     
   )}
-  //console.log(course)
+
   
 
     return (
