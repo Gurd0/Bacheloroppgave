@@ -28,6 +28,7 @@ const ImageEdit = (props: ToggleProps) => {
   React.useEffect(() => {
     if (textField) props.setPageValue(textField);
   }, [textField]);
+
   return (
     <div
       style={{
@@ -35,8 +36,8 @@ const ImageEdit = (props: ToggleProps) => {
       }}
     >
       <h2>Image Url</h2>
-      <TextField value={textField} onChange={handleTextInputChange} />
-      <ImageSelector />
+      <TextField value={props.pageValue} onChange={handleTextInputChange} />
+      <ImageSelector setPageValue={props.setPageValue} />
     </div>
   );
 };

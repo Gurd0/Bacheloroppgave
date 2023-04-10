@@ -1,23 +1,24 @@
 import { TextField } from "@mui/material";
-import { StorageReference, listAll, ref, uploadBytes } from "firebase/storage";
+import {
+  StorageReference,
+  getBlob,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import React, { useState } from "react";
 import { PageType } from "../../../../context/context";
 import { imagesRef, storage } from "../../../../firebase";
 
-const ImageUploader = () => {
+interface ToggleProps {
+  setPageValue: (value: any) => void;
+}
+const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
   const [reference, setReference] = useState<StorageReference>();
-
+  const [url, setURL] = useState<string>();
   // 'file' comes from the Blob or File API
-  const upload = () => {
-    if (file && reference) {
-      uploadBytes(reference, file).then((snapshot) => {
-        console.log("Uploaded a blob or file!");
-      });
-    } else {
-      console.log("Upload failed, no file selected!");
-    }
-  };
 
   React.useEffect(() => {
     if (file) setReference(ref(storage, imagesRef + "/" + file.name));
@@ -27,11 +28,38 @@ const ImageUploader = () => {
   function handleEvent(e: any) {
     if (e.target) {
       setFile(e.target.files[0]);
-      //   upload();
+      console.log(file?.type);
     } else {
       console.log("no file");
     }
   }
+
+  const getUrlFromDB = () => {
+    if (file && reference) {
+      getDownloadURL(ref(storage, imagesRef + "/" + file.name))
+        .then((url) => {
+          console.log(url);
+          setURL(url);
+          props.setPageValue(url);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("URL not found!");
+    }
+  };
+  const upload = () => {
+    if (file && reference) {
+      uploadBytes(reference, file).then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+        console.log(snapshot.ref);
+        getUrlFromDB();
+      });
+    } else {
+      console.log("Upload failed, no file selected!");
+    }
+  };
 
   return (
     <div
