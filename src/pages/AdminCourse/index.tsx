@@ -210,8 +210,6 @@ function Index(){
           {menuItemTopic.map((topic) => {
             return ( <MenuItem value={topic}>{topic}</MenuItem>)
           })}
-          
-         
         </Select>
       </FormControl>
       </>)
