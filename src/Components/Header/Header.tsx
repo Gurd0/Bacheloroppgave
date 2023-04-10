@@ -52,7 +52,7 @@ export default function Header() {
         }}
       >
         <Button
-          href="/profile"
+          href="/login"
           sx={{
             width: "3em",
             height: "100%",
