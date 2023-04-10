@@ -138,6 +138,7 @@ function Index(){
       Topic: topic,
       Prerequisite: course.Prerequisite
     }
+    console.log(c)
     addCourseToFirebase(c)
   }
   const addChapter = () =>{
