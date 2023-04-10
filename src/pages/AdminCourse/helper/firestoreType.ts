@@ -22,7 +22,6 @@ export const changeDraft = async (courseId: string, draft: boolean) => {
 
 
 export const addCourseToFirebase = async (course: CourseType) => {
-    //  console.log(course)
       course.Chapters.map((chapter, index) => {
         chapter.Pages.map((page: PageType) => {
             addPageToFirebase(page)
@@ -34,7 +33,6 @@ export const addCourseToFirebase = async (course: CourseType) => {
         const arrayMap = chapter.Pages.map((page: any) => {
             return { [page.Name + "&&" + page.Type]: doc(db, "Pages/" + page.id) }
            })
-       // const budgets = pageMap.map((obj: any)=> {return Object.assign({}, obj)});
         const c= {
             ChapterName: chapter.ChapterName,
             id: chapter.id,
@@ -58,14 +56,25 @@ export const addCourseToFirebase = async (course: CourseType) => {
       
     }
     console.log(courseT.Prerequisite)
-    await setDoc(doc(db, "Courses", courseT.id), {
-        Name: courseT.Name,
-        draft: courseT.draft,
-        id: courseT.id,
-        Chapters: courseT.Chapters,
-        Topic: courseT.Topic,
-        Prerequisite: courseT.Prerequisite
-    })
+    if(courseT.Prerequisite){
+        await setDoc(doc(db, "Courses", courseT.id), {
+            Name: courseT.Name,
+            draft: courseT.draft,
+            id: courseT.id,
+            Chapters: courseT.Chapters,
+            Topic: courseT.Topic,
+            Prerequisite: courseT.Prerequisite
+        })
+    }else{
+        await setDoc(doc(db, "Courses", courseT.id), {
+            Name: courseT.Name,
+            draft: courseT.draft,
+            id: courseT.id,
+            Chapters: courseT.Chapters,
+            Topic: courseT.Topic,
+        })
+    }
+    
     await addCourseTopicToTopic(courseT, doc(db, "Courses/" + courseT.id))
 }
  const addChapterToFirebase = async (chapter: ChapterType) => {
@@ -96,20 +105,17 @@ export const addCourseToFirebase = async (course: CourseType) => {
     
 }
     const addCourseTopicToTopic = async (course: CourseType, courseRef: DocumentReference)  => {
-        console.log(course.Topic)
         let ref
         if(course.Topic != null){
             ref = doc(db, "Topic", course.Topic)
             const document = await getDoc(ref)
             // if document add course ref 
             if(document.data()){
-                    console.log("HEI ")
                     await updateDoc(doc(db, "Topic", document.id), {
                         "Courses": arrayUnion(courseRef),
                 })
             // else make a new document
             }else{
-                console.log("HUH?")
                 await setDoc(doc(db, "Topic", course.Topic),{
                     Name: course.Topic,
                     Courses:  [courseRef]
