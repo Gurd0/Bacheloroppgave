@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {db} from "../../firebase"
-import { collection, getDoc, doc, getDocs, DocumentReference, DocumentData } from "firebase/firestore";
+import {  DocumentReference } from "firebase/firestore";
 import { useParams } from 'react-router';
 import CourseTree from './components/CourseTree';
 import { useFullCourse, useCurrentPage, useGetCompletedPages } from '../../hooks/queries';
@@ -8,12 +7,11 @@ import { useFullCourse, useCurrentPage, useGetCompletedPages } from '../../hooks
 import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
 import { Box } from '@mui/system';
-import { useQuery } from 'react-query';
+
 import { ChapterType, FullCourse, PageType, RenderTree } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
 import CourseVideo from './components/CourseContent/CourseVideo';
 import CourseImage from './components/CourseContent/CourseImage';
-import Card from '@mui/material/Card';
 import { Button, Drawer, Paper } from '@mui/material';
 import { checkIfCourseIsCompleted, completePage, setCourseAsCompleted } from './helper/firebase';
 import { IdTokenResult, User } from 'firebase/auth';
@@ -145,10 +143,8 @@ const Index = (props: userProp) => {
               const valueAsAny: PageType = value as any
             
               if(id === valueAsAny.id){
-                  console.log("jaaaa?")
                   setCurrentChapter({...course.Chapters[chapterIndex]})
                   setCurrentPageIndex(indexPages)
-                 // console.log(indexPages)
                 }
             }
            })
@@ -165,7 +161,37 @@ const Index = (props: userProp) => {
       setCurrentPageIndex(index)
     }
   }
-  
+  const setPageCompleted = async () => {
+    if(currentPage && props.user && course){
+      await completePage(props.user.uid, currentPage?.id, slug).then(() => {
+        const currentPageClone = currentPage
+        currentPageClone.Completed = true
+        setCurrentPage({...currentPageClone})
+        course.Chapters.map((c, index) => {
+          
+          if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
+            const courseClone = course
+            courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
+            setCourse({...courseClone})
+          }
+        })
+        let comp = 0
+        let pageAmount = 0
+        course.Chapters.map((c) => {
+          c.Pages.map((p: PageType) => {
+            pageAmount++
+            if(p.Completed){
+              comp++
+            }
+          })
+        })
+        if(comp == pageAmount){
+          checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
+        }
+        
+      })
+    }
+  }
   return (
     <>
     <Grid container spacing={2} style={{
@@ -212,15 +238,11 @@ const Index = (props: userProp) => {
 
     <Grid item xs={4} style={{paddingRight: "1em"}}>
       <div ref={containerRef} style={{
-        
-        //minHeight: "500px",
-       // paddingRight: "3em",
         position: 'relative',
       }}>
       
       <Drawer open={open} anchor={"right"} 
        sx={{
-       // position: "relative",´
         backgroundColor: "transparent",
         marginLeft: "auto",
         width: 200,
@@ -246,7 +268,6 @@ const Index = (props: userProp) => {
       </div>
     </Grid>
     <div style={{
-       // position: "absolute",
         width: "100%",
         bottom: 0,
       }}>
@@ -256,37 +277,7 @@ const Index = (props: userProp) => {
       </div>
   </Grid>
   <Button onClick={async () => {
-    if(currentPage && props.user && course){
-      await completePage(props.user.uid, currentPage?.id, slug).then(() => {
-        const currentPageClone = currentPage
-        currentPageClone.Completed = true
-        setCurrentPage({...currentPageClone})
-        course.Chapters.map((c, index) => {
-          
-          if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
-            const courseClone = course
-            courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
-            setCourse({...courseClone})
-          }
-        })
-        let comp = 0
-        let pageAmount = 0
-        course.Chapters.map((c) => {
-          c.Pages.map((p: PageType) => {
-            pageAmount++
-            if(p.Completed){
-              comp++
-            }
-          })
-        })
-        if(comp == pageAmount){
-          checkIfCourseIsCompleted(props.user.uid, slug, course.Chapters)
-        }
-        
-      })
-     
-      
-    }
+    setPageCompleted()
   }}>complete</Button>
  
     </>

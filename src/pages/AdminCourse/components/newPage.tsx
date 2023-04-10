@@ -27,9 +27,6 @@ const NewPage = (Props: ToggleProps) => {
   return (
     <>
     <Grid display={'flex'} flexDirection={'column'} textAlign={'center'} paddingTop={"20px"}>
-        <Box paddingBottom={"20px"}>
-            <TextField id="standard-basic" label="Page Name" variant="standard" onChange= {handleTextInputChange}/>
-        </Box>
         <Box>
             <Button variant="outlined" style={buttonStyle} onClick={() =>{
                 Props.setPageType("Text")

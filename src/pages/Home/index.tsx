@@ -18,6 +18,8 @@ import { useFullCourse, useGetCollection, useGetCompletedCourses } from "../../h
 
 import DoneIcon from '@mui/icons-material/Done';
 import LockIcon from '@mui/icons-material/Lock';
+import CourseCard from "./components/CourseCard";
+import DisabledCard from "./components/DisabledCard";
 
 type userProp = {
   user: User;
@@ -45,7 +47,6 @@ export default function Home(props: userProp) {
           coursesData[index].Completed = true
         }
       })
-      console.log(coursesData)
     }
     setCourses([...coursesData])
   }
@@ -103,23 +104,9 @@ export default function Home(props: userProp) {
                   <Grid item xs={12} sm={6} md={4}>
                   
                   {(course.Prerequisite && !completedCourseList.includes(course.Prerequisite)) ? 
-                     <CardActionArea href={"/course/" + course.id} disabled={true}>
-                     <Card>
-                       <CardHeader title={course.Name } />
-                       <CardMedia component="img" height="200" image="#" alt="#" />
-                     </Card>
-                      <LockIcon />       
-                   </CardActionArea>
+                    <DisabledCard course={course}/>
                     :
-                    <CardActionArea href={"/course/" + course.id}>
-                    <Card>
-                      <CardHeader title={course.Name} />
-                      <CardMedia component="img" height="200" image="#" alt="#" />
-                    </Card>
-                    {course.Completed && 
-                      <DoneIcon/>
-                    }
-                  </CardActionArea>
+                   <CourseCard course={course}/>
                     }
                 </Grid> 
                 )
