@@ -32,8 +32,11 @@ export default function Home(props: userProp) {
   const completedCourses = useGetCompletedCourses(props.user.uid)
   //Spør om dæ e bra å ha to i ein eller om e bør ha to useEffects
   useEffect(() => {
-    if (!fullCourse.isLoading && completedCourses.status == "success" && (completedCourses.data as string[]).length != 0) {
+    if(fullCourse.status == "success"){
       const coursesData = fullCourse.data as CourseType[]
+    
+    if (!fullCourse.isLoading && completedCourses.status == "success" && (completedCourses.data as string[]).length != 0) {
+      
       setCompletedCourseList([...completedCourses.data as string[]])
       const courseCompletedList = completedCourses.data as string[]
       
@@ -43,8 +46,9 @@ export default function Home(props: userProp) {
         }
       })
       console.log(coursesData)
-      setCourses([...coursesData])
     }
+    setCourses([...coursesData])
+  }
   }, [fullCourse.isLoading, completedCourses.status]);
 
   useEffect(() => {
