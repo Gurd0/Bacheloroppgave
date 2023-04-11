@@ -26,8 +26,12 @@ const VideoEdit = (props: ToggleProps) => {
     const pattern = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$/
     if(textField)
     if(pattern.test(textField)){
+      //https://stackoverflow.com/a/54200105
+      const url = textField.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+      const id =  (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
+      console.log(id)
       setWrongUrl(true)
-      props.setPageValue(textField)
+      props.setPageValue("https://www.youtube.com/embed/" + id)
     }else{
       setWrongUrl(false)
     }
