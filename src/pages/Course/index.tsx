@@ -16,7 +16,8 @@ import { Button, Drawer, Paper } from '@mui/material';
 import { checkIfCourseIsCompleted, completePage, setCourseAsCompleted } from './helper/firebase';
 import { IdTokenResult, User } from 'firebase/auth';
 
-
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 type userProp = {
   user: User;
   token?: IdTokenResult;
@@ -81,8 +82,7 @@ const Index = (props: userProp) => {
                 if(value.id == page && courseClone){
                   courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
                }
-              }
-               
+              } 
             })
           })
        })
@@ -227,12 +227,19 @@ const Index = (props: userProp) => {
   
       </div>
       <Button style={{
-        bottom: "50%",
-        float: 'right',
+        bottom: "95%",
+        
+        left: '90%',
       }}
       onClick={() => {
         setOpen(!open)
-      }}>{open.toString()}</Button>
+      }}>
+      {open ?
+        <OpenInFullIcon />
+        : 
+        <CloseFullscreenIcon />
+      }
+      </Button>
     </Grid>
     
 
