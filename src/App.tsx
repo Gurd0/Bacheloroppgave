@@ -48,7 +48,7 @@ function App() {
         <Router>
           {/* <MakeAdmin /> */}
           <Header />
-   
+
           <Routes>
             <Route path="/" element={<Home user={user} />} />
 
@@ -65,7 +65,7 @@ function App() {
         <Router>
           <Header />
           <Routes>
-            <Route path="/login" element={<Login user={user} />} />
+            <Route path="/#" element={<Login user={user} />} />
           </Routes>
           <Footer />
         </Router>
