@@ -8,8 +8,16 @@ interface PropsType {
   currentPage: PageType
 }
 const CourseText = (props: PropsType) => {
-  const contentState = convertFromRaw(props.currentPage.Value);
-  const editorState = EditorState.createWithContent(contentState);
+  let contentState 
+  let editorState 
+  try{
+     contentState = convertFromRaw(props.currentPage.Value);
+     editorState = EditorState.createWithContent(contentState);
+  }catch(error){
+    console.log(error)
+  }
+  
+
   let options = {
     inlineStyles: {
       // Override default element (`strong`).
@@ -24,12 +32,19 @@ const CourseText = (props: PropsType) => {
       RED: {style: {color: '#900'}},
     },
   };
-  const html = stateToHTML(editorState.getCurrentContent(), options)
-  let _html = html.replace("", '');
+  let _html 
+  if(editorState){
+    const html = stateToHTML(editorState.getCurrentContent(), options)
+    _html = html.replace("", '');
+  }
+
   return (
-    <div dangerouslySetInnerHTML={{__html : _html}}>
-    </div>
-  
+    <>
+    {_html && 
+      <div dangerouslySetInnerHTML={{__html : _html}}>
+      </div>
+    }
+    </>
   )
 }
 
