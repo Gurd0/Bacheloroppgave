@@ -10,7 +10,7 @@ import { CourseType, FullCourse, RenderTree } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
@@ -30,6 +30,9 @@ import {db} from "../../firebase"
 import { convertToRaw } from 'draft-js';
 import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
 import { useGetCollection, useGetTopicName } from '../../hooks/queries';
+import AlertPopUp from './components/feedBack/feedBackError';
+import FeedBackError from './components/feedBack/feedBackError';
+import FeedBackSuccess from './components/feedBack/feedBackSuccess';
 
 
 interface autoFill {
@@ -49,6 +52,8 @@ function Index(){
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [textInput, setTextInput] = useState("")
+
+  const [feedBack, setFeedBack] = useState<string>("none")
   
 
   const [course, setCourse] = useState<CourseType>( {
@@ -138,8 +143,16 @@ function Index(){
       Topic: topic,
       Prerequisite: course.Prerequisite
     }
-    console.log(c)
-    addCourseToFirebase(c)
+
+    if(!c.Topic){
+      setFeedBack(feedBack => "Missing Topic")
+    }else if(c.Chapters.length == 0){
+      setFeedBack(feedBack => "Missing Chapter")
+    }
+    else{
+      setFeedBack(feedBack => "success")
+      addCourseToFirebase(c)
+    }
   }
   const addChapter = () =>{
     const t: ChapterType =  {
@@ -218,6 +231,15 @@ function Index(){
   return(
     <>
     <Grid container spacing={2}>
+    
+    {(feedBack != "none" && feedBack != "success") && 
+    <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+    }
+    {feedBack == "success" &&
+    <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+    }
+    
+   
     <Grid item xs={8} >
       <div style={{
         border: '1px solid black',
