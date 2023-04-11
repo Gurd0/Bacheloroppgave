@@ -48,8 +48,7 @@ function App() {
         <Router>
           {/* <MakeAdmin /> */}
           <Header />
-          <h1>HELLO, {user?.displayName}</h1>
-          <button onClick={getToken}> GET TOKEN APP</button>
+   
           <Routes>
             <Route path="/" element={<Home user={user} />} />
 
