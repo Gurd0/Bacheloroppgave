@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardActionArea,
   CardHeader,
@@ -17,7 +18,9 @@ const CourseCard = (props: PropsType) => {
   return (
     <>
       <CardActionArea
-        sx={{ borderRadius: "16px" }}
+        sx={{
+          borderRadius: "16px",
+        }}
         href={"/course/" + props.course.id}
       >
         {props.course.Completed ? (
