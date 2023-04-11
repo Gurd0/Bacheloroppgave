@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardMedia,
   Grid,
+  LinearProgress,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/system";
@@ -81,7 +82,7 @@ export default function Home(props: userProp) {
   return (
     <Box>
       {fullCourse.isLoading && completedCourses.isLoading ? (
-        <CircularProgress />
+        <LinearProgress color="primary" />
       ) : (
         <>
           {[...courseTopicMap.keys()].map((k) => {
