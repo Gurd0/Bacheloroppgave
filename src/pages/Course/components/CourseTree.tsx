@@ -4,7 +4,7 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
-import RenderTree from '../context/RenderrTree';
+import { RenderTree } from '../../../context/context';
 import { Card, Paper, styled, SvgIcon, SvgIconTypeMap } from '@mui/material';
 import { Style } from 'util';
 import { SxProps } from '@mui/material/styles';
@@ -46,7 +46,7 @@ export default function CourseTree(Props: ToggleProps) {
     if(selected){
       Props.ClickHandler(t)
     } 
-    console.log(t)
+
   },[selected])
   React.useEffect(() => {
     const expandedClone = expanded
@@ -63,7 +63,7 @@ export default function CourseTree(Props: ToggleProps) {
   };
 
   const renderTree = (nodes: RenderTree, style?: SxProps) => {
-    console.log(nodes)
+
   return(
     <TreeItem 
     sx={ style }
@@ -73,14 +73,14 @@ export default function CourseTree(Props: ToggleProps) {
     >
       
       {Array.isArray(nodes.children)
-        ? nodes.children.map((node) => renderTreeChild(node, StyledTreeItem))
+        ? nodes.children.map((node: RenderTree) => renderTreeChild(node, StyledTreeItem))
         : null}
       
     </TreeItem>
     
   )};
   const renderTreeChild = (nodes: RenderTree, style?: SxProps) => {
-    console.log(nodes)
+
     return(
     <TreeItem 
     sx={ style }
@@ -108,7 +108,7 @@ export default function CourseTree(Props: ToggleProps) {
     </TreeItem>
     
   )}
-  //console.log(course)
+
   
 
     return (

@@ -28,7 +28,7 @@ const fetchTopicNames = async () => {
         topicList.push(document.data().Name)
       })
     }).finally(() => {
-     // console.log(topicList)
+   
       resolve(topicList)
     })
   }) 
@@ -165,7 +165,7 @@ export const useGetTopicName = () => {
 };
 export const useGetCompletedPages = (courseId: string, userId: string) => {
   const docRef = doc(db, "course_progress", userId, "completed_pages", courseId)
-  console.log("jkljkljl")
+  
   return useQuery(
     ["s"],
     async () => {

@@ -138,6 +138,7 @@ function Index(){
       Topic: topic,
       Prerequisite: course.Prerequisite
     }
+    console.log(c)
     addCourseToFirebase(c)
   }
   const addChapter = () =>{
@@ -209,8 +210,6 @@ function Index(){
           {menuItemTopic.map((topic) => {
             return ( <MenuItem value={topic}>{topic}</MenuItem>)
           })}
-          
-         
         </Select>
       </FormControl>
       </>)

@@ -51,7 +51,7 @@ export const checkIfCourseIsCompleted = async (userId: string,  courseId: string
     if(document.data()){
         const completedPageList = document.data() as any
         const t = completedPageList.pagesId as string[]
-        console.log(t.length)
+        
         let numberOfPages: number = 0
         chapters.map((chapter) => {
             chapter.Pages.map(() => {
