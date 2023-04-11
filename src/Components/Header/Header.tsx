@@ -1,7 +1,6 @@
 import { Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
-//import ecPlayLogo from "../../Assets/Images/ecPlayLogo.svg";
 
 export default function Header() {
   return (
@@ -34,6 +33,7 @@ export default function Header() {
           }}
           startIcon={
             <Avatar
+              src="https://ec-play.com/static/media/ECPlayLogo.4d6cf161.svg"
               variant="square"
               sx={{
                 width: "100%",
@@ -57,9 +57,9 @@ export default function Header() {
             width: "3em",
             height: "100%",
             borderRadius: "50%",
-          }} /*Profilepage*/
+          }} 
         >
-          <Avatar sx={{ height: "100%", width: "80%", bgcolor: "black" }} />
+          <Avatar  sx={{  height: "100%", width: "80%", bgcolor: "black" }} />
         </Button>
       </Box>
     </Box>
