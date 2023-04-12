@@ -73,6 +73,17 @@ const ChapterDragDrop = (Props: ToggleProps) => {
             }
         })
       }
+      const removeChapter = (chapterId: string) => {
+        let chapterIndex: number
+        let chapterClone: ChapterType[] = Props.chapters
+        Props.chapters.map((chapter, index) => {
+            if(chapter.id == chapterId){
+                chapterIndex = index
+                chapterClone.splice(index, 1)
+                Props.setChapters([...chapterClone])
+            }
+        })
+      }
       const changePageName = (chapterId: string, pageId: string, name: string) => {
         let chapterIndex: number
         let chapterClone: ChapterType[] = Props.chapters
@@ -113,6 +124,7 @@ const ChapterDragDrop = (Props: ToggleProps) => {
                                 setSelectedPage={Props.setSelectedPage}
                                 selectedPage={Props.selectedPage}
                                 changePageName={changePageName}
+                                removeChapter={removeChapter}
                                 />
                             )}  
                         </Draggable>  

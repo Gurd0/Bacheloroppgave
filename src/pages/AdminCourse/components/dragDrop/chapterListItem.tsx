@@ -19,6 +19,7 @@ interface ToggleProps {
     setSelectedPage: any
     selectedPage: any
     changePageName: (chapterId: string, pageId: string, name: string) => void
+    removeChapter: (chapterId: string) => void
 }
 const DragItem = styled.div`
   padding: 10px;
@@ -56,7 +57,12 @@ const DragItem = styled.div`
        <button onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         setOpen(!open)
         setAnchorEl(event.currentTarget);
-       }}>Change Name</button></h2>
+       }}>Change Name</button>
+        <button onClick={() => {
+            Props.removeChapter(Props.chapter.id)
+       }}> remove </button>
+       </h2>
+      
        <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
             <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
             <TextField id="standard-basic" label="Page Name" variant="standard" onChange={(event) =>{
