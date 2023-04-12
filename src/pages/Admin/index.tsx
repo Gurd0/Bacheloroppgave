@@ -14,6 +14,7 @@ import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
 import { CourseType, FullCourse } from "../../context/context";
 import { useFullCourse, useGetCollection } from "../../hooks/queries";
+import CardMenu from "./components/cardMenu";
 export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [draftCourses, setDraftCourses] = useState<CourseType[]>([]);
@@ -51,14 +52,36 @@ export default function Home() {
     }
   }, [draftCoursesHook]);
 
+  const handleClick = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>, courseId?: string) => {
+    const target = e.target as HTMLButtonElement
+    if(target.name === 'optionButton') {
+        e.preventDefault();
+        e.stopPropagation();
+    }else {
+      console.log(target.id)
+        if(courseId && target.id == "cardClickable"){
+          window.location.href = "admin/edit/" + courseId
+        }
+    }
+}
+const removeCourseLocal = (courseId: string, topic: string) => {
+  console.log(courses)
+  courses.map((c, index) => {
+    if(c.id === courseId){
+      let coursesClone = courses
+      coursesClone.splice(index, 1)
+      setCourses([...coursesClone])
+    }
+  })
+  
+}
   return (
     <Box>
-      
         {fullCourse.isLoading ? (
           <CircularProgress />
         ) : (
           <>
-          {[...courseTopicMap.keys()].map((k) => {
+          {[...courseTopicMap.keys()].map((key) => {
             return(
               <Box
                 sx={{
@@ -69,7 +92,7 @@ export default function Home() {
               >
              
             <div>
-              <h1 style={{ textAlign: "center" }}>{k}</h1>
+              <h1 style={{ textAlign: "center" }}>{key}</h1>
             </div>
 
             <Grid
@@ -79,14 +102,25 @@ export default function Home() {
               container
               spacing={3}
             >
-            {courseTopicMap.get(k)?.map((course) => {
+            {courseTopicMap.get(key)?.map((course) => {
               return (
                 <Grid item xs={12} sm={6} md={4}>
-
-                <CardActionArea href={"/admin/edit/" + course.id}>
+                <CardActionArea 
+                onClick={(event) => {
+                  handleClick(event, course.id)
+                }} >
                   <Card>
-                    <CardHeader title={course.Name} />
-                    <CardMedia component="img" height="200" image="#" alt="#" />
+                  
+                    <CardHeader id="cardClickable" title={
+                    <span style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}>
+                      {course.Name} 
+                       <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                    </span>}
+                     />
+                    <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
                   </Card>
                 </CardActionArea>
               </Grid> 
