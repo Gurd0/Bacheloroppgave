@@ -65,7 +65,7 @@ function App() {
         <Router>
           <Header />
           <Routes>
-            <Route path="/#" element={<Login user={user} />} />
+            
           </Routes>
           <Footer />
         </Router>
