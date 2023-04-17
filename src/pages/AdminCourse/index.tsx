@@ -272,7 +272,10 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
-
+    <div style={{
+      overflow: 'auto',
+      maxHeight: "40em"
+    }}>
     <Autocomplete
       onChange={(event, newValue) => {
         const courseClone = course
@@ -321,6 +324,7 @@ function Index(){
       <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
     : <h1>hmm</h1>
     }
+    </div>
     </Grid>
   </Grid>
   <button onClick={() =>{
