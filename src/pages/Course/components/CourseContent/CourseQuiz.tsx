@@ -13,6 +13,7 @@ interface questionI {
   answer: string[],
   correctAnswer: string,
 }
+
 const CourseQuiz = (Props: ToggleProps) => {
   const [correctAns, setCorrectAns] = useState<number[]>([])
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -31,21 +32,10 @@ const CourseQuiz = (Props: ToggleProps) => {
     }
     console.log(correctAns)
   }
-  useEffect(() => {
-    let count = 0
-    correctAns.map((n) => {
-      if(n == 1){
-        count ++
-      }
-    })
-    console.log("huh?")
-    setCorrectTotal(count)
-  },[correctAns])
 
   return (
     <div>
       <h5>{currentQuestion + 1}/{Props.currentPage.Value.length }</h5>
-      <h5>Rette svar : {correctTotal}</h5>
       <div>
         <h2>{Props.currentPage.Value[currentQuestion].question}</h2>
       </div>

@@ -14,7 +14,9 @@ import { width } from '@mui/system';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import OndemandVideoOutlinedIcon from '@mui/icons-material/OndemandVideoOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
+import QuizIcon from '@mui/icons-material/Quiz';
+
+
 import DoneIcon from '@mui/icons-material/Done';
 
 //add state for selected row clicked. 
@@ -101,7 +103,9 @@ export default function CourseTree(Props: ToggleProps) {
       {nodes.type == "Video" &&
         <OndemandVideoOutlinedIcon/>
       }
-      
+      {nodes.type == "Quiz" &&
+        <QuizIcon/>
+      }
       </p>
     </div>}
     >
