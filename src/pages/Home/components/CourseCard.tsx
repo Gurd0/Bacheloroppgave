@@ -51,7 +51,12 @@ const CourseCard = (props: PropsType) => {
             }}
           >
             <CardHeader title={props.course.Name} />
-            <CardMedia component="img" height="200" image="#" alt="#" />
+            {props.course.image ? 
+               <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image={props.course.image} alt="#" />
+              :
+              <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg" alt="#" />
+              
+              }
           </Card>
         )}
         {/* {props.course.Completed && <DoneIcon />} */}
