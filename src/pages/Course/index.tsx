@@ -18,6 +18,7 @@ import { IdTokenResult, User } from 'firebase/auth';
 
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import CourseQuiz from './components/CourseContent/CourseQuiz';
 type userProp = {
   user: User;
   token?: IdTokenResult;
@@ -219,9 +220,7 @@ const Index = (props: userProp) => {
         <CourseVideo currentPage={currentPage} />
       }
       {currentPage?.Type === "Quiz" &&
-        <h2>
-          Quiz
-        </h2>
+        <CourseQuiz currentPage={currentPage} completePage={setPageCompleted}/>
       }
       </Box>  
   
