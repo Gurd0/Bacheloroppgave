@@ -33,6 +33,8 @@ import { useGetCollection, useGetTopicName } from '../../hooks/queries';
 import AlertPopUp from './components/feedBack/feedBackError';
 import FeedBackError from './components/feedBack/feedBackError';
 import FeedBackSuccess from './components/feedBack/feedBackSuccess';
+import CourseQuiz from '../Course/components/CourseContent/CourseQuiz';
+import QuizQuestionEdit from './components/courseEdit/quizQuestionEditi';
 
 
 interface autoFill {
@@ -184,9 +186,12 @@ function Index(){
     if(selectedPage){
       let chapterClone = chapters
       let selectedPageClone = selectedPage
+      console.log(chapters)
       chapters.map((chapter, index) => {
          chapter.Pages.map((page: PageType, indexPage: number) => {
-            if(page == selectedPage){
+         
+          
+            if(page.id == selectedPage.id){
               chapterClone[index].Pages[indexPage].Value = value
               setChapters([...chapterClone])
              // selectedPageClone.Value = value
@@ -259,7 +264,9 @@ function Index(){
           <ImageEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
       {selectedPage?.Type === "Quiz" &&
-          <QuizEdit />
+          <QuizEdit selectedPage={selectedPage} setPageValue={setPageValue}/>
+         // <QuizQuestionEdit/>
+
       }
        </Box>
     </div>
