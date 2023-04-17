@@ -49,13 +49,14 @@ export const addCourseToFirebase = async (course: CourseType) => {
         draft: course.draft,
         Topic: course.Topic,
         Prerequisite: course.Prerequisite,
+        image: course.image,
         Chapters: 
         course.Chapters.map((chapter: any) => {
             return doc(db, "Chapter/" + chapter.id)
         }),
       
     }
-    console.log(courseT.Prerequisite)
+    console.log(courseT.image)
     if(courseT.Prerequisite){
         await setDoc(doc(db, "Courses", courseT.id), {
             Name: courseT.Name,
@@ -63,6 +64,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
             id: courseT.id,
             Chapters: courseT.Chapters,
             Topic: courseT.Topic,
+            image: courseT.image,
             Prerequisite: courseT.Prerequisite
         })
     }else{
@@ -72,6 +74,7 @@ export const addCourseToFirebase = async (course: CourseType) => {
             id: courseT.id,
             Chapters: courseT.Chapters,
             Topic: courseT.Topic,
+            image: courseT.image,
         })
     }
     

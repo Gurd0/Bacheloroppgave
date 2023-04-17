@@ -62,6 +62,7 @@ function Index(){
         Name: "Course",
         draft: true,
         Chapters: chapters,
+        image: "",
         id: Math.random().toString(36).substring(2,7)
   })
   const topicName = useGetTopicName();
@@ -143,7 +144,8 @@ function Index(){
       draft: course.draft,
       Chapters: chapters,
       Topic: topic,
-      Prerequisite: course.Prerequisite
+      Prerequisite: course.Prerequisite,
+      image: course.image
     }
 
     if(!c.Topic){
@@ -208,6 +210,12 @@ function Index(){
   const getMenuItem = () => {
     return (
       <>
+    <TextField id="outlined-basic" label="Svg icon" variant="outlined" onChange={(e: any)=> {
+      let courseClone = course
+      courseClone.image = e.target.value
+      setCourse({...courseClone})
+    }}/>
+
     <FormControl sx={{ m: 1 }} variant="standard">
       <InputLabel  htmlFor="demo-customized-textbox">Topic</InputLabel>
       <Input value={topic} onChange={(event) =>{
@@ -272,7 +280,10 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
-
+    <div style={{
+      overflow: 'auto',
+      maxHeight: "40em"
+    }}>
     <Autocomplete
       onChange={(event, newValue) => {
         const courseClone = course
@@ -321,6 +332,7 @@ function Index(){
       <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
     : <h1>hmm</h1>
     }
+    </div>
     </Grid>
   </Grid>
   <button onClick={() =>{

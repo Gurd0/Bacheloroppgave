@@ -16,6 +16,7 @@ export type ChapterType = {
     Topic?: string, 
     Completed? : boolean,
     Prerequisite?: string,
+    image?: string,
   }
 export  type FullCourse = {
     Course: CourseType;

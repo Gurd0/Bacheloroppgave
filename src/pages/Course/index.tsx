@@ -206,7 +206,8 @@ const Index = (props: userProp) => {
         paddingLeft: "5px",
         maxHeight: "40em",
         minHeight: "40em",
-        overflow: "auto"
+        overflow: "auto",
+        backgroundColor: 'whitesmoke'
       }}>
       <Box style={{}}>
       
