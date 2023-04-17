@@ -12,6 +12,7 @@ interface ToggleProps {
     provided: any 
     snapshot: any
     addPage: (chapterId: string) => void
+    chapters: ChapterType[]
     chapter: ChapterType
     pages: PageType[]
     changeChapterName: (name: string, id: string) => void
@@ -20,6 +21,7 @@ interface ToggleProps {
     selectedPage: any
     changePageName: (chapterId: string, pageId: string, name: string) => void
     removeChapter: (chapterId: string) => void
+    setChapters: any
 }
 const DragItem = styled.div`
   padding: 10px;
@@ -94,6 +96,8 @@ const DragItem = styled.div`
                                 setSelectedPage={Props.setSelectedPage}
                                 selected={Props.selectedPage == page}
                                 changePageName={Props.changePageName}
+                                setChapters={Props.setChapters}
+                                chapters={Props.chapters}
                             />
                             )}  
                         </Draggable>  

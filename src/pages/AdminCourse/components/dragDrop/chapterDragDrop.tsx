@@ -113,6 +113,8 @@ const ChapterDragDrop = (Props: ToggleProps) => {
                         <Draggable key={chapter.id} draggableId={chapter.id} index={index} >  
                             {(provided, snapshot) => (  
                                 <ChapterListItem
+                                chapters={Props.chapters}
+                                setChapters={Props.setChapters}
                                 provided={provided}
                                 snapshot={snapshot}
                                 item={"item"}

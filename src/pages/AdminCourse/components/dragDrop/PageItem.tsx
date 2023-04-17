@@ -2,8 +2,8 @@ import { Draggable } from "react-beautiful-dnd";
 import React, { useEffect, useMemo, useState } from "react";
 
 import styled, { css } from "styled-components";
-import { PageType } from "../../../../context/context";
-import { Box, Button, Grid, Popper, TextField } from "@mui/material";
+import { ChapterType, PageType } from "../../../../context/context";
+import { Box, Button, Card, Grid, Popper, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 interface ToggleProps {
@@ -16,6 +16,8 @@ interface ToggleProps {
     setSelectedPage: any
     selected: boolean
     changePageName: (chapterId: string, pageId: string, name: string) => void
+    setChapters: any
+    chapters: ChapterType[]
 }
 
 let StyleDiv = styled.div`
@@ -69,8 +71,13 @@ let StyleDiv = styled.div`
       <Grid container spacing={2} >
         <Grid item xs={8} >
         <div style={{
-          color: color
-        }}>{Props.item.Name}   :   {Props.item.Type}</div>
+          color: color,
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          {Props.item.Name}   :   {Props.item.Type}
+         
+        </div>
         </Grid>
         <Grid item xs={4} >
         
@@ -93,7 +100,6 @@ let StyleDiv = styled.div`
             }}>Ok</Button>
             </Box>
         </Popper>
-         
         </Grid>
       </Grid>
     </StyleDiv>
