@@ -50,20 +50,7 @@ const QuizEdit = (Props: ToggleProps) => {
 
   return (
     <>
-    <h2> Prosent rett for å bestå </h2>
-    <div style={{
-      maxWidth: "80%",
-    }}>
-      <Slider
-        aria-label="Temperature"
-        defaultValue={80}
-        valueLabelDisplay="auto"
-        step={10}
-        marks
-        min={10}
-        max={100}
-      />
-    </div>
+    <h2> Spørsmål </h2>
     <div style={{
       display: 'flex',
       gap: "10px",
