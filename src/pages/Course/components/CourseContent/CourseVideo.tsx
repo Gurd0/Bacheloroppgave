@@ -11,7 +11,7 @@ const CourseVideo = (props: PropsType) => {
       //display: "block",
       background: "#000",
       border: "none",
-      height: "40em",
+      height: "36em",
       width: "100%",
     }}
     src={props.currentPage.Value}>

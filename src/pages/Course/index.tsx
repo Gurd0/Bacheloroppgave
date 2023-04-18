@@ -6,7 +6,7 @@ import { useFullCourse, useCurrentPage, useGetCompletedPages } from '../../hooks
 
 import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
-import { Box } from '@mui/system';
+import { Box, positions } from '@mui/system';
 
 import { ChapterType, FullCourse, PageType, RenderTree } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
@@ -202,12 +202,13 @@ const Index = (props: userProp) => {
     <Grid item xs={xsSize}>
       <div style={{
         border: '1px solid black',
-        width: "95%",
-        paddingLeft: "5px",
+        width: "100%",
         maxHeight: "40em",
         minHeight: "40em",
         overflow: "auto",
-        backgroundColor: 'whitesmoke'
+        backgroundColor: 'whitesmoke',
+        display: 'flex',
+        flexDirection: 'column',
       }}>
       <Box style={{}}>
       
@@ -223,9 +224,19 @@ const Index = (props: userProp) => {
       {currentPage?.Type === "Quiz" &&
         <CourseQuiz currentPage={currentPage} completePage={setPageCompleted}/>
       }
+       
       </Box>  
-  
+      <div style={{
+        width: "100%",
+        marginTop: 'auto',
+        
+      }}>
+      {(currentPageIndex != null  && currentChapter != null ) &&
+       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
+      }
       </div>
+      </div>
+      
       <Button style={{
         bottom: "95%",
         
@@ -274,14 +285,7 @@ const Index = (props: userProp) => {
       
       </div>
     </Grid>
-    <div style={{
-        width: "100%",
-        bottom: 0,
-      }}>
-      {(currentPageIndex != null  && currentChapter != null ) &&
-       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
-      }
-      </div>
+   
   </Grid>
   <Button onClick={async () => {
     setPageCompleted()
