@@ -7,14 +7,25 @@ import {
   CardHeader,
   CardMedia,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tooltip from '@mui/material/Tooltip';
 import { CourseType } from "../../../context/context";
 interface PropsType {
   course: CourseType;
+  courses: CourseType[];
 }
 
 const DisabledCard = (props: PropsType) => {
+  const [prerequisiteName, setPrerequisiteName] = useState("")
+  useEffect(() => {
+    if(props.course.Prerequisite){
+      props.courses.map((c) => {
+        if(c.id === props.course.Prerequisite){
+          setPrerequisiteName(c.Name)
+        }
+      })
+    }
+  },[props.courses])
   return (
     <>
     <style dangerouslySetInnerHTML={{
@@ -39,12 +50,9 @@ const DisabledCard = (props: PropsType) => {
           ].join('\n')
         }}>
       </style>
-    <Tooltip title={"Må fulføre " + props.course.id} >
-      
-      
+    <Tooltip title={"Må fulføre " + prerequisiteName} >
       <div className="card-container">
       <CardActionArea
-      
         sx={{
           borderRadius: "16px",
         }}
