@@ -34,9 +34,9 @@ const Index = (props: userProp) => {
     const [course, setCourse] = useState<FullCourse>()
     
     //queries hooks
-    const fullCourse = (useFullCourse(slug, "Courses"))
-    const page = (useCurrentPage(currentPageId, "Pages"))
-    const completedPages = (useGetCompletedPages(slug, props.user.uid))
+    const courseHook = (useFullCourse(slug, "Courses"))
+    const pageHook = (useCurrentPage(currentPageId, "Pages"))
+    const completedPagesHook = (useGetCompletedPages(slug, props.user.uid))
 
     //open for drawer
     const [xsSize, setXsSize] = useState<number>(8)
@@ -63,22 +63,21 @@ const Index = (props: userProp) => {
         setXsSize(12)
       }
     },[open])
+    // Sets current page from pageHook
     useEffect(() => {
-      if(!page.isLoading){
-        setCurrentPage(page.data as PageType)
+      if(!pageHook.isLoading){
+        setCurrentPage(pageHook.data as PageType)
       }
-    },[page])
+    },[pageHook])
     //kan lag meir effektiv løkke
     useEffect(() => {
-      if(!completedPages.isLoading){
-       const list = completedPages.data as string[]
-   
+      if(!completedPagesHook.isLoading){
+       const list = completedPagesHook.data as string[]
        let courseClone = course
        //kjøre 16 gång, bør nok fix
        list.map((page: string) => {
           course?.Chapters.map((chapter, indexChapter) => {
             chapter.Pages.map((p: PageType, indexPage: number) => {
-         
               for (const [key, value] of Object.entries(p)) {
                 if(value.id == page && courseClone){
                   courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
@@ -89,16 +88,16 @@ const Index = (props: userProp) => {
        })
        setCourse(courseClone)
       }
-    },[completedPages]) 
+    },[completedPagesHook]) 
     useEffect(()=> {
-      if(fullCourse.isError) console.log("error")
-      if(fullCourse.isLoading) console.log("l")
+      if(courseHook.isError) console.log("error")
+      if(courseHook.isLoading) console.log("l")
 
-      if(!fullCourse.isLoading){
-        setCourse(fullCourse.data as FullCourse)
+      if(!courseHook.isLoading){
+        setCourse(courseHook.data as FullCourse)
       }
       
-    },[fullCourse])
+    },[courseHook])
 
     useEffect(() => {
       if(course != undefined){

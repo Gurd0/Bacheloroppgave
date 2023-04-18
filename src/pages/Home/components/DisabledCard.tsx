@@ -17,6 +17,8 @@ interface PropsType {
 
 const DisabledCard = (props: PropsType) => {
   const [prerequisiteName, setPrerequisiteName] = useState("")
+  
+  //Get name of course prerequisite
   useEffect(() => {
     if(props.course.Prerequisite){
       props.courses.map((c) => {
