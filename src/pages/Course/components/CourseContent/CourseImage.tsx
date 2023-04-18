@@ -14,7 +14,7 @@ const CourseImage = (props: PropsType) => {
         display: "block",
         background: "#000",
         border: "none",
-        height: "40em",
+        height: "37em",
         width: "100%",
         objectFit: "contain",
       }}
