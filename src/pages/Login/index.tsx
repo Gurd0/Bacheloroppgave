@@ -1,3 +1,4 @@
+import { LinearProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,24 +15,40 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
 import { auth, signInUser, signOutUser } from "../../firebase";
+import Home from "../Home";
 import Signup from "../SignUp";
 
 export default function LogIn() {
-  const navigate = useNavigate();
   const [token, setToken] = useState<IdTokenResult>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const theme = createTheme();
   const { user } = useContext(AuthContext);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const seeName = (e: any) => {
     console.log(user?.displayName);
   };
+  useEffect(() => {
+    if (!user) {
+      return;
+    } else {
+      setIsLoggingIn(false);
+    }
+  }, [user]);
+
+  if (user && !isLoggingIn) {
+    return <Home />;
+  }
+
+  if (isLoggingIn) {
+    return <LinearProgress />;
+  }
 
   return (
     <>
@@ -84,7 +101,10 @@ export default function LogIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2, backgroundColor: "blue" }}
-                onClick={(e: any) => signInUser(e, email, password)}
+                onClick={(e: any) => {
+                  signInUser(e, email, password);
+                  setIsLoggingIn(true);
+                }}
               >
                 Logg inn
               </Button>
