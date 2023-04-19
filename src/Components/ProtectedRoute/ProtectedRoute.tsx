@@ -1,25 +1,23 @@
 import { User } from "firebase/auth";
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode, useContext, useEffect } from "react";
 import { Navigate, Route } from "react-router-dom";
-import { AuthContext } from "../../context/auth-context";
+import { AuthContext, UserAuth } from "../../context/auth-context";
 
 interface navigationProps {
   children?: ReactNode;
 }
 
 const ProtectedRoute = (props: navigationProps) => {
-  const { user } = useContext(AuthContext);
+  const user = UserAuth();
 
   if (!user) {
     console.log("no user");
-    return (
-      <>
-        <Navigate to="/login" />
-      </>
-    );
-  } else {
-    return <>{props.children}</>;
+    return <></>;
   }
+  // } else {
+  //   return <>{props.children}</>;
+  // }
+  return <>{props.children}</>;
 };
 
 export default ProtectedRoute;
