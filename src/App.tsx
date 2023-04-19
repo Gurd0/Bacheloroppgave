@@ -1,6 +1,7 @@
 import { IdTokenResult, onAuthStateChanged, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  BrowserRouter,
   Navigate,
   Route,
   BrowserRouter as Router,
@@ -16,60 +17,45 @@ import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 //import ProfilePage from "./pages/Profile";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import { AuthContext, AuthProvider } from "./context/auth-context";
 import Signup from "./pages/SignUp";
 
 function App() {
-  const [user, setUser] = useState<User>();
-  const [token, setToken] = useState<string>("");
+  const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    const unSubscribeAuth = onAuthStateChanged(
-      auth,
-      async (authenticatedUser) => {
-        if (authenticatedUser) {
-          setUser(authenticatedUser);
-          authenticatedUser.getIdToken(true).then((token) => setToken(token));
-        } else {
-          setUser(undefined);
-          setToken("");
-        }
-      }
-    );
-
-    return unSubscribeAuth;
-  }, [user]);
-
-  function getToken() {
-    console.log(user?.uid);
-  }
   return (
     <div className="App">
-      {user ? (
-        <Router>
-          {/* <MakeAdmin /> */}
+      <BrowserRouter>
+        {/* <MakeAdmin /> */}
+        <AuthProvider>
           <Header />
-
           <Routes>
-            <Route path="/" element={<Home user={user} />} />
-
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/new" element={<AdminCourse />} />
             <Route path="/admin/edit/:slug" element={<AdminCourse />} />
-            <Route path="/login" element={<Login user={user} />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/course/:slug" element={<Course user={user} />} />
+            <Route
+              path="/course/:slug"
+              element={
+                <ProtectedRoute>
+                  <Course />{" "}
+                </ProtectedRoute>
+              }
+            />
           </Routes>
           <Footer />
-        </Router>
-      ) : (
-        <Router>
-          <Header />
-          <Routes>
-            <Route path="/#" element={<Login user={user} />} />
-          </Routes>
-          <Footer />
-        </Router>
-      )}
+        </AuthProvider>
+      </BrowserRouter>
     </div>
   );
 }
