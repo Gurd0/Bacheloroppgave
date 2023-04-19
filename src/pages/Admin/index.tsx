@@ -8,13 +8,23 @@ import {
   Grid,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { styled } from "@mui/system";
+import styled, { css } from "styled-components";
 import React, { useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
 import { CourseType, FullCourse } from "../../context/context";
 import { useFullCourse, useGetCollection } from "../../hooks/queries";
 import CardMenu from "./components/cardMenu";
+
+
+const StyleDiv = styled.div`
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+`;
+
 export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [draftCourses, setDraftCourses] = useState<CourseType[]>([]);
@@ -75,6 +85,19 @@ const removeCourseLocal = (courseId: string, topic: string) => {
   })
   
 }
+const onDragEnd = (result: any, topic: string) => {
+  let courseTopicMapClone = courseTopicMap
+  const courseListFromMap: CourseType[] | undefined= courseTopicMap.get(topic)
+  if(courseListFromMap){
+    const [removed] = courseListFromMap.splice(result.source.index, 1)
+    courseListFromMap.splice(result.destination.index, 0, removed)
+    courseTopicMapClone.set(topic, courseListFromMap)
+    setCoursesTopicMap(courseTopicMapClone)
+    console.log(courseTopicMapClone)
+  }
+  
+};
+  
   return (
     <Box>
         {fullCourse.isLoading ? (
@@ -94,39 +117,70 @@ const removeCourseLocal = (courseId: string, topic: string) => {
             <div>
               <h1 style={{ textAlign: "center" }}>{key}</h1>
             </div>
-
-            <Grid
+           
+            
+            <DragDropContext onDragEnd={(result: any ) => {
+              onDragEnd(result, key)
+            }}>  
+            <Droppable droppableId="droppableCourse"  >
+              {(provided) => (  
+              
+              <Grid
+              {...provided.droppableProps}  
+              ref={provided.innerRef}  
               sx={{
                 padding: "1em",
               }}
               container
               spacing={3}
+              
             >
-            {courseTopicMap.get(key)?.map((course) => {
+            {courseTopicMap.get(key)?.map((course, index) => {
               return (
-                <Grid item xs={12} sm={6} md={4}>
-                <CardActionArea 
-                onClick={(event) => {
-                  handleClick(event, course.id)
-                }} >
-                  <Card>
+                <Draggable key={course.id} draggableId={course.id} index={index} >
+                  {(provided) => (  
+                  <Grid item xs={12} sm={6} md={4} >
+                    <StyleDiv 
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    >
+                      <Card style={{backgroundColor: "black"}}></Card>
+                      <CardActionArea 
+                      onClick={(event) => {
+                        handleClick(event, course.id)
+                      }} >
+                        <Card>
+                          <CardHeader id="cardClickable" title={
+                          <span style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}>
+                            {course.Name} 
+                            <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                          </span>}
+                          />
+                          <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
+                        </Card>
+                      </CardActionArea>
+                      </StyleDiv>
+                 
+                
+                  </Grid> 
+                  )}
+                  </Draggable>
                   
-                    <CardHeader id="cardClickable" title={
-                    <span style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}>
-                      {course.Name} 
-                       <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
-                    </span>}
-                     />
-                    <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
-                  </Card>
-                </CardActionArea>
-              </Grid> 
               )
             })}
+            {provided.placeholder}
             </Grid>
+            
+            
+            )}
+           
+            </Droppable>  
+            </DragDropContext>
+            
             </Box>
             )
            })} 
@@ -161,3 +215,24 @@ const removeCourseLocal = (courseId: string, topic: string) => {
       </Box>
   );
 }
+/*
+<Grid item xs={12} sm={6} md={4}>
+                    <CardActionArea 
+                    onClick={(event) => {
+                      handleClick(event, course.id)
+                    }} >
+                      <Card>
+                        <CardHeader id="cardClickable" title={
+                        <span style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}>
+                          {course.Name} 
+                          <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                        </span>}
+                        />
+                        <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
+                      </Card>
+                    </CardActionArea>
+                </Grid> 
+*/
