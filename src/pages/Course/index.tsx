@@ -6,7 +6,7 @@ import { useFullCourse, useCurrentPage, useGetCompletedPages } from '../../hooks
 
 import Grid from '@mui/material/Grid';
 import CourseMobileStep from './components/CourseMobileStep';
-import { Box } from '@mui/system';
+import { Box, positions } from '@mui/system';
 
 import { ChapterType, FullCourse, PageType, RenderTree } from '../../context/context';
 import CourseText from './components/CourseContent/CourseText';
@@ -18,6 +18,7 @@ import { IdTokenResult, User } from 'firebase/auth';
 
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import CourseQuiz from './components/CourseContent/CourseQuiz';
 type userProp = {
   user: User;
   token?: IdTokenResult;
@@ -33,9 +34,9 @@ const Index = (props: userProp) => {
     const [course, setCourse] = useState<FullCourse>()
     
     //queries hooks
-    const fullCourse = (useFullCourse(slug, "Courses"))
-    const page = (useCurrentPage(currentPageId, "Pages"))
-    const completedPages = (useGetCompletedPages(slug, props.user.uid))
+    const courseHook = (useFullCourse(slug, "Courses"))
+    const pageHook = (useCurrentPage(currentPageId, "Pages"))
+    const completedPagesHook = (useGetCompletedPages(slug, props.user.uid))
 
     //open for drawer
     const [xsSize, setXsSize] = useState<number>(8)
@@ -62,22 +63,21 @@ const Index = (props: userProp) => {
         setXsSize(12)
       }
     },[open])
+    // Sets current page from pageHook
     useEffect(() => {
-      if(!page.isLoading){
-        setCurrentPage(page.data as PageType)
+      if(!pageHook.isLoading){
+        setCurrentPage(pageHook.data as PageType)
       }
-    },[page])
+    },[pageHook])
     //kan lag meir effektiv løkke
     useEffect(() => {
-      if(!completedPages.isLoading){
-       const list = completedPages.data as string[]
-   
+      if(!completedPagesHook.isLoading){
+       const list = completedPagesHook.data as string[]
        let courseClone = course
        //kjøre 16 gång, bør nok fix
        list.map((page: string) => {
           course?.Chapters.map((chapter, indexChapter) => {
             chapter.Pages.map((p: PageType, indexPage: number) => {
-         
               for (const [key, value] of Object.entries(p)) {
                 if(value.id == page && courseClone){
                   courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
@@ -88,16 +88,16 @@ const Index = (props: userProp) => {
        })
        setCourse(courseClone)
       }
-    },[completedPages]) 
+    },[completedPagesHook]) 
     useEffect(()=> {
-      if(fullCourse.isError) console.log("error")
-      if(fullCourse.isLoading) console.log("l")
+      if(courseHook.isError) console.log("error")
+      if(courseHook.isLoading) console.log("l")
 
-      if(!fullCourse.isLoading){
-        setCourse(fullCourse.data as FullCourse)
+      if(!courseHook.isLoading){
+        setCourse(courseHook.data as FullCourse)
       }
       
-    },[fullCourse])
+    },[courseHook])
 
     useEffect(() => {
       if(course != undefined){
@@ -201,11 +201,13 @@ const Index = (props: userProp) => {
     <Grid item xs={xsSize}>
       <div style={{
         border: '1px solid black',
-        width: "95%",
-        paddingLeft: "5px",
+        width: "100%",
         maxHeight: "40em",
         minHeight: "40em",
-        overflow: "auto"
+        overflow: "auto",
+        backgroundColor: 'whitesmoke',
+        display: 'flex',
+        flexDirection: 'column',
       }}>
       <Box style={{}}>
       
@@ -219,13 +221,21 @@ const Index = (props: userProp) => {
         <CourseVideo currentPage={currentPage} />
       }
       {currentPage?.Type === "Quiz" &&
-        <h2>
-          Quiz
-        </h2>
+        <CourseQuiz currentPage={currentPage} completePage={setPageCompleted}/>
       }
+       
       </Box>  
-  
+      <div style={{
+        width: "100%",
+        marginTop: 'auto',
+        
+      }}>
+      {(currentPageIndex != null  && currentChapter != null ) &&
+       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
+      }
       </div>
+      </div>
+      
       <Button style={{
         bottom: "95%",
         
@@ -274,14 +284,7 @@ const Index = (props: userProp) => {
       
       </div>
     </Grid>
-    <div style={{
-        width: "100%",
-        bottom: 0,
-      }}>
-      {(currentPageIndex != null  && currentChapter != null ) &&
-       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
-      }
-      </div>
+   
   </Grid>
   <Button onClick={async () => {
     setPageCompleted()

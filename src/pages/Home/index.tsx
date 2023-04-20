@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Backdrop,
   Box,
   Card,
@@ -27,15 +30,16 @@ import LockIcon from "@mui/icons-material/Lock";
 import CourseCard from "./components/CourseCard";
 import DisabledCard from "./components/DisabledCard";
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 type userProp = {
   user: User;
   token?: IdTokenResult;
 };
 export default function Home(props: userProp) {
   const [courses, setCourses] = useState<CourseType[]>([]);
-  const [courseTopicMap, setCoursesTopicMap] = useState<
-    Map<string, CourseType[]>
-  >(new Map());
+  const [courseTopicMap, setCoursesTopicMap] = useState<Map<string, CourseType[]>>(new Map());
+  
   const [completedCourseList, setCompletedCourseList] = useState<string[]>([]);
 
   const fullCourse = useGetCollection("Courses", false);
@@ -94,9 +98,17 @@ export default function Home(props: userProp) {
                   justifyContent: "center",
                 }}
               >
+                <Accordion defaultExpanded={true}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={"panel1a-content-"+ k}
+                  id={"panel1a-header-"+k}
+                >
                 <div>
                   <h1 style={{ textAlign: "center" }}>{k}</h1>
                 </div>
+                </AccordionSummary>
+                <AccordionDetails>
 
                 <Grid
                   sx={{
@@ -110,7 +122,7 @@ export default function Home(props: userProp) {
                       <Grid item xs={12} sm={6} md={4}>
                         {course.Prerequisite &&
                         !completedCourseList.includes(course.Prerequisite) ? (
-                          <DisabledCard course={course} />
+                          <DisabledCard course={course} courses={courses}/>
                         ) : (
                           <CourseCard course={course} />
                         )}
@@ -118,6 +130,8 @@ export default function Home(props: userProp) {
                     );
                   })}
                 </Grid>
+                </AccordionDetails>
+              </Accordion>
               </Box>
             );
           })}

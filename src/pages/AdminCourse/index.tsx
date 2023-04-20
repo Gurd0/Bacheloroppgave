@@ -33,6 +33,9 @@ import { useGetCollection, useGetTopicName } from '../../hooks/queries';
 import AlertPopUp from './components/feedBack/feedBackError';
 import FeedBackError from './components/feedBack/feedBackError';
 import FeedBackSuccess from './components/feedBack/feedBackSuccess';
+import CourseQuiz from '../Course/components/CourseContent/CourseQuiz';
+import QuizQuestionEdit from './components/courseEdit/quizQuestionEditi';
+import { option } from 'yargs';
 
 
 interface autoFill {
@@ -60,11 +63,13 @@ function Index(){
         Name: "Course",
         draft: true,
         Chapters: chapters,
+        image: "",
         id: Math.random().toString(36).substring(2,7)
   })
   const topicName = useGetTopicName();
   const fullCourse = useGetCollection("Courses", false);
   const [coursNameAndId, setCourseNameAndId] = useState<autoFill[]>([])
+  const [prerequisiteIndex, setPrerequisiteIndex ] = useState<number>(0)
 
   useEffect(() => {
     if (!topicName.isLoading && topicName.status == "success") {
@@ -74,10 +79,8 @@ function Index(){
   }, [topicName.data]);
  
   useEffect(() => {
-    
     if(!fullCourse.isLoading && fullCourse.status == "success"){
       let list: autoFill[] = []
-      console.log("d")
       const coursesData = fullCourse.data as CourseType[]
       coursesData.map((c) => {
       const t: autoFill = {
@@ -122,12 +125,23 @@ function Index(){
               const course: CourseType = {
                 Name: courseD.Name,
                 draft: courseD.draft,
+                Topic: courseD.Topic,
+                Prerequisite: courseD.Prerequisite,
                 id: slug,
                 Chapters: chapters,
+                image: courseD.image,
               };
               setCourse({...course})
               setChapters([...chapters])
-             
+              if(course.Topic)
+              setTopic(course.Topic)
+              if(course.Prerequisite){
+                coursNameAndId.map((c, index) => {
+                  if(c.id == course.Prerequisite){
+                    setPrerequisiteIndex(index)
+                  }
+                })
+              }
             })
         });
     } 
@@ -141,7 +155,8 @@ function Index(){
       draft: course.draft,
       Chapters: chapters,
       Topic: topic,
-      Prerequisite: course.Prerequisite
+      Prerequisite: course.Prerequisite,
+      image: course.image
     }
 
     if(!c.Topic){
@@ -184,9 +199,12 @@ function Index(){
     if(selectedPage){
       let chapterClone = chapters
       let selectedPageClone = selectedPage
+      console.log(chapters)
       chapters.map((chapter, index) => {
          chapter.Pages.map((page: PageType, indexPage: number) => {
-            if(page == selectedPage){
+         
+          
+            if(page.id == selectedPage.id){
               chapterClone[index].Pages[indexPage].Value = value
               setChapters([...chapterClone])
              // selectedPageClone.Value = value
@@ -204,16 +222,16 @@ function Index(){
     return (
       <>
     <FormControl sx={{ m: 1 }} variant="standard">
-      <InputLabel  htmlFor="demo-customized-textbox">Topic</InputLabel>
+      <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
       <Input value={topic} onChange={(event) =>{
         setTopic(event.target.value);
       }}></Input>
     </FormControl>
     <FormControl sx={{ m: 1 }} variant="standard">
-        <InputLabel id="demo-customized-select-label">Topic</InputLabel>
+        <InputLabel id="customized-select-label">Topic</InputLabel>
         <Select
-          labelId="demo-customized-select-label"
-          id="demo-customized-select"
+          labelId="customized-select-label"
+          id="customized-select"
           value={topic}
           onChange={handleChangeTopicSelect}
         >
@@ -259,25 +277,40 @@ function Index(){
           <ImageEdit setPageValue={setPageValue} pageValue={selectedPage.Value} selectedPage={selectedPage}/>
       }
       {selectedPage?.Type === "Quiz" &&
-          <QuizEdit />
+          <QuizEdit selectedPage={selectedPage} setPageValue={setPageValue}/>
+         // <QuizQuestionEdit/>
+
       }
        </Box>
     </div>
     </Grid>
     <Grid item xs={4}>
-
+    <div style={{
+      overflow: 'auto',
+      maxHeight: "40em"
+    }}>
+    <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
+      let courseClone = course
+      courseClone.image = e.target.value
+      setCourse({...courseClone})
+    }}/>
     <Autocomplete
       onChange={(event, newValue) => {
-        const courseClone = course
-        if(newValue){
-          courseClone.Prerequisite = newValue.id
-          setCourse(courseClone)
+        if(event?.type == "change"){
+          const courseClone = course
+          if(newValue){
+            courseClone.Prerequisite = newValue.id
+            setCourse(courseClone)
+          }
         }
-        
       }}
-      disablePortal
-      id="combo-box-demo"
       options={coursNameAndId}
+      
+      defaultValue={coursNameAndId.find((e) => course.Prerequisite === e.id)}
+      getOptionLabel={option => option.label}
+      disablePortal
+      id="combo-box"
+      
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Prerequisite" />}
     />
@@ -314,6 +347,7 @@ function Index(){
       <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
     : <h1>hmm</h1>
     }
+    </div>
     </Grid>
   </Grid>
   <button onClick={() =>{
