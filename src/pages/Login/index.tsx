@@ -1,3 +1,4 @@
+import { LinearProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,76 +15,50 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
-import { auth } from "../../firebase";
+import React, { useContext, useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/auth-context";
+import { auth, signInUser, signOutUser } from "../../firebase";
+import Home from "../Home";
 import Signup from "../SignUp";
 
-type userProp = {
-  user?: User;
-};
-
-export default function LogIn(user: userProp) {
+export default function LogIn() {
   const [token, setToken] = useState<IdTokenResult>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const theme = createTheme();
-
-  const signInUser = async (e: any) => {
-    if (!user.user) {
-      try {
-        await signInWithEmailAndPassword(auth, email, password)
-          .then((userCredentials) => {
-            const user = userCredentials.user;
-            console.log(user);
-          })
-          .finally(() => {
-            window.location.href = "/";
-            console.log("NAVIGATING");
-          })
-          .catch((error) => {
-            console.log(error.code);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      console.log("Hello, " + user.user?.displayName);
-    }
-    e.preventDefault();
-  };
-
-  const signOutUser = async (e: any) => {
-    try {
-      if (user.user) {
-        await signOut(auth)
-          .then(() => {
-            console.log("Logged out");
-          })
-          .then(() => {
-            setToken(undefined);
-          })
-          .catch((error) => {
-            setError(error.message);
-          });
-      } else {
-        console.log("No user logged in");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    e.preventDefault();
-  };
+  const { user } = useContext(AuthContext);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const seeName = (e: any) => {
-    console.log(user.user?.displayName);
+    console.log(user?.displayName);
   };
+  useEffect(() => {
+    if (!user) {
+      return;
+    } else {
+      setIsLoggingIn(false);
+    }
+  }, [user]);
+
+  if (user && !isLoggingIn) {
+    return <Home />;
+  }
+
+  if (isLoggingIn) {
+    return <LinearProgress />;
+  }
 
   return (
     <>
       <Button onClick={seeName}>See Name</Button>
-      <Button onClick={signOutUser}>SIGN OUT</Button>
+      {user && (
+        <>
+          {" "}
+          <Button onClick={(e: any) => signOutUser(e, auth)}>SIGN OUT</Button>
+        </>
+      )}
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <Box
@@ -126,7 +101,10 @@ export default function LogIn(user: userProp) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2, backgroundColor: "blue" }}
-                onClick={signInUser}
+                onClick={(e: any) => {
+                  signInUser(e, email, password);
+                  setIsLoggingIn(true);
+                }}
               >
                 Logg inn
               </Button>
