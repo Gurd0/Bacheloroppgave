@@ -261,7 +261,7 @@ const Index = (props: userProp) => {
         
       }}>
       {(currentPageIndex != null  && currentChapter != null ) &&
-       <CourseMobileStep setPageCompleted={setPageCompleted} currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
+       <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
       }
       </div>
       
