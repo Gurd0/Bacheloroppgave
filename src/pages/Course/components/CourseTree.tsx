@@ -34,7 +34,6 @@ const StyledTreeView ={
 const StyledTreeItem = {
   //display: "none",
    //height: "4em",
-   //padding: "10px"
 }
 
 export default function CourseTree(Props: ToggleProps) {
@@ -45,14 +44,32 @@ export default function CourseTree(Props: ToggleProps) {
 
   React.useEffect(() => {
     const t = selected.join("")
-    if(selected){
+    if(selected ){
       Props.ClickHandler(t)
     } 
 
   },[selected])
   React.useEffect(() => {
+    console.log(Props.selectedNode.join(""))
+    
+      try{
+        if(Props.tree.children && Props.tree.children[0].children && Props.selectedNode.join("") == "l"){
+          console.log("hei ??? ")
+          Props.ClickHandler(Props.tree.children[0].children[0].id)
+        } 
+      }catch (err){
+        console.log(err)
+      } 
+   
+  },[Props.selectedNode])
+
+  React.useEffect(() => {
     const expandedClone = expanded
-    expandedClone.push(Props.tree.id)
+    if(Props.tree.children){
+    Props.tree.children.map((t) => {
+      expandedClone.push(t.id)
+    })
+   }
     setExpanded(expandedClone)
   },[Props.tree])
 
@@ -71,7 +88,7 @@ export default function CourseTree(Props: ToggleProps) {
     sx={ style }
     key={nodes.id} 
     nodeId={nodes.id} 
-    label={nodes.name}
+    label={<h4>{nodes.name}</h4>}
     >
       
       {Array.isArray(nodes.children)
@@ -84,16 +101,24 @@ export default function CourseTree(Props: ToggleProps) {
   const renderTreeChild = (nodes: RenderTree, style?: SxProps) => {
 
     return(
+      
     <TreeItem 
     sx={ style }
     key={nodes.id} 
+    className="wrapper"
     nodeId={nodes.id} 
-    label={<div>
-      <p style={{display: 'flex', justifyContent: 'space-between'}}>
-      {nodes.name}
-      {nodes.completed && 
-        <DoneIcon/>
-      }
+    style={Props.selectedNode.join("") == nodes.id ?{
+      backgroundColor: "rgba(0,0,0,0.04)",
+      
+      overflowX: "hidden",
+    }:{
+      backgroundColor: 'white',
+      width: "100%"
+    }}
+    label={
+    <div style={{display:'flex', flexDirection: 'row',  margin: "0",
+    padding: "5px", gap: "10px", paddingLeft: 0, }}>
+      <div style={{gap: 0, }}>
       {nodes.type == "Text" &&
         <TextSnippetOutlinedIcon/>
       }
@@ -106,11 +131,17 @@ export default function CourseTree(Props: ToggleProps) {
       {nodes.type == "Quiz" &&
         <QuizIcon/>
       }
-      </p>
+      {nodes.completed && 
+        <DoneIcon/>
+      }
+      </div>
+      
+      <div>
+      {nodes.name}
+      </div>
     </div>}
     >
     </TreeItem>
-    
   )}
 
   
@@ -127,10 +158,20 @@ export default function CourseTree(Props: ToggleProps) {
         onNodeSelect={handleSelect}
         sx={{ 
           flexGrow: 1,
-          maxWidth: "90%",
+          maxWidth: "100%",
         }}
       >
-        {renderTree(Props.tree, StyledTreeView)}
+        <>
+        {Props.tree.children &&
+        <>
+        {Props.tree.children.map((chap) => {
+            return renderTree(chap, StyledTreeView)
+        }
+           
+         )}
+         </>
+        }
+        </>
       </TreeView>
     );
 }

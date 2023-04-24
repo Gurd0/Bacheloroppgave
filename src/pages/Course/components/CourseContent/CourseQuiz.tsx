@@ -5,7 +5,7 @@ import { PageType } from '../../../../context/context'
 
 interface ToggleProps {
   currentPage: PageType
-  completePage: any
+  completePage: (pageId: string) => void
 }
 interface questionI {
   id: string,
@@ -72,7 +72,7 @@ const CourseQuiz = (Props: ToggleProps) => {
       console.log((count/Props.currentPage.Value.length) * 100)
       if((count/Props.currentPage.Value.length) * 100 >= 80){
         console.log("over 100 %")
-        Props.completePage()
+        Props.completePage(Props.currentPage.id)
       }else{
         console.log("Under 80 %")
         setCurrentQuestion(0)

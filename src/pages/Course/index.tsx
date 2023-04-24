@@ -18,6 +18,8 @@ import { IdTokenResult, User } from 'firebase/auth';
 
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+
 import CourseQuiz from './components/CourseContent/CourseQuiz';
 type userProp = {
   user: User;
@@ -27,7 +29,7 @@ type userProp = {
 const Index = (props: userProp) => {
     const { slug }: any = useParams();
     
-    const [currentPageId, setCurrentPageId] = useState("")
+    const [currentPageId, setCurrentPageId] = useState("l")
     const [currentPage, setCurrentPage] = useState<PageType>()
     const [currentChapter, setCurrentChapter] = useState<ChapterType>()
     const [currentPageIndex, setCurrentPageIndex] = useState<number>()
@@ -43,7 +45,18 @@ const Index = (props: userProp) => {
     const [open, setOpen] = useState<boolean>(true);
     const [height, setHeight] = useState<string>("40em")
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const prevPageRef = useRef<PageType>();
     
+    useEffect(() => {
+      const asyncArrow =async () => {
+        if(prevPageRef.current && prevPageRef.current?.Type !== "Quiz"){
+        await setPageCompleted(prevPageRef.current.id)
+      }
+      }
+
+      asyncArrow()
+    }, [prevPageRef.current]); 
     
     //TODO lægg tel animasjon når lastes
     const [tree, setTree] = useState<RenderTree>({
@@ -57,18 +70,25 @@ const Index = (props: userProp) => {
     useEffect(() => {
       if(open &&  containerRef != null  && containerRef.current != null && containerRef.current.clientHeight != null){
         setHeight("40em");
-        setXsSize(8)
+        setXsSize(7.5)
       } else {
         setHeight("0em")
-        setXsSize(12)
+        setXsSize(11)
       }
     },[open])
     // Sets current page from pageHook
     useEffect(() => {
-      if(!pageHook.isLoading){
-        setCurrentPage(pageHook.data as PageType)
+      if(!pageHook.isLoading && pageHook.status == "success" && pageHook.data){
+        console.count("count")
+        console.log(prevPageRef.current)
+        if(prevPageRef.current?.id != currentPage?.id && (pageHook.data as PageType).id != currentPage?.id){
+            prevPageRef.current = currentPage;
+            console.log("BØØØØØ")
+        }
+        setCurrentPage(pageHook.data as PageType) 
       }
     },[pageHook])
+
     //kan lag meir effektiv løkke
     useEffect(() => {
       if(!completedPagesHook.isLoading){
@@ -82,6 +102,7 @@ const Index = (props: userProp) => {
                 if(value.id == page && courseClone){
                   courseClone.Chapters[indexChapter].Pages[indexPage].Completed = true
                }
+               
               } 
             })
           })
@@ -95,6 +116,7 @@ const Index = (props: userProp) => {
 
       if(!courseHook.isLoading){
         setCourse(courseHook.data as FullCourse)
+        
       }
       
     },[courseHook])
@@ -112,7 +134,6 @@ const Index = (props: userProp) => {
         course.Chapters.map(chapter => {
              const childrenPages: RenderTree[] = []
              chapter.Pages.map((pageMap: Array<Map<string, DocumentReference>>) => {
-            
               const pageMapClone: any = pageMap
               for (const [key, value] of Object.entries(pageMap)) {
                 //make key type any to get objects
@@ -127,7 +148,6 @@ const Index = (props: userProp) => {
              })
              tree.children?.push({name: chapter.ChapterName, id: chapter.id, type: "chapter", children: childrenPages})
         })
-       
         setTree({...tree})
     }
     },[course])
@@ -155,26 +175,33 @@ const Index = (props: userProp) => {
     if(currentChapter){
       for (const [key, value] of Object.entries(currentChapter.Pages[index])) {
         const valueAsAny: PageType = value as any
-        setCurrentPageId(valueAsAny.id)
+        if(valueAsAny.id){
+          setCurrentPageId(valueAsAny.id)
+        }
       }
      
       setCurrentPageIndex(index)
     }
   }
-  const setPageCompleted = async () => {
-    if(currentPage && props.user && course){
-      await completePage(props.user.uid, currentPage?.id, slug).then(() => {
-        const currentPageClone = currentPage
-        currentPageClone.Completed = true
-        setCurrentPage({...currentPageClone})
+  const setPageCompleted = async (pageId: string) => {
+    if(prevPageRef.current && props.user && course){
+      await completePage(props.user.uid, pageId, slug).then(() => {
+      if(pageId){
         course.Chapters.map((c, index) => {
-          
-          if (currentPageIndex != null && currentChapter != null && c.id === currentChapter.id){
-            const courseClone = course
-            courseClone.Chapters[index].Pages[currentPageIndex].Completed = true
-            setCourse({...courseClone})
+          c.Pages.map((p: any, pIndex: number) => {
+            for (const [key, value] of Object.entries(p)) {
+            //make key type any to get objects
+            const valueAsAny: PageType = value as any
+            if (pageId &&  valueAsAny.id == pageId){
+              const courseClone = course
+              courseClone.Chapters[index].Pages[pIndex].Completed = true
+              setCourse({...courseClone})
+            }
           }
+          })
         })
+      }
+
         let comp = 0
         let pageAmount = 0
         course.Chapters.map((c) => {
@@ -196,6 +223,7 @@ const Index = (props: userProp) => {
     <>
     <Grid container spacing={2} style={{
       backgroundColor: "#e8e8e8",
+      paddingLeft: "1em"
     }}>
 
     <Grid item xs={xsSize}>
@@ -208,6 +236,7 @@ const Index = (props: userProp) => {
         backgroundColor: 'whitesmoke',
         display: 'flex',
         flexDirection: 'column',
+        
       }}>
       <Box style={{}}>
       
@@ -229,33 +258,47 @@ const Index = (props: userProp) => {
         width: "100%",
         marginTop: 'auto',
         
+        
       }}>
       {(currentPageIndex != null  && currentChapter != null ) &&
        <CourseMobileStep currentChapter={currentChapter} currentPageIndex={currentPageIndex} setCurrentPageByIndex={setCurrentPageByIndex}/>  
       }
       </div>
-      </div>
       
-      <Button style={{
-        bottom: "95%",
-        
-        left: '90%',
+      </div>
+    </Grid>
+    <Grid item xs={0.5}>
+    <Button style={
+      !open?{
+        display: "flex",
+        alignContent: "center",
+        top: "20em",
+        right: 0,
+      
+        transform: "rotate(90deg)",
+      }: {
+        display: "flex",
+        alignContent: "center",
+        top: "20em",
+        right: 0,
+      
+        transform: "rotate(270deg)",
       }}
       onClick={() => {
         setOpen(!open)
       }}>
       {open ?
-        <OpenInFullIcon />
+        <ExpandCircleDownIcon style={{color: "black", fontSize: "3em"}}/>
         : 
-        <CloseFullscreenIcon />
+        <ExpandCircleDownIcon style={{color: "black", fontSize: "3em"}}/>
       }
       </Button>
-    </Grid>
+      </Grid>
+    <Grid item xs={3.5} style={{paddingRight: "0em"}}>
     
-
-    <Grid item xs={4} style={{paddingRight: "1em"}}>
       <div ref={containerRef} style={{
         position: 'relative',
+        
       }}>
       
       <Drawer open={open} anchor={"right"} 
@@ -272,24 +315,25 @@ const Index = (props: userProp) => {
             height: {height},
             transition: "none !important",
             backgroundColor: "transparent",
+            
           },
         }}
-        variant="persistent" onClose={() => setOpen(false)}>
-        <Paper  variant="outlined" elevation={10} sx={{p: '50px', borderRadius: '20px', borderColor: 'black'}}>
-          {tree.children?.map((chap) => (
-            <CourseTree tree={chap} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
-          ))}
+        variant="persistent" onClose={() => setOpen(false)}
+        PaperProps={{style: {border: 'none'}}}
+        >
+        <div  style={{height: "33em" }}>
+        <Paper  variant="outlined" elevation={10} sx={{p: "2vh", borderRadius: '10px', borderColor: 'black', overflov: "auto"}}>
+        <CourseTree tree={tree} ClickHandler={onPageClick} selectedNode={[currentPageId]}/>
+          
+          
       </Paper>
+      </div>
       </Drawer>
       
       </div>
     </Grid>
    
   </Grid>
-  <Button onClick={async () => {
-    setPageCompleted()
-  }}>complete</Button>
- 
     </>
   )
 }

@@ -42,15 +42,17 @@ export default function Home(props: userProp) {
   
   const [completedCourseList, setCompletedCourseList] = useState<string[]>([]);
 
-  const fullCourse = useGetCollection("Courses", false);
+  const coursesHook = useGetCollection("Courses", false);
   const completedCourses = useGetCompletedCourses(props.user.uid);
   //Spør om dæ e bra å ha to i ein eller om e bør ha to useEffects
+
+  //Sets courses from coursesHook when status is success
   useEffect(() => {
-    if (fullCourse.status == "success") {
-      const coursesData = fullCourse.data as CourseType[];
+    if (coursesHook.status == "success") {
+      const coursesData = coursesHook.data as CourseType[];
 
       if (
-        !fullCourse.isLoading &&
+        !coursesHook.isLoading &&
         completedCourses.status == "success" &&
         (completedCourses.data as string[]).length != 0
       ) {
@@ -65,8 +67,9 @@ export default function Home(props: userProp) {
       }
       setCourses([...coursesData]);
     }
-  }, [fullCourse.isLoading, completedCourses.status]);
+  }, [coursesHook.isLoading, completedCourses.status]);
 
+  //Makes a map for topic and course to help sort.
   useEffect(() => {
     let myMap = new Map<string, CourseType[]>();
     courses.map((c) => {
@@ -85,7 +88,7 @@ export default function Home(props: userProp) {
 
   return (
     <Box>
-      {fullCourse.isLoading && completedCourses.isLoading ? (
+      {coursesHook.isLoading && completedCourses.isLoading ? (
         <LinearProgress color="primary" />
       ) : (
         <>
