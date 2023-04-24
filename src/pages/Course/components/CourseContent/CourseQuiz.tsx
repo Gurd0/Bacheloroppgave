@@ -21,7 +21,12 @@ const CourseQuiz = (Props: ToggleProps) => {
 
   const onChangeRadio = (e: any) => {
     console.log(e.target.value)
-    if(e.target.value === Props.currentPage.Value[currentQuestion].correctAnswer){
+    let correctString
+    Props.currentPage.Value[currentQuestion].answer.map((a: string, index: number) => {
+      if(index === Props.currentPage.Value[currentQuestion].correctAnswer)
+      correctString = Props.currentPage.Value[currentQuestion].answer[index]
+    })
+    if(e.target.value === correctString){
       let correctAnsClone = correctAns
       correctAnsClone[currentQuestion] = 1
       setCorrectAns(correctAnsClone)

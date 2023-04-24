@@ -7,7 +7,7 @@ interface questionI {
     id: string,
     question: string,
     answer: string[],
-    correctAnswer: string,
+    correctAnswer: number,
   }
 interface ToggleProps {
     currentQuestion: questionI,
@@ -17,7 +17,7 @@ interface ToggleProps {
 const QuizQuestionEdit = (Props: ToggleProps) => {
   const [quizObj, setQuizObj] = useState()
   const [question, setQuestion] = useState<string>("")
-  const [correctAnswer, setCorrectAnswer] = useState("")
+  const [correctAnswer, setCorrectAnswer] = useState<number>(0)
   const [answer, setAnswer] = useState([
   {
     id: "outlined-svar1",
@@ -130,7 +130,6 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
           select
           onChange={(e: any) => {
             setCorrectAnswer(e.target.value)
-            console.log(e.target.value)
           }}
           label="Select"
           defaultValue={correctAnswer}
@@ -149,16 +148,20 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
         justifyContent: 'space-between',
     }}>
         <Button onClick={()=> {
+            let c = 0
             console.log(answer)
             let answerList: string[] = []
-            answer.map((a)=> {
+            answer.map((a, index)=> {
                 answerList.push(a.value)
+                if(a.value === correctAnswer.toString()){
+                  c = index
+                }
             })
             const q: questionI = {
                 id: Props.currentQuestion.id,
                 question: question,
                 answer: answerList,
-                correctAnswer: correctAnswer,
+                correctAnswer: c,
             }
             console.log(q)
             Props.updateCurrentQuestion(q)
