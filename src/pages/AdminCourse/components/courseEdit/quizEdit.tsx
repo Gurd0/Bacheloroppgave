@@ -22,7 +22,7 @@ interface question {
   id: string,
   question: string,
   answer: string[],
-  correctAnswer: string,
+  correctAnswer: number,
 }
 const QuizEdit = (Props: ToggleProps) => {
   const [pageValue, setPageValue] = useState<question[]>([])
@@ -47,7 +47,10 @@ const QuizEdit = (Props: ToggleProps) => {
       }
     })
   }
-
+  const saveQuiz = () => {
+   
+    Props.setPageValue(pageValue)
+  }
   return (
     <>
     <h2> Spørsmål </h2>
@@ -100,7 +103,7 @@ const QuizEdit = (Props: ToggleProps) => {
         id: Math.random().toString(36).substring(2,7),
         question: "",
         answer: [],
-        correctAnswer: "",
+        correctAnswer: 0,
       }
       let pageValueClone = pageValue
       pageValueClone.push(q)
@@ -108,8 +111,7 @@ const QuizEdit = (Props: ToggleProps) => {
     }}>Legg til spørsmål</Button>
 
     <Button onClick= {() => {
-      Props.setPageValue(pageValue)
-      console.log(pageValue)
+      saveQuiz()
     }}> Lager </Button>
     </>
   )
