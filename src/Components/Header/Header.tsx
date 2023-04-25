@@ -1,8 +1,10 @@
 import { Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
+  const navigate = useNavigate();
   return (
     <Box
       id="main-container"
@@ -52,14 +54,14 @@ export default function Header() {
         }}
       >
         <Button
-          href="/login"
+          href="/"
           sx={{
             width: "3em",
             height: "100%",
             borderRadius: "50%",
-          }} 
+          }}
         >
-          <Avatar  sx={{  height: "100%", width: "80%", bgcolor: "black" }} />
+          <Avatar sx={{ height: "100%", width: "80%", bgcolor: "black" }} />
         </Button>
       </Box>
     </Box>

@@ -1,5 +1,11 @@
 import { IdTokenResult, onAuthStateChanged, User } from "firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -17,13 +23,13 @@ import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 //import ProfilePage from "./pages/Profile";
+import AuthChecker from "./Components/AuthChecker";
+import { AuthGuard } from "./Components/ProtectedRoute/AuthGuard";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { AuthContext, AuthProvider } from "./context/auth-context";
 import Signup from "./pages/SignUp";
 
 function App() {
-  const { user } = useContext(AuthContext);
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -34,24 +40,27 @@ function App() {
             <Route
               path="/"
               element={
-                <ProtectedRoute>
+                <AuthGuard>
                   <Home />
-                </ProtectedRoute>
+                </AuthGuard>
               }
             />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/new" element={<AdminCourse />} />
-            <Route path="/admin/edit/:slug" element={<AdminCourse />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
             <Route
               path="/course/:slug"
               element={
-                <ProtectedRoute>
-                  <Course />{" "}
-                </ProtectedRoute>
+                <AuthGuard>
+                  <Course />
+                </AuthGuard>
               }
             />
+            <Route path="/admin">
+              {/* Create adminprotected route */}
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/new" element={<AdminCourse />} />
+              <Route path="/admin/edit/:slug" element={<AdminCourse />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" /> {/*Page not found*/}
           </Routes>
           <Footer />
         </AuthProvider>
