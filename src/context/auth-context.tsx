@@ -18,16 +18,20 @@ export const AuthContext = createContext({
   // "User" comes from firebase auth-public.d.ts
   user: {} as User | undefined,
   isAuthenticated: true || false,
+  isLoading: true || false,
 });
 //checker if loading
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     if (user && isAuthenticated) {
       return;
     }
     const unSubscribeAuth = onAuthStateChanged(
+      //Unsubscribe listener
       auth,
       async (authenticatedUser) => {
         if (authenticatedUser) {
@@ -35,22 +39,26 @@ export const AuthProvider = ({ children }: Props) => {
           const user = authenticatedUser;
           setUser(user); // loading false
           setIsAuthenticated(true);
+          setIsLoading(false);
           // authenticatedUser
           //   .getIdToken(true)
           //   .then((token) => console.log("Auth token: " + token));
         } else {
           setUser(undefined);
           setIsAuthenticated(false);
+          setIsLoading(false);
+          console.log("Is Authenticated: " + isAuthenticated);
           console.log("Auth set to none");
         }
       }
     );
     return unSubscribeAuth;
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   const value = {
     user,
     isAuthenticated,
+    isLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
