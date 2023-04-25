@@ -30,12 +30,12 @@ import {db} from "../../firebase"
 import { convertToRaw } from 'draft-js';
 import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
 import { useGetCollection, useGetTopicName } from '../../hooks/queries';
-import AlertPopUp from './components/feedBack/feedBackError';
-import FeedBackError from './components/feedBack/feedBackError';
-import FeedBackSuccess from './components/feedBack/feedBackSuccess';
+
 import CourseQuiz from '../Course/components/CourseContent/CourseQuiz';
 import QuizQuestionEdit from './components/courseEdit/quizQuestionEditi';
 import { option } from 'yargs';
+import FeedBackError from '../../Components/feedBack/feedBackError';
+import FeedBackSuccess from '../../Components/feedBack/feedBackSuccess';
 
 
 interface autoFill {
