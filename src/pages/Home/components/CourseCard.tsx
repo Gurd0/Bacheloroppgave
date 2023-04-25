@@ -9,9 +9,10 @@ import {
 import React from "react";
 import { CourseType } from "../../../context/context";
 
-import FunctionsIcon from '@mui/icons-material/Functions';
+import FunctionsIcon from "@mui/icons-material/Functions";
 
 import DoneIcon from "@mui/icons-material/Done";
+import { Link } from "react-router-dom";
 interface PropsType {
   course: CourseType;
 }
@@ -20,10 +21,11 @@ const CourseCard = (props: PropsType) => {
   return (
     <>
       <CardActionArea
+        component={Link}
+        to={"/course/" + props.course.id}
         sx={{
           borderRadius: "16px",
         }}
-        href={"/course/" + props.course.id}
       >
         {props.course.Completed ? (
           <Card
@@ -35,13 +37,24 @@ const CourseCard = (props: PropsType) => {
             }}
           >
             <CardHeader title={props.course.Name} />
-            {props.course.image ? 
-               <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image={props.course.image} alt="#" />
-              :
-              <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg" alt="#" />
-              
-              }
-                     </Card>
+            {props.course.image ? (
+              <CardMedia
+                sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                component="img"
+                height="100"
+                image={props.course.image}
+                alt="#"
+              />
+            ) : (
+              <CardMedia
+                sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                component="img"
+                height="100"
+                image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg"
+                alt="#"
+              />
+            )}
+          </Card>
         ) : (
           <Card
             sx={{
@@ -51,12 +64,23 @@ const CourseCard = (props: PropsType) => {
             }}
           >
             <CardHeader title={props.course.Name} />
-            {props.course.image ? 
-               <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image={props.course.image} alt="#" />
-              :
-              <CardMedia sx={{padding: "0 2em 2em 0em", objectFit: "contain"}} component="img" height="100" image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg" alt="#" />
-              
-              }
+            {props.course.image ? (
+              <CardMedia
+                sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                component="img"
+                height="100"
+                image={props.course.image}
+                alt="#"
+              />
+            ) : (
+              <CardMedia
+                sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                component="img"
+                height="100"
+                image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg"
+                alt="#"
+              />
+            )}
           </Card>
         )}
         {/* {props.course.Completed && <DoneIcon />} */}
