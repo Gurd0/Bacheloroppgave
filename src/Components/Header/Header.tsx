@@ -1,7 +1,7 @@
 import { Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export default function Header() {
         }}
       >
         <Button
-          href="/"
+          onClick={() => navigate("/profile/:uid")}
           sx={{
             width: "3em",
             height: "100%",
