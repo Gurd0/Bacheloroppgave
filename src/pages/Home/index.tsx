@@ -15,7 +15,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/system";
 import { IdTokenResult, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
 import { CourseType, FullCourse } from "../../context/context";
@@ -30,20 +30,20 @@ import LockIcon from "@mui/icons-material/Lock";
 import CourseCard from "./components/CourseCard";
 import DisabledCard from "./components/DisabledCard";
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { AuthContext } from "../../context/auth-context";
 
-type userProp = {
-  user: User;
-  token?: IdTokenResult;
-};
-export default function Home(props: userProp) {
+export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);
-  const [courseTopicMap, setCoursesTopicMap] = useState<Map<string, CourseType[]>>(new Map());
-  
+  const [courseTopicMap, setCoursesTopicMap] = useState<
+    Map<string, CourseType[]>
+  >(new Map());
+  const { user } = useContext(AuthContext);
+
   const [completedCourseList, setCompletedCourseList] = useState<string[]>([]);
 
   const coursesHook = useGetCollection("Courses", false);
-  const completedCourses = useGetCompletedCourses(props.user.uid);
+  const completedCourses = useGetCompletedCourses(user?.uid || "");
   //Spør om dæ e bra å ha to i ein eller om e bør ha to useEffects
 
   //Sets courses from coursesHook when status is success
@@ -102,39 +102,40 @@ export default function Home(props: userProp) {
                 }}
               >
                 <Accordion defaultExpanded={true}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={"panel1a-content-"+ k}
-                  id={"panel1a-header-"+k}
-                >
-                <div>
-                  <h1 style={{ textAlign: "center" }}>{k}</h1>
-                </div>
-                </AccordionSummary>
-                <AccordionDetails>
-
-                <Grid
-                  sx={{
-                    padding: "1em",
-                  }}
-                  container
-                  spacing={3}
-                >
-                  {courseTopicMap.get(k)?.map((course) => {
-                    return (
-                      <Grid item xs={12} sm={6} md={4}>
-                        {course.Prerequisite &&
-                        !completedCourseList.includes(course.Prerequisite) ? (
-                          <DisabledCard course={course} courses={courses}/>
-                        ) : (
-                          <CourseCard course={course} />
-                        )}
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-                </AccordionDetails>
-              </Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={"panel1a-content-" + k}
+                    id={"panel1a-header-" + k}
+                  >
+                    <div>
+                      <h1 style={{ textAlign: "center" }}>{k}</h1>
+                    </div>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid
+                      sx={{
+                        padding: "1em",
+                      }}
+                      container
+                      spacing={3}
+                    >
+                      {courseTopicMap.get(k)?.map((course) => {
+                        return (
+                          <Grid item xs={12} sm={6} md={4}>
+                            {course.Prerequisite &&
+                            !completedCourseList.includes(
+                              course.Prerequisite
+                            ) ? (
+                              <DisabledCard course={course} courses={courses} />
+                            ) : (
+                              <CourseCard course={course} />
+                            )}
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
               </Box>
             );
           })}
