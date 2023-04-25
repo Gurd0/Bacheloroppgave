@@ -1,11 +1,13 @@
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, useEffect, useState } from 'react'
 import { PageType } from '../../../../context/context'
 
 
 interface ToggleProps {
   currentPage: PageType
   completePage: (pageId: string) => void
+  setFeedBack: Dispatch<React.SetStateAction<string>>
+  feedBack: string
 }
 interface questionI {
   id: string,
@@ -78,11 +80,13 @@ const CourseQuiz = (Props: ToggleProps) => {
       if((count/Props.currentPage.Value.length) * 100 >= 80){
         console.log("over 100 %")
         Props.completePage(Props.currentPage.id)
+        Props.setFeedBack(feedBack => "Success")
       }else{
         console.log("Under 80 %")
         setCurrentQuestion(0)
         setCorrectAns([])
         setCorrectTotal(0)
+        Props.setFeedBack(feedBack => "Bedre lykke neste gang")
       }
     }}>
     fulfør</Button>

@@ -35,6 +35,8 @@ import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 
 import { AuthContext } from "../../context/auth-context";
 import CourseQuiz from "./components/CourseContent/CourseQuiz";
+import FeedBackError from "../../Components/feedBack/feedBackError";
+import FeedBackSuccess from "../../Components/feedBack/feedBackSuccess";
 
 const Index = () => {
   const { slug }: any = useParams();
@@ -44,6 +46,8 @@ const Index = () => {
   const [currentChapter, setCurrentChapter] = useState<ChapterType>();
   const [currentPageIndex, setCurrentPageIndex] = useState<number>();
   const [course, setCourse] = useState<FullCourse>();
+
+  const [feedBack, setFeedBack] = useState<string>("none");
 
   //queries hooks
   const courseHook = useFullCourse(slug, "Courses");
@@ -245,6 +249,7 @@ const Index = () => {
   };
   return (
     <>
+      
       <Grid
         container
         spacing={2}
@@ -253,6 +258,8 @@ const Index = () => {
           paddingLeft: "1em",
         }}
       >
+        
+       
         <Grid item xs={xsSize}>
           <div
             style={{
@@ -267,6 +274,12 @@ const Index = () => {
             }}
           >
             <Box style={{}}>
+            {(feedBack != "none" && feedBack != "success") && 
+              <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+              }
+              {feedBack == "Success" &&
+              <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+              }
               {currentPage?.Type === "Text" && (
                 <CourseText currentPage={currentPage} />
               )}
@@ -280,6 +293,8 @@ const Index = () => {
                 <CourseQuiz
                   currentPage={currentPage}
                   completePage={setPageCompleted}
+                  setFeedBack={setFeedBack}
+                  feedBack={feedBack}
                 />
               )}
             </Box>
