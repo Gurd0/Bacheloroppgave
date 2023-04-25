@@ -58,6 +58,7 @@ export const signOutUser = async (e: any, auth: any) => {
       await signOut(auth)
         .then(() => {
           console.log("Logged out");
+          window.location.href = "/login";
         })
         .then(() => {})
         .catch((error) => {
