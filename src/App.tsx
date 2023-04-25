@@ -27,6 +27,7 @@ import AuthChecker from "./Components/AuthChecker";
 import { AuthGuard } from "./Components/ProtectedRoute/AuthGuard";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { AuthContext, AuthProvider } from "./context/auth-context";
+import ProfilePage from "./pages/Profile";
 import Signup from "./pages/SignUp";
 
 function App() {
@@ -38,13 +39,21 @@ function App() {
           <Header />
           <Routes>
             <Route
+              path="/profile/:uid"
+              element={
+                <AuthGuard>
+                  <ProfilePage />
+                </AuthGuard>
+              }
+            />
+            <Route
               path="/"
               element={
                 <AuthGuard>
                   <Home />
                 </AuthGuard>
               }
-            />
+            ></Route>
             <Route
               path="/course/:slug"
               element={
