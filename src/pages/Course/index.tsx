@@ -274,7 +274,7 @@ const Index = () => {
             }}
           >
             <Box style={{}}>
-            {(feedBack != "none" && feedBack != "success") && 
+            {(feedBack != "none" && feedBack != "Success") && 
               <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
               }
               {feedBack == "Success" &&
