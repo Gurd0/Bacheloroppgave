@@ -10,7 +10,7 @@ import { CourseType, FullCourse, RenderTree } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Modal, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
@@ -37,12 +37,23 @@ import { option } from 'yargs';
 import FeedBackError from '../../Components/feedBack/feedBackError';
 import FeedBackSuccess from '../../Components/feedBack/feedBackSuccess';
 
+import SettingsIcon from '@mui/icons-material/Settings';
 
 interface autoFill {
   label: string,
   id: string,
 }
-
+const styleModalBox = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 function Index(){
   const { slug }: any = useParams();
   const [chapters, setChapters] = useState<ChapterType[]>([])
@@ -53,6 +64,7 @@ function Index(){
   const [selectedChapter, setSelectedChapter] = useState<ChapterType>()
 
   const [open, setOpen] = useState(false)
+  const [openSetting, setOpenSetting] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [textInput, setTextInput] = useState("")
 
@@ -221,6 +233,7 @@ function Index(){
   const getMenuItem = () => {
     return (
       <>
+      
     <FormControl sx={{ m: 1 }} variant="standard">
       <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
       <Input value={topic} onChange={(event) =>{
@@ -256,8 +269,56 @@ function Index(){
     {feedBack == "success" &&
     <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
     }
+    <Modal
+        open={openSetting}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleModalBox} style={{
+          backgroundColor: 'white'
+        }}>
+        <div style={{
+            display: "flex",
+            flexDirection: 'column',
+            justifyContent: 'space-evenly',
+            gap: "20px",      
+            
+          }}>
+             <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
+            let courseClone = course
+            courseClone.image = e.target.value
+            setCourse({...courseClone})
+          }}/>
+          {course.image && 
+            <img src={course.image}  width="120" height="120" />
+          }
+          <Autocomplete
+            onChange={(event, newValue) => {
+              if(event?.type == "change"){
+                const courseClone = course
+                if(newValue){
+                  courseClone.Prerequisite = newValue.id
+                  setCourse(courseClone)
+                }
+              }
+            }}
+            options={coursNameAndId}
+            defaultValue={coursNameAndId.find((e) => course.Prerequisite === e.id)}
+            getOptionLabel={option => option.label}
+            disablePortal
+            id="combo-box"
+            
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Prerequisite" />}
+          />
     
-   
+          {getMenuItem()}
+          <Button onClick={()=> {
+            setOpenSetting(!openSetting)
+          }}>Exit</Button>
+          </div>
+        </Box>
+    </Modal>
     <Grid item xs={8} >
       <div style={{
         border: '1px solid black',
@@ -285,37 +346,14 @@ function Index(){
     </div>
     </Grid>
     <Grid item xs={4}>
+    <Button onClick={() => {
+      setOpenSetting(!openSetting)
+    }}><SettingsIcon />Settings</Button>
     <div style={{
       overflow: 'auto',
       maxHeight: "40em"
     }}>
-    <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
-      let courseClone = course
-      courseClone.image = e.target.value
-      setCourse({...courseClone})
-    }}/>
-    <Autocomplete
-      onChange={(event, newValue) => {
-        if(event?.type == "change"){
-          const courseClone = course
-          if(newValue){
-            courseClone.Prerequisite = newValue.id
-            setCourse(courseClone)
-          }
-        }
-      }}
-      options={coursNameAndId}
-      
-      defaultValue={coursNameAndId.find((e) => course.Prerequisite === e.id)}
-      getOptionLabel={option => option.label}
-      disablePortal
-      id="combo-box"
-      
-      sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="Prerequisite" />}
-    />
-    
-    {getMenuItem()}
+   
     
     <h2>{course.Name } + {course.id}
     <button onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
