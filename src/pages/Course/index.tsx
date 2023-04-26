@@ -359,7 +359,7 @@ const Index = () => {
           </Grid>
         <Grid item xs={matches ? 12 : 3.5} style={{
           
-          ...( matches ? {paddingLeft: "1em",} : {paddingLeft: 0,} ),
+          ...( matches ? {paddingRight: "2em",} : {paddingLeft: 0,} ),
         }}>
           <div
             ref={containerRef}
@@ -387,9 +387,6 @@ const Index = () => {
                   transition: "none !important",
                   backgroundColor: "transparent",
                 },
-               
-                  
-                
               }}
               
               variant="persistent"
