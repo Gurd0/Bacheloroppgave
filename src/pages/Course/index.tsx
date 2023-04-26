@@ -1,6 +1,7 @@
 import { DocumentReference } from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   useCurrentPage,
   useFullCourse,
@@ -9,7 +10,7 @@ import {
 import CourseTree from "./components/CourseTree";
 
 import Grid from "@mui/material/Grid";
-import { Box, positions } from "@mui/system";
+import { Box, padding, positions } from "@mui/system";
 import CourseMobileStep from "./components/CourseMobileStep";
 
 import { Button, Drawer, Paper } from "@mui/material";
@@ -62,6 +63,8 @@ const Index = () => {
 
   const prevPageRef = useRef<PageType>();
 
+  const matches = useMediaQuery('(max-width:740px)');
+
   useEffect(() => {
     const asyncArrow = async () => {
       if (prevPageRef.current && prevPageRef.current?.Type !== "Quiz") {
@@ -79,6 +82,16 @@ const Index = () => {
     type: "error",
     children: [],
   });
+  useEffect(() => {
+    if(matches){
+      setXsSize(xsSize => 11);
+      setOpen(true)
+    }
+    else{
+      setXsSize(7.5)
+    }
+  },[matches])
+
   useEffect(() => {
     if (
       open &&
@@ -249,17 +262,16 @@ const Index = () => {
   };
   return (
     <>
-      
       <Grid
         container
         spacing={2}
         style={{
           backgroundColor: "#e8e8e8",
           paddingLeft: "1em",
+          display: "flex",
+          
         }}
       >
-        
-       
         <Grid item xs={xsSize}>
           <div
             style={{
@@ -270,7 +282,8 @@ const Index = () => {
               overflow: "auto",
               backgroundColor: "whitesmoke",
               display: "flex",
-              flexDirection: "column",
+              flexDirection: 'column',
+            
             }}
           >
             <Box style={{}}>
@@ -314,26 +327,20 @@ const Index = () => {
             </div>
           </div>
         </Grid>
-        <Grid item xs={0.5}>
-          <Button
+        <Grid item xs={0.7} style={{
+          paddingLeft: 0,
+         
+        }}>
+            <Button
             style={
-              !open
-                ? {
-                    display: "flex",
-                    alignContent: "center",
-                    top: "20em",
-                    right: 0,
-
-                    transform: "rotate(90deg)",
-                  }
-                : {
-                    display: "flex",
-                    alignContent: "center",
-                    top: "20em",
-                    right: 0,
-
-                    transform: "rotate(270deg)",
-                  }
+            {
+                display: "flex",
+                alignContent: "center",
+                top: "20em",
+                ...( matches ? {display:"none"} : {} ),
+                ...( open ? {transform: "rotate(270deg)",} : {transform: "rotate(90deg)",} ),
+              
+                }
             }
             onClick={() => {
               setOpen(!open);
@@ -349,46 +356,59 @@ const Index = () => {
               />
             )}
           </Button>
-        </Grid>
-        <Grid item xs={3.5} style={{ paddingRight: "0em" }}>
+          </Grid>
+        <Grid item xs={matches ? 12 : 3.5} style={{
+          
+          ...( matches ? {paddingLeft: "1em",} : {paddingLeft: 0,} ),
+        }}>
           <div
             ref={containerRef}
             style={{
-              position: "relative",
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <Drawer
-              open={open}
+              open={(open)}
               anchor={"right"}
               sx={{
+                overflowY: "hidden",
+                
                 backgroundColor: "transparent",
-                marginLeft: "auto",
-                width: 200,
                 "& .MuiBackdrop-root": {
                   display: "none",
                 },
                 "& .MuiDrawer-paper": {
+                 
                   width: "100%",
-                  position: "absolute",
-                  height: { height },
+                  ...( matches ? {paddingBottom: "1em",} : {paddingBottom: 0,} ),
+                  ...( open ? {position: "relative",} : {position: 'absolute',} ),
+                  height: "auto",
                   transition: "none !important",
                   backgroundColor: "transparent",
                 },
+               
+                  
+                
               }}
+              
               variant="persistent"
               onClose={() => setOpen(false)}
               PaperProps={{ style: { border: "none" } }}
             >
-              <div style={{ height: "33em" }}>
+              <div style={{ }}>
                 <Paper
                   variant="outlined"
                   elevation={10}
                   sx={{
                     p: "2vh",
+                    height: "auto",
+                    width: "90%",
                     borderRadius: "10px",
                     borderColor: "black",
-                    overflov: "auto",
+                    
                   }}
+                  
                 >
                   <CourseTree
                     tree={tree}
@@ -398,7 +418,7 @@ const Index = () => {
                 </Paper>
               </div>
             </Drawer>
-          </div>
+            </div>
         </Grid>
       </Grid>
     </>
