@@ -56,7 +56,7 @@ const Index = () => {
   const completedPagesHook = useGetCompletedPages(slug, user?.uid || "");
 
   //open for drawer
-  const [xsSize, setXsSize] = useState<number>(8);
+  const [xsSize, setXsSize] = useState<number>(12);
   const [open, setOpen] = useState<boolean>(true);
   const [height, setHeight] = useState<string>("40em");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +94,7 @@ const Index = () => {
 
   useEffect(() => {
     if (
-      open &&
+      (open && !matches) &&
       containerRef != null &&
       containerRef.current != null &&
       containerRef.current.clientHeight != null
