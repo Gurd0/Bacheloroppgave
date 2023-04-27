@@ -82,13 +82,15 @@ export default function Home() {
   }, [draftCoursesHook]);
 
   const handleClick = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>, courseId?: string) => {
+    console.log("hei")
+    
     const target = e.target as HTMLButtonElement
     if(target.name === 'optionButton') {
         e.preventDefault();
         e.stopPropagation();
     }else {
         if(courseId && target.id == "cardClickable"){
-          window.location.href = "admin/edit/" + courseId
+          window.location.href = "/admin/edit/" + courseId
         }
     }
 }
@@ -197,6 +199,7 @@ const onDragEnd = (result: any, topic: string) => {
                           />
                           {course.image ? (
                             <CardMedia
+                              id="cardClickable"
                               sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
                               component="img"
                               height="100"
@@ -205,6 +208,7 @@ const onDragEnd = (result: any, topic: string) => {
                             />
                           ) : (
                             <CardMedia
+                              id="cardClickable"
                               sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
                               component="img"
                               height="100"
