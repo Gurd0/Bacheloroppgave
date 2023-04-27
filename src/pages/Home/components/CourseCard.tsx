@@ -15,6 +15,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Link } from "react-router-dom";
 interface PropsType {
   course: CourseType;
+  defaultImage: string;
 }
 
 const CourseCard = (props: PropsType) => {
@@ -29,6 +30,7 @@ const CourseCard = (props: PropsType) => {
       >
         {props.course.Completed ? (
           <Card
+            key={props.course.id}
             sx={{
               backgroundColor: "#dfedd6",
               borderRadius: "16px",
@@ -50,7 +52,7 @@ const CourseCard = (props: PropsType) => {
                 sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
                 component="img"
                 height="100"
-                image="https://www.svgrepo.com/show/29301/maths-teacher-class-teaching-on-whiteboard.svg"
+                image={props.defaultImage}
                 alt="#"
               />
             )}

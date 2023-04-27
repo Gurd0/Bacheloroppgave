@@ -38,22 +38,14 @@ import FeedBackError from '../../Components/feedBack/feedBackError';
 import FeedBackSuccess from '../../Components/feedBack/feedBackSuccess';
 
 import SettingsIcon from '@mui/icons-material/Settings';
+import { styleModalBox } from '../../Assets/css';
+import { ModalBox } from '../../Components/modalBox';
 
 interface autoFill {
   label: string,
   id: string,
 }
-const styleModalBox = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+
 function Index(){
   const { slug }: any = useParams();
   const [chapters, setChapters] = useState<ChapterType[]>([])
@@ -269,22 +261,8 @@ function Index(){
     {feedBack == "success" &&
     <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
     }
-    <Modal
-        open={openSetting}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styleModalBox} style={{
-          backgroundColor: 'white'
-        }}>
-        <div style={{
-            display: "flex",
-            flexDirection: 'column',
-            justifyContent: 'space-evenly',
-            gap: "20px",      
-            
-          }}>
-             <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
+    <ModalBox open={openSetting} setOpen={setOpenSetting}>
+          <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
             let courseClone = course
             courseClone.image = e.target.value
             setCourse({...courseClone})
@@ -316,9 +294,8 @@ function Index(){
           <Button onClick={()=> {
             setOpenSetting(!openSetting)
           }}>Exit</Button>
-          </div>
-        </Box>
-    </Modal>
+          
+    </ModalBox>
     <Grid item xs={8} >
       <div style={{
         border: '1px solid black',

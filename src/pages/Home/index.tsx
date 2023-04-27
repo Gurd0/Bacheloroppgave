@@ -23,6 +23,7 @@ import {
   useFullCourse,
   useGetCollection,
   useGetCompletedCourses,
+  useGetDefaultImage,
 } from "../../hooks/queries";
 
 import DoneIcon from "@mui/icons-material/Done";
@@ -41,11 +42,19 @@ export default function Home() {
   const { user } = useContext(AuthContext);
 
   const [completedCourseList, setCompletedCourseList] = useState<string[]>([]);
+  const [defaultImage, setDefaultImage] = useState<string>("")
 
   const coursesHook = useGetCollection("Courses", false);
+  const defaultImageHook = useGetDefaultImage()
   const completedCourses = useGetCompletedCourses(user?.uid || "");
-  //Spør om dæ e bra å ha to i ein eller om e bør ha to useEffects
-
+  
+  useEffect(() => {
+    if(defaultImageHook.data && defaultImageHook.status == "success"){
+      const img: any = defaultImageHook.data 
+      
+      setDefaultImage(img.image)
+    }
+  },[defaultImageHook])
   //Sets courses from coursesHook when status is success
   useEffect(() => {
     if (coursesHook.status == "success") {
@@ -95,6 +104,7 @@ export default function Home() {
           {[...courseTopicMap.keys()].map((k) => {
             return (
               <Box
+                key={k}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -121,14 +131,14 @@ export default function Home() {
                     >
                       {courseTopicMap.get(k)?.map((course) => {
                         return (
-                          <Grid item xs={12} sm={6} md={4}>
+                          <Grid key={course.id} item xs={12} sm={6} md={4}>
                             {course.Prerequisite &&
                             !completedCourseList.includes(
                               course.Prerequisite
                             ) ? (
-                              <DisabledCard course={course} courses={courses} />
+                              <DisabledCard key={course.id} course={course} courses={courses} />
                             ) : (
-                              <CourseCard course={course} />
+                              <CourseCard key={course.id} course={course} defaultImage={defaultImage}/>
                             )}
                           </Grid>
                         );

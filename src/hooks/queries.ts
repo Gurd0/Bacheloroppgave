@@ -33,6 +33,16 @@ const fetchTopicNames = async () => {
     })
   }) 
 }
+const fetchDefaultImage = async () => {
+  return new Promise(async (resolve, reject) => { 
+    const docRef = doc(db, "defaultImage", "image");
+    const docSnap = await getDoc(docRef); 
+
+    if (docSnap.exists()) {
+      resolve(docSnap.data())
+    }
+  }) 
+}
 const fetchCurrentPageFromFirebase = async (id: string, collection: string) => {
   if (id !== "" && collection !== "") {
     const docRef = doc(db, collection, id);
@@ -181,6 +191,15 @@ export const useGetCompletedCourses = (userId: string) => {
     ["s"],
     async () => {
       return await Promise.resolve(fetchCompletedCourses(docRef));
+    },
+    { refetchOnWindowFocus: false }
+  );
+}
+export const useGetDefaultImage = () => {
+  return useQuery(
+    ["defaultImage"],
+    async () => {
+      return await Promise.resolve(fetchDefaultImage());
     },
     { refetchOnWindowFocus: false }
   );
