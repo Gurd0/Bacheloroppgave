@@ -1,11 +1,13 @@
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
   CardHeader,
   CardMedia,
   Grid,
+  TextField,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import styled, { css } from "styled-components";
@@ -14,8 +16,12 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ReactDOM from "react-dom/client";
 import { useParams } from "react-router";
 import { CourseType, FullCourse } from "../../context/context";
-import { useFullCourse, useGetCollection } from "../../hooks/queries";
+import { useFullCourse, useGetCollection, useGetDefaultImage } from "../../hooks/queries";
 import CardMenu from "./components/cardMenu";
+
+import SettingsIcon from '@mui/icons-material/Settings';
+import { ModalBox } from "../../Components/modalBox";
+import { setDefaulfImage } from "./helper/firebase";
 
 
 const StyleDiv = styled.div`
@@ -33,6 +39,19 @@ export default function Home() {
 
   const fullCourse = useGetCollection("Courses", false);
   const draftCoursesHook = useGetCollection("Courses", true)
+
+  const [openSetting, setOpenSetting] = useState(false)
+  const [image, setImage] = useState<string>("")
+  const [defaultImage, setDefaultImage] = useState<string>("")
+  const defaultImageHook = useGetDefaultImage()
+ 
+  
+  useEffect(() => {
+    if(defaultImageHook.data && defaultImageHook.status == "success"){
+      const img: any = defaultImageHook.data 
+      setDefaultImage(img.image)
+    }
+  },[defaultImageHook])
 
   useEffect(() => {
     if (!fullCourse.isLoading) {
@@ -68,14 +87,12 @@ export default function Home() {
         e.preventDefault();
         e.stopPropagation();
     }else {
-      console.log(target.id)
         if(courseId && target.id == "cardClickable"){
           window.location.href = "admin/edit/" + courseId
         }
     }
 }
 const removeCourseLocal = (courseId: string, topic: string) => {
-  console.log(courses)
   courses.map((c, index) => {
     if(c.id === courseId){
       let coursesClone = courses
@@ -93,7 +110,6 @@ const onDragEnd = (result: any, topic: string) => {
     courseListFromMap.splice(result.destination.index, 0, removed)
     courseTopicMapClone.set(topic, courseListFromMap)
     setCoursesTopicMap(courseTopicMapClone)
-    console.log(courseTopicMapClone)
   }
   
 };
@@ -104,9 +120,28 @@ const onDragEnd = (result: any, topic: string) => {
           <CircularProgress />
         ) : (
           <>
+          <Button onClick={() => {
+            window.location.replace('/admin/new');
+          }}>Ny</Button>
+
+          <Button onClick={() => {
+            setOpenSetting(!openSetting)
+          }}><SettingsIcon />Settings</Button>
+
+          <ModalBox open={openSetting} setOpen={setOpenSetting}>
+            <TextField id="outlined-basic" label="Svg icon" variant="outlined" onChange={(e: any)=> {
+              setImage(e.target.value)
+            }}/>
+           <Button onClick={() => {
+            setDefaulfImage(image)
+           }}>Sett standar bilde</Button>
+            <img src={image} width="120" height="120" />
+          </ModalBox>
+          
           {[...courseTopicMap.keys()].map((key) => {
             return(
               <Box
+                key={key}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -139,7 +174,7 @@ const onDragEnd = (result: any, topic: string) => {
               return (
                 <Draggable key={course.id} draggableId={course.id} index={index} >
                   {(provided) => (  
-                  <Grid item xs={12} sm={6} md={4} >
+                  <Grid item xs={12} sm={6} md={4} key={course.id}>
                     <StyleDiv 
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -157,10 +192,26 @@ const onDragEnd = (result: any, topic: string) => {
                             justifyContent: "space-between",
                           }}>
                             {course.Name} 
-                            <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                            <CardMenu key={course.id} courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
                           </span>}
                           />
-                          <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
+                          {course.image ? (
+                            <CardMedia
+                              sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                              component="img"
+                              height="100"
+                              image={course.image}
+                              alt="#"
+                            />
+                          ) : (
+                            <CardMedia
+                              sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                              component="img"
+                              height="100"
+                              image={defaultImage}
+                              alt="#"
+                            />
+                          )}
                         </Card>
                       </CardActionArea>
                       </StyleDiv>
