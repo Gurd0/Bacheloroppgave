@@ -6,6 +6,10 @@ import { ChapterType, PageType } from "../../../../context/context";
 import { Box, Button, Card, Grid, Popper, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 
+
+import RemoveIcon from '@mui/icons-material/Remove';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 interface ToggleProps {
     item : PageType
     provided: any 
@@ -81,14 +85,19 @@ let StyleDiv = styled.div`
         </Grid>
         <Grid item xs={4} >
         
-        <button onClick={() => {
+        <Button 
+        startIcon={<RemoveIcon />}
+        title={"remove"}
+        onClick={() => {
             Props.removeItem(Props.chapterId, Props.pageId)
-         }}>Remove</button>
-         <button onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+         }}>Remove</Button>
+         <Button 
+         startIcon={<BorderColorIcon />}
+         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
            // Props.changePageName(Props.chapterId, Props.pageId)
            setOpen(!open)
            setAnchorEl(event.currentTarget);
-         }}>Change Name</button>
+         }}>Change Name</Button>
           <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
             <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
             <TextField id="standard-basic" label="Page Name" variant="standard" onChange={(event) =>{

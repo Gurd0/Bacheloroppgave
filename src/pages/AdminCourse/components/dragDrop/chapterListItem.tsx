@@ -6,7 +6,9 @@ import { CourseType, PageType } from "../../../../context/context";
 import ListItem from "./PageItem";
 import { ChapterType } from "../../../../context/context";
 import { Box, Button, Popper, TextField } from "@mui/material";
-
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 interface ToggleProps {
     item : any
     provided: any 
@@ -55,14 +57,26 @@ const DragItem = styled.div`
       {...Props.provided.dragHandleProps}
     >
         
-       <h2>{Props.chapter.ChapterName} <button onClick={() => Props.addPage(Props.chapter.id) }>Add Page</button>
-       <button onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+       <h2>
+        {Props.chapter.ChapterName} 
+       <Button 
+       title={"Change name"}
+       startIcon={<BorderColorIcon />}
+       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         setOpen(!open)
         setAnchorEl(event.currentTarget);
-       }}>Change Name</button>
-        <button onClick={() => {
+       }}>Change Name</Button>
+
+       <div style={{
+        display: 'flex',
+        alignContent: "space-between",
+       }}>
+       <Button  title={"Add Chapter"} onClick={() => Props.addPage(Props.chapter.id) } startIcon={<AddIcon />}></Button>
+       <Button  title={"Remove Chapter"} startIcon={<RemoveIcon />} onClick={() => {
             Props.removeChapter(Props.chapter.id)
-       }}> remove </button>
+       }}> </Button>
+       
+        </div>
        </h2>
       
        <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
