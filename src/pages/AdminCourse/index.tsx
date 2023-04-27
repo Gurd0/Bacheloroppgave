@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom/client';
 import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 
-import { Box } from '@mui/system';
+import { Box, height } from '@mui/system';
 import { useQuery } from 'react-query';
 
 import { CourseType, FullCourse, RenderTree } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Modal, Popper, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Modal, Popper, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
@@ -38,8 +38,14 @@ import FeedBackError from '../../Components/feedBack/feedBackError';
 import FeedBackSuccess from '../../Components/feedBack/feedBackSuccess';
 
 import SettingsIcon from '@mui/icons-material/Settings';
+import SaveIcon from '@mui/icons-material/Save';
+import AddIcon from '@mui/icons-material/Add';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 import { styleModalBox } from '../../Assets/css';
 import { ModalBox } from '../../Components/modalBox';
+
+
 
 interface autoFill {
   label: string,
@@ -289,11 +295,17 @@ function Index(){
             sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Prerequisite" />}
           />
-    
           {getMenuItem()}
-          <Button onClick={()=> {
-            setOpenSetting(!openSetting)
-          }}>Exit</Button>
+          <p>
+          Draft : {course.draft.toString()}
+          <Switch inputProps={{ 'aria-label': 'Size switch demo' }}  defaultChecked size="small" onChange={() => {
+            changeDraft(course.id, !course.draft)
+            console.log(course.draft)
+            const courseClone = course
+            courseClone.draft = !course.draft
+            setCourse({...courseClone})
+          }}/>
+          </p>
           
     </ModalBox>
     <Grid item xs={8} >
@@ -328,20 +340,24 @@ function Index(){
     }}><SettingsIcon />Settings</Button>
     <div style={{
       overflow: 'auto',
-      maxHeight: "40em"
+      maxHeight: "40em",
     }}>
    
     
     <h2>{course.Name } + {course.id}
-    <button onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
+    <Button 
+    startIcon={<BorderColorIcon />}
+    onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
       setOpen(!open)
       setAnchorEl(event.currentTarget);
     }}>
       Change Name
-    </button>
-     <button onClick = {() =>{
+    </Button>
+     <Button 
+     startIcon={<AddIcon />}
+     onClick = {() =>{
           addChapter()
-        }} >Add Chapter</button>
+        }} >Add Chapter</Button>
      </h2>
 
     <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
@@ -357,24 +373,28 @@ function Index(){
       }}>Ok</Button>
       </Box>
     </Popper>
-
+    
     {chapters ?
       <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
     : <h1>hmm</h1>
     }
+    
     </div>
+    <Button
+    variant='contained'
+    title={"Save"}
+    startIcon={<SaveIcon style={{
+      transform: "scale(1.8)",
+    }}/>}
+    style={{
+      width: "90%",
+      height: "3em",
+    }}
+    onClick={() =>{
+      saveToDraft()
+    }}>Save</Button>
     </Grid>
   </Grid>
-  <button onClick={() =>{
-    saveToDraft()
-  }}>Save</button>
-  <button onClick={() =>{
-    changeDraft(course.id, !course.draft)
-    console.log(course.draft)
-    const courseClone = course
-    courseClone.draft = !course.draft
-    setCourse({...courseClone})
-  }}>draft {course.draft.toString()}</button>
     </>
   )
 }
