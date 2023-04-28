@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import styled, { css } from "styled-components";
 import { CourseType, PageType } from "../../../../context/context";
@@ -9,6 +9,7 @@ import { Box, Button, Popper, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { DocumentReference, namedQuery } from "firebase/firestore";
 interface ToggleProps {
     item : any
     provided: any 
@@ -48,7 +49,16 @@ const DragItem = styled.div`
     newpage.splice(result.destination.index, 0, removed);
     setPage(newpage);
   };
-  
+  useEffect(() => {
+    let chaptersClone = Props.chapters
+    chaptersClone.map((c, index) => {
+        if(c.id === Props.chapter.id){
+            chaptersClone[index].Pages = page
+            Props.setChapters([...chaptersClone])
+        }
+    })
+  },[page])
+
   return (
     <DragItem
       ref={Props.provided.innerRef}
@@ -97,25 +107,66 @@ const DragItem = styled.div`
                     {...provided.droppableProps}  
                     ref={provided.innerRef}  
                 > 
-                    {page.map((page: PageType, index: number) => (  
-                        <Draggable key={page.id} draggableId={page.id} index={index} >  
+                <>
+                   {page.map((pageMap: any, index: number) => {
+
+                     //TODO: Elendig kode men får ikke tid tel å sjå på dæ hær.
+
+                    for (const [key, value] of Object.entries(pageMap)) {
+                        //make key type any to get objects
+                       const keyAsAny = value as any;
+                       const NameAndType= key.split("&&");  
+                       if(!pageMap.id){
+                           return(
+                           <Draggable key={keyAsAny.id} draggableId={keyAsAny.id} index={index}>  
+                           {(provided, snapshot) => (  
+                               <ListItem 
+                               key={keyAsAny.id}
+                               NameAndType={NameAndType}
+                               provided={provided}
+                               snapshot={snapshot}
+                               item={pageMap}
+                               removeItem={Props.removePage}
+                               chapterId={Props.chapter.id}
+                               pageId={keyAsAny.id}
+                               setSelectedPage={Props.setSelectedPage}
+                               selected={Props.selectedPage == page}
+                               changePageName={Props.changePageName}
+                               setChapters={Props.setChapters}
+                               chapters={Props.chapters}
+                           />
+                           )}
+                       
+                       </Draggable>   
+                           )
+                       }else{
+                        return(
+                            <Draggable key={pageMap.id} draggableId={pageMap.id} index={index}>  
                             {(provided, snapshot) => (  
                                 <ListItem
+                                key={pageMap.id}
+                                NameAndType={NameAndType}
                                 provided={provided}
                                 snapshot={snapshot}
-                                item={page}
+                                item={pageMap}
                                 removeItem={Props.removePage}
                                 chapterId={Props.chapter.id}
-                                pageId={page.id}
+                                pageId={keyAsAny.id}
                                 setSelectedPage={Props.setSelectedPage}
                                 selected={Props.selectedPage == page}
                                 changePageName={Props.changePageName}
                                 setChapters={Props.setChapters}
                                 chapters={Props.chapters}
                             />
-                            )}  
-                        </Draggable>  
-                    ))}  
+                            )}
+                        </Draggable>   
+                       
+                            )
+                       }
+                    }
+                   
+                    })}  
+                    </>
                     {provided.placeholder} 
                 </div>  
             )}  

@@ -22,6 +22,7 @@ interface ToggleProps {
     changePageName: (chapterId: string, pageId: string, name: string) => void
     setChapters: any
     chapters: ChapterType[]
+    NameAndType: any 
 }
 
 let StyleDiv = styled.div`
@@ -40,6 +41,7 @@ let StyleDiv = styled.div`
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false)
   const [textInput, setTextInput] = useState("")
+
     // Check for click type 
     const handleClick = (e: any) => {
         switch (e.detail) {
@@ -62,6 +64,10 @@ let StyleDiv = styled.div`
     
       }
     },[Props.selected]) 
+    useEffect(() => {
+      console.log(Props.item.Name)
+    },[Props.item])
+
   return (
     <StyleDiv
       ref={Props.provided.innerRef}
@@ -79,8 +85,14 @@ let StyleDiv = styled.div`
           display: 'flex',
           flexDirection: 'column',
         }}>
-          {Props.item.Name}   :   {Props.item.Type}
-         
+        {Props.item.Name && Props.item.Type 
+        ?
+        <h4>{Props.item.Name}   :   {Props.item.Type}</h4>
+        :
+        <h4>{Props.NameAndType[0]}   :   {Props.NameAndType[1]}</h4>
+        }
+      
+        
         </div>
         </Grid>
         <Grid item xs={4} >
