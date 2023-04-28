@@ -22,6 +22,7 @@ interface ToggleProps {
     changePageName: (chapterId: string, pageId: string, name: string) => void
     setChapters: any
     chapters: ChapterType[]
+
 }
 
 let StyleDiv = styled.div`
@@ -40,6 +41,8 @@ let StyleDiv = styled.div`
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false)
   const [textInput, setTextInput] = useState("")
+  const [page , setPage] = useState<PageType>(Props.item)
+
     // Check for click type 
     const handleClick = (e: any) => {
         switch (e.detail) {
@@ -47,7 +50,9 @@ let StyleDiv = styled.div`
           case 2:
             console.log("double click");
             const page = Props.item
-            Props.setSelectedPage(page)
+            Props.setSelectedPage({...page})
+            console.log(page)
+            console.log(Props.selected)
 
             break;
         }
@@ -62,6 +67,10 @@ let StyleDiv = styled.div`
     
       }
     },[Props.selected]) 
+    useEffect(() => {
+      console.log(Props.item.Name)
+    },[Props.item])
+
   return (
     <StyleDiv
       ref={Props.provided.innerRef}
@@ -79,8 +88,11 @@ let StyleDiv = styled.div`
           display: 'flex',
           flexDirection: 'column',
         }}>
-          {Props.item.Name}   :   {Props.item.Type}
-         
+        
+        <h4>{page.Name}   :   {page.Type}</h4>
+        
+      
+        
         </div>
         </Grid>
         <Grid item xs={4} >
@@ -89,7 +101,8 @@ let StyleDiv = styled.div`
         startIcon={<RemoveIcon />}
         title={"remove"}
         onClick={() => {
-            Props.removeItem(Props.chapterId, Props.pageId)
+          
+            Props.removeItem(Props.chapterId, Props.item.id)
          }}>Remove</Button>
          <Button 
          startIcon={<BorderColorIcon />}

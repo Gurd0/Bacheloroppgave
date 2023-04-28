@@ -16,7 +16,7 @@ import ChapterListItem from "./chapterListItem";
   
 const ChapterDragDrop = (Props: ToggleProps) => {
     const [open, setOpen] = useState(false);
-
+  
     const onDragEnd = (result: any) => {
         const newpage = Array.from(Props.chapters);
         const [removed] = newpage.splice(result.source.index, 1);
@@ -117,10 +117,8 @@ const ChapterDragDrop = (Props: ToggleProps) => {
                                 setChapters={Props.setChapters}
                                 provided={provided}
                                 snapshot={snapshot}
-                                item={"item"}
                                 addPage={addPage}
                                 chapter={chapter}
-                                pages={chapter.Pages}
                                 changeChapterName={changeChapterName}
                                 removePage={removePage}
                                 setSelectedPage={Props.setSelectedPage}

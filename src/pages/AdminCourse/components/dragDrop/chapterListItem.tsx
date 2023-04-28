@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import styled, { css } from "styled-components";
 import { CourseType, PageType } from "../../../../context/context";
@@ -9,14 +9,13 @@ import { Box, Button, Popper, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { DocumentReference, namedQuery } from "firebase/firestore";
 interface ToggleProps {
-    item : any
     provided: any 
     snapshot: any
     addPage: (chapterId: string) => void
     chapters: ChapterType[]
     chapter: ChapterType
-    pages: PageType[]
     changeChapterName: (name: string, id: string) => void
     removePage: (chapterId: string, pageId: string) => void
     setSelectedPage: any
@@ -37,18 +36,28 @@ const DragItem = styled.div`
 `;
 
  function ChapterListItem(Props: ToggleProps) {
-  const [page, setPage] = useState<PageType[]>(Props.pages);
+  const [pages, setPages] = useState<PageType[]>(Props.chapter.Pages);
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [textInput, setTextInput] = useState("")
 
+
   const onDragEnd = (result: any) => {
-    const newpage = Array.from(page);
+    const newpage = Array.from(pages);
     const [removed] = newpage.splice(result.source.index, 1);
     newpage.splice(result.destination.index, 0, removed);
-    setPage(newpage);
+    setPages(newpage);
   };
-  
+  useEffect(() => {
+    let chaptersClone = Props.chapters
+    chaptersClone.map((c, index) => {
+        if(c.id === Props.chapter.id){
+            chaptersClone[index].Pages = pages
+            Props.setChapters([...chaptersClone])
+        }
+    })
+  },[pages])
+
   return (
     <DragItem
       ref={Props.provided.innerRef}
@@ -97,10 +106,17 @@ const DragItem = styled.div`
                     {...provided.droppableProps}  
                     ref={provided.innerRef}  
                 > 
-                    {page.map((page: PageType, index: number) => (  
-                        <Draggable key={page.id} draggableId={page.id} index={index} >  
+                <>
+                   {Props.chapter.Pages.map((page: any, index: number) => {
+
+                     //TODO: Elendig kode men får ikke tid tel å sjå på dæ hær.
+                
+                        if(page.id){
+                        return(
+                            <Draggable key={page.id} draggableId={page.id} index={index}>  
                             {(provided, snapshot) => (  
                                 <ListItem
+                                key={page.id}
                                 provided={provided}
                                 snapshot={snapshot}
                                 item={page}
@@ -108,14 +124,19 @@ const DragItem = styled.div`
                                 chapterId={Props.chapter.id}
                                 pageId={page.id}
                                 setSelectedPage={Props.setSelectedPage}
-                                selected={Props.selectedPage == page}
+                                selected={Props.selectedPage.id == page.id}
                                 changePageName={Props.changePageName}
                                 setChapters={Props.setChapters}
                                 chapters={Props.chapters}
                             />
-                            )}  
-                        </Draggable>  
-                    ))}  
+                            )}
+                        </Draggable>   
+                       
+                            )
+                    }
+                
+                    })}  
+                    </>
                     {provided.placeholder} 
                 </div>  
             )}  

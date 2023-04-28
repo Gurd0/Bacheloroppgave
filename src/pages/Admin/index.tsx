@@ -52,7 +52,11 @@ export default function Home() {
       setDefaultImage(img.image)
     }
   },[defaultImageHook])
-
+  useEffect(() => {
+    if(defaultImage){
+      setImage(defaultImage)
+    }
+  },[defaultImage])
   useEffect(() => {
     if (!fullCourse.isLoading) {
       setCourses(fullCourse.data as CourseType[]);
@@ -131,7 +135,7 @@ const onDragEnd = (result: any, topic: string) => {
           }}><SettingsIcon />Settings</Button>
 
           <ModalBox open={openSetting} setOpen={setOpenSetting}>
-            <TextField id="outlined-basic" label="Svg icon" variant="outlined" onChange={(e: any)=> {
+            <TextField id="outlined-basic" label="Svg icon" variant="outlined" value={image} onChange={(e: any)=> {
               setImage(e.target.value)
             }}/>
            <Button onClick={() => {
@@ -270,24 +274,3 @@ const onDragEnd = (result: any, topic: string) => {
       </Box>
   );
 }
-/*
-<Grid item xs={12} sm={6} md={4}>
-                    <CardActionArea 
-                    onClick={(event) => {
-                      handleClick(event, course.id)
-                    }} >
-                      <Card>
-                        <CardHeader id="cardClickable" title={
-                        <span style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}>
-                          {course.Name} 
-                          <CardMenu courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
-                        </span>}
-                        />
-                        <CardMedia id="cardClickable" component="img" height="200" image="#" alt="#" />
-                      </Card>
-                    </CardActionArea>
-                </Grid> 
-*/
