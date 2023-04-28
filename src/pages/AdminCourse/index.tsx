@@ -80,6 +80,7 @@ function Index(){
   const fullCourse = useGetCollection("Courses", false);
   const [coursNameAndId, setCourseNameAndId] = useState<autoFill[]>([])
   const [prerequisiteIndex, setPrerequisiteIndex ] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (!topicName.isLoading && topicName.status == "success") {
@@ -105,44 +106,57 @@ function Index(){
    
   useEffect(() => {
     const test = async () => {
-        let chapters: ChapterType[] = [];
+        let chaptersLet: ChapterType[] = [];
         let courseD: CourseType;
         return new Promise(async (resolve, reject) => {
           await getDoc(doc(db, "Courses", slug))
             .then((course) => course.data() as CourseType)
             .then(async (courseData) => {
               courseD = courseData;
-              chapters = await Promise.all(
+              chaptersLet = await Promise.all(
                 courseData.Chapters.map(async (ref:DocumentReference) => {
-                  return getDoc(ref).then((chapter) => chapter.data() as ChapterType);
+                  return await getDoc(ref).then((chapter) => chapter.data() as ChapterType);
                 })
               );
             })
             .catch((err) => {
               console.log("Error : " + err);
             })
-            .then(() => {
-              
-              chapters.map((chapter, index) => {
-                
-                chapter.Pages.map(async (pageRef: Map<string, DocumentReference>, pageIndex: number) => {    
-                 chapters[index].Pages[pageIndex] =  (await getDoc(Object.values(pageRef)[0])).data() as PageType
+            .then(async () => {
+
+                  const promise: any[] = []
+                    chaptersLet.map((c, index) => {
+                      c.Pages.map(async (pageRef: Map<string, DocumentReference>, pageIndex: number) => {  
+                        promise.push(
+                          new Promise(async (resolve,reject) => {
+                            const p =  await getDoc(Object.values(pageRef)[0])
+                            resolve(chaptersLet[index].Pages[pageIndex] = p.data() as PageType)
+                          })
+                        )
+                      })
+                      Promise.all(promise).then(() => {
+                        console.log(chaptersLet)
+                        setChapters([...chaptersLet])
+                        setSelectedPage({...chaptersLet[0].Pages[0]})
+                        setIsLoading(false)
+                      })
                 })
-              })
+                
             }).catch((err) => {
               console.log("error : " + err)
             }).finally(() => {
-              const course: CourseType = {
+              console.log(chaptersLet)
+              const courseConst: CourseType = {
                 Name: courseD.Name,
                 draft: courseD.draft,
                 Topic: courseD.Topic,
                 Prerequisite: courseD.Prerequisite,
                 id: slug,
-                Chapters: chapters,
+                Chapters: chaptersLet,
                 image: courseD.image,
               };
-              setCourse({...course})
-              setChapters([...chapters])
+              setCourse({...courseConst})
+              
               if(course.Topic)
               setTopic(course.Topic)
               if(course.Prerequisite){
@@ -191,15 +205,19 @@ function Index(){
   }
   const setPageType = (type: string) => {
     if(selectedPage){
+      console.log("hei")
       let chapterClone = chapters
       let selectedPageClone = selectedPage
+      
       chapters.map((chapter, index) => {
          chapter.Pages.map((page: PageType, indexPage: number) => {
-            if(page == selectedPage){
-              chapterClone[index].Pages[indexPage].type = type
+            if(page.id == selectedPage.id){
+              console.log(selectedPage)
+              console.log(page)
+              chapterClone[index].Pages[indexPage].Type = type
               setChapters([...chapterClone])
               selectedPageClone.Type = type
-              setSelectedPage(selectedPageClone)
+              setSelectedPage({...selectedPageClone})
             }
          })
       })
@@ -374,7 +392,7 @@ function Index(){
       </Box>
     </Popper>
     
-    {chapters ?
+    {!isLoading ?
       <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
     : <h1>hmm</h1>
     }

@@ -11,13 +11,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { DocumentReference, namedQuery } from "firebase/firestore";
 interface ToggleProps {
-    item : any
     provided: any 
     snapshot: any
     addPage: (chapterId: string) => void
     chapters: ChapterType[]
     chapter: ChapterType
-    pages: PageType[]
     changeChapterName: (name: string, id: string) => void
     removePage: (chapterId: string, pageId: string) => void
     setSelectedPage: any
@@ -38,26 +36,27 @@ const DragItem = styled.div`
 `;
 
  function ChapterListItem(Props: ToggleProps) {
-  const [page, setPage] = useState<PageType[]>(Props.pages);
+  const [pages, setPages] = useState<PageType[]>(Props.chapter.Pages);
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [textInput, setTextInput] = useState("")
 
+
   const onDragEnd = (result: any) => {
-    const newpage = Array.from(page);
+    const newpage = Array.from(pages);
     const [removed] = newpage.splice(result.source.index, 1);
     newpage.splice(result.destination.index, 0, removed);
-    setPage(newpage);
+    setPages(newpage);
   };
   useEffect(() => {
     let chaptersClone = Props.chapters
     chaptersClone.map((c, index) => {
         if(c.id === Props.chapter.id){
-            chaptersClone[index].Pages = page
+            chaptersClone[index].Pages = pages
             Props.setChapters([...chaptersClone])
         }
     })
-  },[page])
+  },[pages])
 
   return (
     <DragItem
@@ -108,52 +107,24 @@ const DragItem = styled.div`
                     ref={provided.innerRef}  
                 > 
                 <>
-                   {page.map((pageMap: any, index: number) => {
+                   {Props.chapter.Pages.map((page: any, index: number) => {
 
                      //TODO: Elendig kode men får ikke tid tel å sjå på dæ hær.
-
-                    for (const [key, value] of Object.entries(pageMap)) {
-                        //make key type any to get objects
-                       const keyAsAny = value as any;
-                       const NameAndType= key.split("&&");  
-                       if(!pageMap.id){
-                           return(
-                           <Draggable key={keyAsAny.id} draggableId={keyAsAny.id} index={index}>  
-                           {(provided, snapshot) => (  
-                               <ListItem 
-                               key={keyAsAny.id}
-                               NameAndType={NameAndType}
-                               provided={provided}
-                               snapshot={snapshot}
-                               item={pageMap}
-                               removeItem={Props.removePage}
-                               chapterId={Props.chapter.id}
-                               pageId={keyAsAny.id}
-                               setSelectedPage={Props.setSelectedPage}
-                               selected={Props.selectedPage == page}
-                               changePageName={Props.changePageName}
-                               setChapters={Props.setChapters}
-                               chapters={Props.chapters}
-                           />
-                           )}
-                       
-                       </Draggable>   
-                           )
-                       }else{
+                
+                        if(page.id){
                         return(
-                            <Draggable key={pageMap.id} draggableId={pageMap.id} index={index}>  
+                            <Draggable key={page.id} draggableId={page.id} index={index}>  
                             {(provided, snapshot) => (  
                                 <ListItem
-                                key={pageMap.id}
-                                NameAndType={NameAndType}
+                                key={page.id}
                                 provided={provided}
                                 snapshot={snapshot}
-                                item={pageMap}
+                                item={page}
                                 removeItem={Props.removePage}
                                 chapterId={Props.chapter.id}
-                                pageId={keyAsAny.id}
+                                pageId={page.id}
                                 setSelectedPage={Props.setSelectedPage}
-                                selected={Props.selectedPage == page}
+                                selected={Props.selectedPage.id == page.id}
                                 changePageName={Props.changePageName}
                                 setChapters={Props.setChapters}
                                 chapters={Props.chapters}
@@ -162,9 +133,8 @@ const DragItem = styled.div`
                         </Draggable>   
                        
                             )
-                       }
                     }
-                   
+                
                     })}  
                     </>
                     {provided.placeholder} 
