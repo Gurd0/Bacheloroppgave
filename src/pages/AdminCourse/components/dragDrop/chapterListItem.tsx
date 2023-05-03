@@ -109,8 +109,11 @@ const DragItem = styled.div`
                 <>
                    {Props.chapter.Pages.map((page: any, index: number) => {
 
-                     //TODO: Elendig kode men får ikke tid tel å sjå på dæ hær.
-                
+                        let selected = false
+                        if( Props.selectedPage?.id && page?.id){
+                          selected = Props.selectedPage.id === page.id
+                        }
+                        
                         if(page.id){
                         return(
                             <Draggable key={page.id} draggableId={page.id} index={index}>  
@@ -124,7 +127,7 @@ const DragItem = styled.div`
                                 chapterId={Props.chapter.id}
                                 pageId={page.id}
                                 setSelectedPage={Props.setSelectedPage}
-                                selected={Props.selectedPage.id == page.id}
+                                selected={selected}
                                 changePageName={Props.changePageName}
                                 setChapters={Props.setChapters}
                                 chapters={Props.chapters}
