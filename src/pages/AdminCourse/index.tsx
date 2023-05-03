@@ -184,6 +184,7 @@ function Index(){
   },[slug])
 
   const saveToDraft = async () => {
+    console.log(course.Prerequisite)
     const c: CourseType = {
       Name: course.Name,
       id: course.id,
@@ -263,7 +264,7 @@ function Index(){
       
     <FormControl sx={{ m: 1 }} variant="standard">
       <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
-      <Input value={topic} onChange={(event) =>{
+      <Input value={course.Topic} onChange={(event) =>{
         setTopic(event.target.value);
       }}></Input>
     </FormControl>
@@ -272,7 +273,7 @@ function Index(){
         <Select
           labelId="customized-select-label"
           id="customized-select"
-          value={topic}
+          value={course.Topic}
           onChange={handleChangeTopicSelect}
         >
          <MenuItem value="">
@@ -306,23 +307,19 @@ function Index(){
             <img src={course.image}  width="120" height="120" />
           }
           <Autocomplete
-            onChange={(event, newValue) => {
-              if(event?.type == "change"){
-                const courseClone = course
-                if(newValue){
-                  courseClone.Prerequisite = newValue.id
-                  setCourse(courseClone)
-                }
-              }
-            }}
-            options={coursNameAndId}
-            defaultValue={coursNameAndId.find((e) => course.Prerequisite === e.id)}
-            getOptionLabel={option => option.label}
-            disablePortal
-            id="combo-box"
+           onChange={(event, newValue) => {
+            const courseClone = course
+            if(newValue){
+              courseClone.Prerequisite = newValue.id
+              setCourse(courseClone)
+            }
             
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Prerequisite" />}
+          }}
+          disablePortal
+          id="combo-box-demo"
+          options={coursNameAndId}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Prerequisite" />}
           />
           {getMenuItem()}
           <p>
