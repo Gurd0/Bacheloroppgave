@@ -264,7 +264,7 @@ function Index(){
       
     <FormControl sx={{ m: 1 }} variant="standard">
       <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
-      <Input value={course.Topic} onChange={(event) =>{
+      <Input defaultValue={topic} onChange={(event) =>{
         setTopic(event.target.value);
       }}></Input>
     </FormControl>
@@ -273,7 +273,7 @@ function Index(){
         <Select
           labelId="customized-select-label"
           id="customized-select"
-          value={course.Topic}
+          defaultValue={topic}
           onChange={handleChangeTopicSelect}
         >
          <MenuItem value="">
