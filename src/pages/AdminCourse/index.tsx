@@ -109,7 +109,13 @@ function Index(){
         let chaptersLet: ChapterType[] = [];
         let courseD: CourseType;
         return new Promise(async (resolve, reject) => {
-          await getDoc(doc(db, "Courses", slug))
+          await getDoc(doc(db, "Courses", slug)).then((c) => {
+            const data = c.data() as any
+            if(data.Chapters.length === 0){
+              setIsLoading(false)
+            } 
+            return(c)
+          })
             .then((course) => course.data() as CourseType)
             .then(async (courseData) => {
               courseD = courseData;
@@ -169,7 +175,12 @@ function Index(){
             })
         });
     } 
-    test()
+    console.log(slug)
+    if(!slug){
+      setIsLoading(false)
+    }else{
+      test()
+    }
   },[slug])
 
   const saveToDraft = async () => {
