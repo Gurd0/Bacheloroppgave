@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
+import FeedBackError from "../../Components/feedBack/feedBackError";
 import { auth, db } from "../../firebase";
 
 interface props {
@@ -34,6 +35,7 @@ const Form = (props: props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [feedBack, setFeedBack] = useState("none")
 
   //TODO: Need to update profile with given firstname and lastname
   const handleSubmit = async (e: any) => {
@@ -44,13 +46,19 @@ const Form = (props: props) => {
           displayName: name,
           email: userCredentials.user.email,
         });
-        console.log("USER REGISTERED!");
+      }).catch((err) => {
+        const error = err.toString().split(/[()]/)
+        const userError = error[1].split("/")
+        setFeedBack(userError[1])
+        
       })
       .then((userCredentials) => {
+        console.log("hmm")
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {
             displayName: firstName + " " + lastName,
           });
+          props.handleClose();
         } else {
           console.log(error);
         }
@@ -59,11 +67,15 @@ const Form = (props: props) => {
         setError(error.message);
         //console.log(errorMessage + " " + errorCode);
       });
-    props.handleClose();
+   
   };
 
   return (
     //onSubmit={handleSubmit} TODO: On submit with button type="submit" results in error in regards to firebase.
+    <>
+    {(feedBack != "none" && feedBack != "Success") && 
+          <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+      }
     <form style={formStyle}>
       <TextField
         sx={sxStyleTextField}
@@ -117,6 +129,7 @@ const Form = (props: props) => {
         </Button>
       </div>
     </form>
+    </>
   );
 };
 
