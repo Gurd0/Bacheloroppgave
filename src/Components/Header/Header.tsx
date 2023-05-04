@@ -10,7 +10,7 @@ export default function Header() {
       id="main-container"
       sx={{
         width: "100% - 1px",
-        height: "3em",
+        height: "4em",
         display: "flex",
         justifyContent: "stretch",
         border: "1px solid rgba(0, 0, 0, 0.12)",
@@ -61,7 +61,7 @@ export default function Header() {
             borderRadius: "50%",
           }}
         >
-          <Avatar sx={{ height: "100%", width: "80%", bgcolor: "black" }} />
+          <Avatar sx={{ width: "80%", bgcolor: "black" }} />
         </Button>
       </Box>
     </Box>
