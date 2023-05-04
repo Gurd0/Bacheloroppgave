@@ -124,7 +124,7 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
           </div>
       ))}
       </div>
-      <Button onClick={addNewAnswer}>Legg til nytt spørsmål</Button>
+      <Button onClick={addNewAnswer}>Legg til nytt svar alternativ</Button>
       <TextField
           id="outlined-select-correct"
           select

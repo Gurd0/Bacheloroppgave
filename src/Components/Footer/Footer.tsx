@@ -17,15 +17,15 @@ const styledIcon= {
 export default function Footer(){
     return (
         <Box className='Box-footer' sx={{
-          width: '100%',
+          maxWidth: '100%',
+          borderTop: "1px solid black"
         }}>
-          <hr style={{width:"100%"}}></hr>
           <Grid sx={{
                 width: "100%",
                 margin: "auto",
                 display: "grid",
-                padding: "40px",
-                gridGap: "16px",
+                
+               
                 alignItems: "center",
                 gridTemplateColumns: "1fr 1fr 1fr",
           }}> 
@@ -51,6 +51,7 @@ export default function Footer(){
             </Box>
             <Box
             sx={{
+              maxWidth: "80%",
               display: 'flex',
               alignItems: 'center',
               flexDirection: 'column',

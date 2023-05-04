@@ -158,7 +158,7 @@ export default function CourseTree(Props: ToggleProps) {
         onNodeSelect={handleSelect}
         sx={{ 
           flexGrow: 1,
-          maxWidth: "100%",
+          maxWidth: "95%",
         }}
       >
         <>

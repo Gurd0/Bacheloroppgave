@@ -9,13 +9,16 @@ export default function Header() {
     <Box
       id="main-container"
       sx={{
+        
+        position: "absolute",
+        backgroundColor: "white",
         width: "100%",
-        height: "3em",
+        height: "4em",
+        
         display: "flex",
         justifyContent: "stretch",
-        border: "1px solid rgba(0, 0, 0, 0.12)",
-        paddingTop: "8px",
-        paddingBottom: "8px",
+        borderBottom: "1px solid black",
+        zIndex: 10,
       }}
     >
       <Box
@@ -61,7 +64,7 @@ export default function Header() {
             borderRadius: "50%",
           }}
         >
-          <Avatar sx={{ height: "100%", width: "80%", bgcolor: "black" }} />
+          <Avatar sx={{ width: "80%", bgcolor: "black" }} />
         </Button>
       </Box>
     </Box>
