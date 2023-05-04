@@ -9,13 +9,15 @@ export default function Header() {
     <Box
       id="main-container"
       sx={{
-        width: "100% - 1px",
+        
+        position: "absolute",
+        backgroundColor: "white",
+        width: "100%",
         height: "4em",
         display: "flex",
         justifyContent: "stretch",
-        border: "1px solid rgba(0, 0, 0, 0.12)",
-        paddingTop: "8px",
-        paddingBottom: "8px",
+        borderBottom: "1px solid black",
+        zIndex: 10,
       }}
     >
       <Box

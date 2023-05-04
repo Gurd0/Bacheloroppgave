@@ -18,8 +18,8 @@ export default function Footer(){
     return (
         <Box className='Box-footer' sx={{
           maxWidth: '100%',
+          borderTop: "1px solid black"
         }}>
-          <hr style={{width:"98%"}}></hr>
           <Grid sx={{
                 width: "100%",
                 margin: "auto",
