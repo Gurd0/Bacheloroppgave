@@ -398,9 +398,8 @@ const Index = () => {
                   variant="outlined"
                   elevation={10}
                   sx={{
-                    p: "2vh",
                     height: "auto",
-                    width: "90%",
+                    width: "96%",
                     borderRadius: "10px",
                     borderColor: "black",
                     
