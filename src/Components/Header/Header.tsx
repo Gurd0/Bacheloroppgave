@@ -9,7 +9,7 @@ export default function Header() {
     <Box
       id="main-container"
       sx={{
-        width: "100%",
+        width: "100% - 1px",
         height: "3em",
         display: "flex",
         justifyContent: "stretch",
