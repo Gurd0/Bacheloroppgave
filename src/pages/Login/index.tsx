@@ -17,10 +17,12 @@ import {
 } from "firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import FeedBackError from "../../Components/feedBack/feedBackError";
 import { AuthContext } from "../../context/auth-context";
 import { auth, signInUser, signOutUser } from "../../firebase";
 import Home from "../Home";
 import Signup from "../SignUp";
+
 
 export default function LogIn() {
   const [token, setToken] = useState<IdTokenResult>();
@@ -31,6 +33,13 @@ export default function LogIn() {
   const { user } = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
+  const [feedBack, setFeedBack] = useState<string>("none")
+
+
+
+  /*useKeypress('Enter', () => {
+   tryLogin()
+  });*/ 
   const seeName = (e: any) => {
     console.log(user?.displayName);
   };
@@ -49,9 +58,22 @@ export default function LogIn() {
   if (isLoggingIn) {
     return <LinearProgress />;
   }
-
+  const userFeedBack = (err: string) => {
+    console.log("feedback")
+    const error = err.toString().split(/[()]/)
+    const userError = error[1].split("/")
+    setFeedBack(userError[1])
+    setIsLoggingIn(false);
+  }
+  const tryLogin = (e: any) => {
+    signInUser(e, email, password, userFeedBack);
+    setIsLoggingIn(true);
+  }
   return (
     <>
+    {(feedBack != "none" && feedBack != "Success") && 
+          <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+      }
       <Button onClick={seeName}>See Name</Button>
       {user && (
         <>
@@ -99,12 +121,10 @@ export default function LogIn() {
               />
               <Button
                 fullWidth
+                type="submit"
                 variant="contained"
                 sx={{ mt: 3, mb: 2, backgroundColor: "blue" }}
-                onClick={(e: any) => {
-                  signInUser(e, email, password);
-                  setIsLoggingIn(true);
-                }}
+                onClick={tryLogin}
               >
                 Logg inn
               </Button>
