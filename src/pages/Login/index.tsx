@@ -35,14 +35,6 @@ export default function LogIn() {
 
   const [feedBack, setFeedBack] = useState<string>("none")
 
-
-
-  /*useKeypress('Enter', () => {
-   tryLogin()
-  });*/ 
-  const seeName = (e: any) => {
-    console.log(user?.displayName);
-  };
   useEffect(() => {
     if (!user) {
       return;
@@ -74,7 +66,6 @@ export default function LogIn() {
     {(feedBack != "none" && feedBack != "Success") && 
           <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
       }
-      <Button onClick={seeName}>See Name</Button>
       {user && (
         <>
           {" "}
