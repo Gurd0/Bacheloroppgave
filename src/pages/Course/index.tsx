@@ -266,10 +266,12 @@ const Index = () => {
         container
         spacing={2}
         style={{
+          paddingTop: "4em",
+          position: "static",
           backgroundColor: "#e8e8e8",
           paddingLeft: "1em",
           display: "flex",
-          
+          paddingBottom: "1em"
         }}
       >
         <Grid item xs={xsSize}>
@@ -283,10 +285,9 @@ const Index = () => {
               backgroundColor: "whitesmoke",
               display: "flex",
               flexDirection: 'column',
-            
             }}
           >
-            <Box style={{}}>
+            <Box>
             {(feedBack != "none" && feedBack != "Success") && 
               <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
               }

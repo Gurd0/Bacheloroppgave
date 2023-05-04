@@ -96,7 +96,9 @@ export default function Home() {
   }, [courses]);
 
   return (
-    <Box>
+    <Box style={{
+      paddingTop: "3em",
+    }}>
       {coursesHook.isLoading && completedCourses.isLoading ? (
         <LinearProgress color="primary" />
       ) : (
