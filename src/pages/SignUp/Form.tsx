@@ -13,17 +13,16 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  padding: 2,
-  width: "500px",
-  height: "600px",
-  margin: 2,
+  marginBottom: "4em",
+  width: "100%",
+  height: "30em",
+
   backgroundColor: "white",
 };
 
 const sxStyleTextField = {
-  // TODO: Find better styling options for MUI components
-  margin: 1,
-  width: "350px",
+  marginTop: 1,
+  width: "80%",
 };
 const sxStyleButton = {
   margin: 2,
