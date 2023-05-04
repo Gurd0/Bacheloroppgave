@@ -26,26 +26,29 @@ export const imagesRef = ref(
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-export const signInUser = async (e: any, email: string, password: string) => {
+export const signInUser = async (e: any, email: string, password: string, userFeedBack: (err: string) => void) => {
   if (!auth.currentUser) {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const s = async (): Promise<boolean> => {
+        let bool = false
+        await signInWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
           const user = userCredentials.user;
           console.log(user);
+          if(user){
+            bool = true
+          }
         })
-        .finally(() => {
-          // window.location.href = "/";
-          console.log("NAVIGATING");
-          // navigate("/", { replace: true });
-          window.location.href = "/";
-        })
-        .catch((error) => {
-          console.log(error.code);
-        });
+        return bool
+      }
+      if(await s()){
+        window.location.href = "/";
+      }
     } catch (error) {
       console.log(error);
+      userFeedBack(error as string)
     }
+
   } else {
     console.log("Hello, " + auth.currentUser?.displayName);
   }
