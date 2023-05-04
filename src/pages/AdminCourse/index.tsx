@@ -289,9 +289,7 @@ function Index(){
   }
   return(
     <>
-    <Grid style={{
-      paddingTop: "4em"
-    }} container spacing={2}>
+    <Grid container spacing={2}>
     
     {(feedBack != "none" && feedBack != "success") && 
     <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>

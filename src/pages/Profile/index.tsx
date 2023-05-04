@@ -9,13 +9,13 @@ export default function ProfilePage() {
   const { uid }: any = useParams();
 
   return (
-    <>
+    <div >
       {user && (
         <>
           <h1>Hello, {user.displayName}</h1>
           <Button onClick={(e: any) => signOutUser(e, auth)}>SIGN OUT</Button>
         </>
       )}
-    </>
+    </div>
   );
 }

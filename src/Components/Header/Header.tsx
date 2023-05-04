@@ -14,6 +14,7 @@ export default function Header() {
         backgroundColor: "white",
         width: "100%",
         height: "4em",
+        
         display: "flex",
         justifyContent: "stretch",
         borderBottom: "1px solid black",

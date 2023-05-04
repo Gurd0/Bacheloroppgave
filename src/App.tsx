@@ -37,6 +37,7 @@ function App() {
         {/* <MakeAdmin /> */}
         <AuthProvider>
           <Header />
+          <div style={{paddingTop: "4em"}}>
           <Routes>
             <Route
               path="/profile/:uid"
@@ -71,6 +72,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="*" /> {/*Page not found*/}
           </Routes>
+          </div>
           <Footer />
         </AuthProvider>
       </BrowserRouter>

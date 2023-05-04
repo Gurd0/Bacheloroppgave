@@ -266,7 +266,7 @@ const Index = () => {
         container
         spacing={2}
         style={{
-          paddingTop: "4em",
+          paddingTop: "1em",
           position: "static",
           backgroundColor: "#e8e8e8",
           paddingLeft: "1em",
