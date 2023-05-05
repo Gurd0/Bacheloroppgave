@@ -55,6 +55,9 @@ const Index = () => {
   const [open, setOpen] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [nextChapter, setNextChapter] = useState<boolean>(true)
+  const [preChapter, setPreChapter] = useState<boolean>(false)
+
   const prevPageRef = useRef<PageType>();
 
   const matches = useMediaQuery('(max-width:740px)');
@@ -192,6 +195,9 @@ const Index = () => {
               if (id === valueAsAny.id) {
                 setCurrentChapter({ ...course.Chapters[chapterIndex] });
                 setCurrentPageIndex(indexPages);
+                setNextChapter(course.Chapters[chapterIndex + 1] != null)
+                setPreChapter(course.Chapters[chapterIndex - 1] != null)
+                
               }
             }
           }
@@ -241,6 +247,9 @@ const Index = () => {
           });
         });
         if (comp == pageAmount) {
+          let courseClone = course
+          courseClone.Course.Completed = true
+          setCourse({...courseClone})
           checkIfCourseIsCompleted(user.uid, slug, course.Chapters);
         }
       });
@@ -304,11 +313,15 @@ const Index = () => {
                 marginTop: "auto",
               }}
             >
-              {currentPageIndex != null && currentChapter != null && (
+              {course && currentPageIndex != null && currentChapter != null && (
                 <CourseMobileStep
                   currentChapter={currentChapter}
                   currentPageIndex={currentPageIndex}
                   setCurrentPageByIndex={setCurrentPageByIndex}
+                  nexChapter={nextChapter}
+                  preChapter={preChapter}
+                  course={course}
+                  onPageClick={onPageClick}
                 />
               )}
             </div>
