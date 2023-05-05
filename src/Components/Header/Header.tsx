@@ -1,7 +1,6 @@
 import { Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
-import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();

@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: Props) => {
       auth,
       async (authenticatedUser) => {
         if (authenticatedUser) {
-          console.log("Auth set: " + authenticatedUser.displayName);
+     
           const user = authenticatedUser;
           setUser(user); // loading false
           setIsAuthenticated(true);
@@ -47,8 +47,6 @@ export const AuthProvider = ({ children }: Props) => {
           setUser(undefined);
           setIsAuthenticated(false);
           setIsLoading(false);
-          console.log("Is Authenticated: " + isAuthenticated);
-          console.log("Auth set to none");
         }
       }
     );

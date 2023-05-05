@@ -1,15 +1,15 @@
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import styled, { css } from "styled-components";
-import { CourseType, PageType } from "../../../../context/context";
+import styled from "styled-components";
+import {  PageType } from "../../../../context/context";
 import ListItem from "./PageItem";
 import { ChapterType } from "../../../../context/context";
 import { Box, Button, Popper, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import { DocumentReference, namedQuery } from "firebase/firestore";
+
 interface ToggleProps {
     provided: any 
     snapshot: any

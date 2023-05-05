@@ -1,7 +1,6 @@
-import { Backdrop, Box, TextField } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react"
+import { Box } from "@mui/material";
+import { useEffect } from "react"
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
-import { StringMappingType } from "typescript";
 import { PageType, ChapterType } from '../../../../context/context';
 import ChapterListItem from "./chapterListItem";
 
@@ -15,8 +14,7 @@ import ChapterListItem from "./chapterListItem";
   }
   
 const ChapterDragDrop = (Props: ToggleProps) => {
-    const [open, setOpen] = useState(false);
-  
+    
     const onDragEnd = (result: any) => {
         const newpage = Array.from(Props.chapters);
         const [removed] = newpage.splice(result.source.index, 1);
@@ -54,13 +52,9 @@ const ChapterDragDrop = (Props: ToggleProps) => {
         })
     }
     
-    const handleClose = () => {
-        setOpen(false);
-    };
     const removePage = (chapterId: string, pageId: string) => {
         let chapterIndex: number
         let chapterClone: ChapterType[] = Props.chapters
-        console.log(chapterId + " : "+ pageId)
         Props.chapters.map((chapter, index) => {
             if(chapter.id == chapterId){
                 chapterIndex = index
@@ -87,7 +81,6 @@ const ChapterDragDrop = (Props: ToggleProps) => {
       const changePageName = (chapterId: string, pageId: string, name: string) => {
         let chapterIndex: number
         let chapterClone: ChapterType[] = Props.chapters
-        console.log(chapterId + " : "+ pageId)
         Props.chapters.map((chapter, index) => {
             if(chapter.id == chapterId){
                 chapterIndex = index

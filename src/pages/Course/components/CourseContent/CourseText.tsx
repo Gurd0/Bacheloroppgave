@@ -1,5 +1,4 @@
-import { convertFromRaw, Editor, EditorState } from 'draft-js'
-import React from 'react'
+import { convertFromRaw, EditorState } from 'draft-js'
 import { PageType } from '../../../../context/context'
 import { stateToHTML } from 'draft-js-export-html';
 

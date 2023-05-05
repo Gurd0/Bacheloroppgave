@@ -1,17 +1,10 @@
 import {
-  Box,
   Card,
   CardActionArea,
   CardHeader,
   CardMedia,
-  IconButton,
 } from "@mui/material";
-import React from "react";
 import { CourseType } from "../../../context/context";
-
-import FunctionsIcon from "@mui/icons-material/Functions";
-
-import DoneIcon from "@mui/icons-material/Done";
 import { Link } from "react-router-dom";
 interface PropsType {
   course: CourseType;

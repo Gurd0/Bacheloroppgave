@@ -3,12 +3,10 @@ import React from 'react'
 import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
+import TreeItem from '@mui/lab/TreeItem';
 import { RenderTree } from '../../../context/context';
-import { Card, Paper, styled, SvgIcon, SvgIconTypeMap } from '@mui/material';
-import { Style } from 'util';
 import { SxProps } from '@mui/material/styles';
-import { width } from '@mui/system';
+
 
 //icons
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
@@ -50,11 +48,8 @@ export default function CourseTree(Props: ToggleProps) {
 
   },[selected])
   React.useEffect(() => {
-    console.log(Props.selectedNode.join(""))
-    
       try{
         if(Props.tree.children && Props.tree.children[0].children && Props.selectedNode.join("") == "l"){
-          console.log("hei ??? ")
           Props.ClickHandler(Props.tree.children[0].children[0].id)
         } 
       }catch (err){

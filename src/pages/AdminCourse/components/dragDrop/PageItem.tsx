@@ -1,10 +1,10 @@
-import { Draggable } from "react-beautiful-dnd";
-import React, { useEffect, useMemo, useState } from "react";
 
-import styled, { css } from "styled-components";
+import React, { useEffect, useState } from "react";
+
+import styled from "styled-components";
 import { ChapterType, PageType } from "../../../../context/context";
-import { Box, Button, Card, Grid, Popper, TextField } from "@mui/material";
-import { red } from "@mui/material/colors";
+import { Box, Button, Grid, Popper, TextField } from "@mui/material";
+
 
 
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -48,12 +48,8 @@ let StyleDiv = styled.div`
         switch (e.detail) {
           // on double click 
           case 2:
-            console.log("double click");
             const page = Props.item
             Props.setSelectedPage({...page})
-            console.log(page)
-            console.log(Props.selected)
-
             break;
         }
       };
@@ -67,9 +63,6 @@ let StyleDiv = styled.div`
     
       }
     },[Props.selected]) 
-    useEffect(() => {
-      console.log(Props.item.Name)
-    },[Props.item])
 
   return (
     <StyleDiv

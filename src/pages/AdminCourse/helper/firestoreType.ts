@@ -1,6 +1,4 @@
-import { convertToRaw } from 'draft-js'
-import { arrayRemove, arrayUnion, collection, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
-import React from 'react'
+import { arrayRemove, arrayUnion, collection, doc, DocumentReference, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
 import { CourseType, PageType } from '../../../context/context'
 import { db } from '../../../firebase'
 import { ChapterType } from '../../../context/context'
@@ -8,10 +6,8 @@ import { ChapterType } from '../../../context/context'
 export const changeDraft = async (courseId: string, draft: boolean) => {
 
     const courseRef = doc(db, "Courses", courseId);
-
     try{
         await updateDoc(courseRef, {
-            
             draft: draft,
         })
     }catch(err){
@@ -39,8 +35,6 @@ export const addCourseToFirebase = async (course: CourseType) => {
             Pages: arrayMap
               
         }
-        console.log(c.Pages)
-       //console.log(JSON.parse(JSON.stringify(c)))
        addChapterToFirebase(c)
     })
     const courseT = {
@@ -56,7 +50,6 @@ export const addCourseToFirebase = async (course: CourseType) => {
         }),
       
     }
-    console.log(courseT.image)
     if(courseT.Prerequisite){
         await setDoc(doc(db, "Courses", courseT.id), {
             Name: courseT.Name,
@@ -81,7 +74,6 @@ export const addCourseToFirebase = async (course: CourseType) => {
     await addCourseTopicToTopic(courseT, doc(db, "Courses/" + courseT.id))
 }
  const addChapterToFirebase = async (chapter: ChapterType) => {
-   // console.log(chapter)
     await setDoc(doc(db, "Chapter", chapter.id), {
         ChapterName: chapter.ChapterName,
         id: chapter.id,
@@ -90,7 +82,6 @@ export const addCourseToFirebase = async (course: CourseType) => {
 }
 
  const addPageToFirebase = async (page: PageType) => {
-   // console.log(page.Value)
     if(page.Value){
         await setDoc(doc(db, "Pages", page.id), {
             Type: page.Type,

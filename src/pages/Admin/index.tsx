@@ -3,20 +3,17 @@ import {
   Button,
   Card,
   CardActionArea,
-  CardContent,
   CardHeader,
   CardMedia,
   Grid,
   TextField,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import ReactDOM from "react-dom/client";
-import { useParams } from "react-router";
-import { CourseType, FullCourse } from "../../context/context";
-import { useFullCourse, useGetCollection, useGetDefaultImage } from "../../hooks/queries";
+import { CourseType } from "../../context/context";
+import { useGetCollection, useGetDefaultImage } from "../../hooks/queries";
 import CardMenu from "./components/cardMenu";
 
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -86,7 +83,6 @@ export default function Home() {
   }, [draftCoursesHook]);
 
   const handleClick = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>, courseId?: string) => {
-    console.log("hei")
     
     const target = e.target as HTMLButtonElement
     if(target.name === 'optionButton') {

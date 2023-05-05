@@ -1,13 +1,10 @@
-import LockIcon from "@mui/icons-material/Lock";
 import {
-  Alert,
-  Box,
   Card,
   CardActionArea,
   CardHeader,
   CardMedia,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Tooltip from '@mui/material/Tooltip';
 import { CourseType } from "../../../context/context";
 interface PropsType {

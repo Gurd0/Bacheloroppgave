@@ -1,5 +1,5 @@
-import { Box, Button, Card, Grid, MenuItem, Modal, Popover, Slider, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Button, Card, Grid, Modal } from '@mui/material'
+import  { useEffect, useState } from 'react'
 import { PageType } from '../../../../context/context'
 import QuizQuestionEdit from './quizQuestionEditi';
 

@@ -1,6 +1,5 @@
 import { Button, MenuItem, TextField } from '@mui/material'
-import { maxWidth } from '@mui/system'
-import React, { ChangeEventHandler, useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 
 
 interface questionI {
@@ -149,7 +148,6 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
     }}>
         <Button onClick={()=> {
             let c = 0
-            console.log(answer)
             let answerList: string[] = []
             answer.map((a, index)=> {
                 answerList.push(a.value)
@@ -163,7 +161,6 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
                 answer: answerList,
                 correctAnswer: c,
             }
-            console.log(q)
             Props.updateCurrentQuestion(q)
             Props.handleClose()
         }}>Ok</Button>
