@@ -2,7 +2,6 @@ import { TextField } from "@mui/material";
 import React from "react";
 import { PageType } from "../../../../context/context";
 import {
-  default as ImageSelector,
   default as ImageUploader,
 } from "./imageUploader";
 
@@ -22,7 +21,6 @@ const ImageEdit = (props: ToggleProps) => {
   };
 
   React.useEffect(() => {
-    console.log(props.pageValue);
     if (typeof props.pageValue === "string") {
       setTextField(props.pageValue);
     }

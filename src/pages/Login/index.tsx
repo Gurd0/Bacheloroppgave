@@ -1,5 +1,4 @@
 import { LinearProgress } from "@mui/material";
-import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -9,14 +8,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import {
-  IdTokenResult,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-} from "firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import FeedBackError from "../../Components/feedBack/feedBackError";
 import { AuthContext } from "../../context/auth-context";
 import { auth, signInUser, signOutUser } from "../../firebase";
@@ -25,10 +17,8 @@ import Signup from "../SignUp";
 
 
 export default function LogIn() {
-  const [token, setToken] = useState<IdTokenResult>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const theme = createTheme();
   const { user } = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
@@ -51,7 +41,6 @@ export default function LogIn() {
     return <LinearProgress />;
   }
   const userFeedBack = (err: string) => {
-    console.log("feedback")
     const error = err.toString().split(/[()]/)
     const userError = error[1].split("/")
     setFeedBack(userError[1])

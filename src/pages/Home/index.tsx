@@ -2,32 +2,19 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Backdrop,
   Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
   Grid,
   LinearProgress,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import { styled } from "@mui/system";
-import { IdTokenResult, User } from "firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
-import ReactDOM from "react-dom/client";
-import { useParams } from "react-router";
-import { CourseType, FullCourse } from "../../context/context";
+
+import { useContext, useEffect, useState } from "react";
+import { CourseType } from "../../context/context";
 import {
-  useFullCourse,
   useGetCollection,
   useGetCompletedCourses,
   useGetDefaultImage,
 } from "../../hooks/queries";
 
-import DoneIcon from "@mui/icons-material/Done";
-import LockIcon from "@mui/icons-material/Lock";
 import CourseCard from "./components/CourseCard";
 import DisabledCard from "./components/DisabledCard";
 

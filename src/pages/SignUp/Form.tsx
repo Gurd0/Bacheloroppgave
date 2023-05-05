@@ -53,7 +53,6 @@ const Form = (props: props) => {
         
       })
       .then((userCredentials) => {
-        console.log("hmm")
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {
             displayName: firstName + " " + lastName,
@@ -65,7 +64,6 @@ const Form = (props: props) => {
       })
       .catch((error) => {
         setError(error.message);
-        //console.log(errorMessage + " " + errorCode);
       });
    
   };

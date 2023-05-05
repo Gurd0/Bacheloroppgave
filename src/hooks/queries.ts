@@ -1,15 +1,12 @@
-import { rejects } from "assert";
 import {
   collection,
   doc,
-  DocumentData,
   DocumentReference,
   getDoc,
   getDocs,
   query,
   where,
 } from "firebase/firestore";
-import { resolve } from "path";
 import { useQuery } from "react-query";
 import { db } from "../firebase";
 import {

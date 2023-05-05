@@ -1,21 +1,16 @@
-import { Box, Button, Input, TextField, Typography } from "@mui/material";
+import { Box, Button, Input, Typography } from "@mui/material";
 import CircularProgress, {
   CircularProgressProps,
 } from "@mui/material/CircularProgress";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
+
 import {
   StorageReference,
-  getBlob,
   getDownloadURL,
-  listAll,
   ref,
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import React, { ImgHTMLAttributes, useState } from "react";
-import { PageType } from "../../../../context/context";
+import React, { useState } from "react";
 import { imagesRef, storage } from "../../../../firebase";
 
 interface ToggleProps {
@@ -24,7 +19,6 @@ interface ToggleProps {
 const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
   const [reference, setReference] = useState<StorageReference>();
-  const [url, setURL] = useState<string>(); // Most likely not needed
   const [imagePreview, setImagePreview] = useState<string>();
   const [progress, setProgress] = useState<number>();
   const [uploading, setUploading] = useState<boolean>(false);
@@ -123,8 +117,6 @@ const ImageUploader = (props: ToggleProps) => {
           if (file) {
             getDownloadURL(ref(storage, imagesRef + "/" + file.name))
               .then((url) => {
-                console.log(url);
-                setURL(url);
                 props.setPageValue(url);
               })
               .catch((error) => {

@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import MobileStepper from '@mui/material/MobileStepper';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import React from 'react';
 import Button from '@mui/material/Button';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import { useTheme } from '@mui/material/styles';
-import { ChapterType, CourseType } from '../../../context/context';
 import { Menu, MenuItem } from '@mui/material';
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -61,7 +54,6 @@ const CardMenu = (Props: propsInterface) => {
       <MenuItem onClick={() => {
         handleClose()
         removeCourse(Props.courseId)
-       console.log(Props.Topic)
         Props.removeCourseLocal(Props.courseId, Props.Topic)
         }
         }>Remove</MenuItem>

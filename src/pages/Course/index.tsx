@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -10,11 +10,10 @@ import {
 import CourseTree from "./components/CourseTree";
 
 import Grid from "@mui/material/Grid";
-import { Box, padding, positions } from "@mui/system";
+import { Box } from "@mui/system";
 import CourseMobileStep from "./components/CourseMobileStep";
 
 import { Button, Drawer, Paper } from "@mui/material";
-import { IdTokenResult, User } from "firebase/auth";
 import {
   ChapterType,
   FullCourse,
@@ -27,13 +26,9 @@ import CourseVideo from "./components/CourseContent/CourseVideo";
 import {
   checkIfCourseIsCompleted,
   completePage,
-  setCourseAsCompleted,
 } from "./helper/firebase";
 
-import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-
 import { AuthContext } from "../../context/auth-context";
 import CourseQuiz from "./components/CourseContent/CourseQuiz";
 import FeedBackError from "../../Components/feedBack/feedBackError";
@@ -58,7 +53,6 @@ const Index = () => {
   //open for drawer
   const [xsSize, setXsSize] = useState<number>(12);
   const [open, setOpen] = useState<boolean>(true);
-  const [height, setHeight] = useState<string>("40em");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const prevPageRef = useRef<PageType>();
@@ -99,24 +93,19 @@ const Index = () => {
       containerRef.current != null &&
       containerRef.current.clientHeight != null
     ) {
-      setHeight("40em");
       setXsSize(7.5);
     } else {
-      setHeight("0em");
       setXsSize(11);
     }
   }, [open]);
   // Sets current page from pageHook
   useEffect(() => {
     if (!pageHook.isLoading && pageHook.status == "success" && pageHook.data) {
-      console.count("count");
-      console.log(prevPageRef.current);
       if (
         prevPageRef.current?.id != currentPage?.id &&
         (pageHook.data as PageType).id != currentPage?.id
       ) {
         prevPageRef.current = currentPage;
-        console.log("BØØØØØ");
       }
       setCurrentPage(pageHook.data as PageType);
     }
@@ -144,16 +133,13 @@ const Index = () => {
     }
   }, [completedPagesHook]);
   useEffect(() => {
-    if (courseHook.isError) console.log("error");
-    if (courseHook.isLoading) console.log("l");
-
-    if (!courseHook.isLoading) {
+    if (!courseHook.isLoading && courseHook.status === "success") {
       setCourse(courseHook.data as FullCourse);
     }
   }, [courseHook]);
 
   useEffect(() => {
-    if (course != undefined) {
+    if (course !== undefined) {
       let tree: RenderTree = {
         id: course.Course.id,
         name: course.Course.Name,

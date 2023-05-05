@@ -1,4 +1,3 @@
-import React from 'react'
 import { PageType } from '../../../../context/context'
 
 interface PropsType {

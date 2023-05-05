@@ -17,7 +17,6 @@ const VideoEdit = (props: ToggleProps) => {
     setTextField(event.target.value);
   };
   React.useEffect(() => {
-    console.log(props.pageValue)
     if(typeof props.pageValue === "string"){
       setTextField(props.pageValue)
     }
@@ -29,7 +28,6 @@ const VideoEdit = (props: ToggleProps) => {
       //https://stackoverflow.com/a/54200105
       const url = textField.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
       const id =  (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
-      console.log(id)
       setWrongUrl(true)
       props.setPageValue("https://www.youtube.com/embed/" + id)
     }else{

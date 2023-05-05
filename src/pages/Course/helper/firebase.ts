@@ -1,7 +1,5 @@
-import { convertToRaw } from 'draft-js'
-import { addDoc, arrayRemove, arrayUnion, collection, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
-import React from 'react'
-import { CourseType, PageType } from '../../../context/context'
+import {  arrayUnion, doc, getDoc,  setDoc, updateDoc } from 'firebase/firestore'
+
 import { db } from '../../../firebase'
 import { ChapterType } from '../../../context/context'
 

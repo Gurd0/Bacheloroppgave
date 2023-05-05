@@ -1,39 +1,29 @@
-import React, {useState, useEffect, ChangeEventHandler} from 'react';
-import ReactDOM from 'react-dom/client';
+import React, {useState, useEffect} from 'react';
 import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 
-import { Box, height } from '@mui/system';
-import { useQuery } from 'react-query';
+import { Box } from '@mui/system';
 
-import { CourseType, FullCourse, RenderTree } from '../../context/context';
+
+import { CourseType } from '../../context/context';
 import NewPage from './components/newPage';
 import ChapterDragDrop from './components/dragDrop/chapterDragDrop';
 import { ChapterType } from '../../context/context';
-import { Alert, Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Modal, Popper, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
-import { alignProperty } from '@mui/material/styles/cssUtils';
+import { Autocomplete, Button, FormControl, Input, InputLabel, MenuItem, Popper, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
 import { PageType } from '../../context/context';
 import TextEdit from './components/courseEdit/textEdit';
 import ImageEdit from './components/courseEdit/imageEdit';
 import VideoEdit from './components/courseEdit/videoEdit';
 import QuizEdit from './components/courseEdit/quizEdit';
 import {
-  collection,
   doc,
-  DocumentData,
   DocumentReference,
   getDoc,
-  getDocs,
-  setDoc,
 } from "firebase/firestore";
 import {db} from "../../firebase"
-import { convertToRaw } from 'draft-js';
 import { addCourseToFirebase, changeDraft } from './helper/firestoreType';
 import { useGetCollection, useGetTopicName } from '../../hooks/queries';
 
-import CourseQuiz from '../Course/components/CourseContent/CourseQuiz';
-import QuizQuestionEdit from './components/courseEdit/quizQuestionEditi';
-import { option } from 'yargs';
 import FeedBackError from '../../Components/feedBack/feedBackError';
 import FeedBackSuccess from '../../Components/feedBack/feedBackSuccess';
 
@@ -42,7 +32,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
-import { styleModalBox } from '../../Assets/css';
 import { ModalBox } from '../../Components/modalBox';
 
 
@@ -59,7 +48,6 @@ function Index(){
   const [menuItemTopic, setMenuItemTopic] = useState<string[]>(["test1", "test2"])
 
   const [selectedPage, setSelectedPage] = useState<PageType>()
-  const [selectedChapter, setSelectedChapter] = useState<ChapterType>()
 
   const [open, setOpen] = useState(false)
   const [openSetting, setOpenSetting] = useState(false)
@@ -79,13 +67,11 @@ function Index(){
   const topicName = useGetTopicName();
   const fullCourse = useGetCollection("Courses", false);
   const [coursNameAndId, setCourseNameAndId] = useState<autoFill[]>([])
-  const [prerequisiteIndex, setPrerequisiteIndex ] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (!topicName.isLoading && topicName.status == "success") {
       setMenuItemTopic([...topicName.data as unknown as string[]]);
-      console.log(topicName.data);
     }
   }, [topicName.data]);
  
@@ -104,6 +90,7 @@ function Index(){
     }
   },[fullCourse.data])
    
+  //Ved bedre tid ville dette blitt gjort om til en react query
   useEffect(() => {
     const test = async () => {
         let chaptersLet: ChapterType[] = [];
@@ -141,7 +128,6 @@ function Index(){
                         )
                       })
                       Promise.all(promise).then(() => {
-                        console.log(chaptersLet)
                         setChapters([...chaptersLet])
                         setSelectedPage({...chaptersLet[0].Pages[0]})
                         setIsLoading(false)
@@ -151,7 +137,6 @@ function Index(){
             }).catch((err) => {
               console.log("error : " + err)
             }).finally(() => {
-              console.log(chaptersLet)
               const courseConst: CourseType = {
                 Name: courseD.Name,
                 draft: courseD.draft,
@@ -165,17 +150,9 @@ function Index(){
               
               if(course.Topic)
               setTopic(course.Topic)
-              if(course.Prerequisite){
-                coursNameAndId.map((c, index) => {
-                  if(c.id == course.Prerequisite){
-                    setPrerequisiteIndex(index)
-                  }
-                })
-              }
             })
         });
     } 
-    console.log(slug)
     if(!slug){
       setIsLoading(false)
     }else{
@@ -184,7 +161,6 @@ function Index(){
   },[slug])
 
   const saveToDraft = async () => {
-    console.log(course.Prerequisite)
     const c: CourseType = {
       Name: course.Name,
       id: course.id,
@@ -217,15 +193,12 @@ function Index(){
   }
   const setPageType = (type: string) => {
     if(selectedPage){
-      console.log("hei")
       let chapterClone = chapters
       let selectedPageClone = selectedPage
       
       chapters.map((chapter, index) => {
          chapter.Pages.map((page: PageType, indexPage: number) => {
             if(page.id == selectedPage.id){
-              console.log(selectedPage)
-              console.log(page)
               chapterClone[index].Pages[indexPage].Type = type
               setChapters([...chapterClone])
               selectedPageClone.Type = type
@@ -238,17 +211,11 @@ function Index(){
   const setPageValue = (value: any) => {
     if(selectedPage){
       let chapterClone = chapters
-      let selectedPageClone = selectedPage
-      console.log(chapters)
       chapters.map((chapter, index) => {
-         chapter.Pages.map((page: PageType, indexPage: number) => {
-         
-          
+         chapter.Pages.map((page: PageType, indexPage: number) => {   
             if(page.id == selectedPage.id){
               chapterClone[index].Pages[indexPage].Value = value
               setChapters([...chapterClone])
-             // selectedPageClone.Value = value
-            //  setSelectedPage(selectedPageClone)
             }
          })
       })
@@ -326,7 +293,6 @@ function Index(){
           Draft : {course.draft.toString()}
           <Switch inputProps={{ 'aria-label': 'Size switch demo' }}  defaultChecked size="small" onChange={() => {
             changeDraft(course.id, !course.draft)
-            console.log(course.draft)
             const courseClone = course
             courseClone.draft = !course.draft
             setCourse({...courseClone})
@@ -354,8 +320,6 @@ function Index(){
       }
       {selectedPage?.Type === "Quiz" &&
           <QuizEdit selectedPage={selectedPage} setPageValue={setPageValue}/>
-         // <QuizQuestionEdit/>
-
       }
        </Box>
     </div>

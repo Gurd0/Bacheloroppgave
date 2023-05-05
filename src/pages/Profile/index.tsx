@@ -1,12 +1,10 @@
 import Button from "@mui/material/Button";
-import React, { useContext, useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useContext} from "react";
 import { AuthContext } from "../../context/auth-context";
-import { auth, signInUser, signOutUser } from "../../firebase";
+import { auth, signOutUser } from "../../firebase";
 
 export default function ProfilePage() {
   const { user } = useContext(AuthContext);
-  const { uid }: any = useParams();
 
   return (
     <div >
