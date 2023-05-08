@@ -5,18 +5,18 @@ import {
   CardMedia,
 } from "@mui/material";
 import { CourseType } from "../../../context/context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 interface PropsType {
   course: CourseType;
   defaultImage: string;
 }
 
 const CourseCard = (props: PropsType) => {
+  const navigate = useNavigate();
   return (
     <>
       <CardActionArea
-        component={Link}
-        to={"/course/" + props.course.id}
+        onClick={() => navigate("/course/" + props.course.id)}
         sx={{
           borderRadius: "16px",
         }}
