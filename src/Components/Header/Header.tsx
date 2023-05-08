@@ -30,7 +30,8 @@ export default function Header() {
         }}
       >
         <Button
-          href="/"
+          
+          onClick={() => navigate('')}
           sx={{
             width: "10em",
             height: "auto",
