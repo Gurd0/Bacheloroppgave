@@ -153,11 +153,11 @@ export const useCurrentPage = (id: string, collection: string) => {
 //TODO fiks query key og her brukes fetch course, bør bytt navn
 export const useGetCollection = (collection: string, draft: boolean) => {
   return useQuery(
-    [collection, draft],
+    [collection],
     async () => {
       return await Promise.resolve(fetchCourseContentFromFirebase(collection, draft));
     },
-    { refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 5, cacheTime: 1000 * 60 *10}
   );
 };
 //TODO fix name
@@ -174,31 +174,32 @@ export const useGetCompletedPages = (courseId: string, userId: string) => {
   const docRef = doc(db, "course_progress", userId, "completed_pages", courseId)
   
   return useQuery(
-    ["s"],
+    ["completedPages" +userId + courseId],
     async () => {
       return await Promise.resolve(fetchCompletedPages(courseId, userId, docRef));
     },
-    { refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false, staleTime: 0,}
   );
 }
 //TODO dokumente heite test i firestore, bør finn nå nytt
 export const useGetCompletedCourses = (userId: string) => {
   const docRef = doc(db, "course_progress", userId, "completed_courses", "test")
   return useQuery(
-    ["s"],
+    ["completedCourses" + userId],
     async () => {
       return await Promise.resolve(fetchCompletedCourses(docRef));
     },
-    { refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false, staleTime: 0, cacheTime: 1000* 60 * 10}
   );
 }
 export const useGetDefaultImage = () => {
   return useQuery(
     ["defaultImage"],
+    
     async () => {
       return await Promise.resolve(fetchDefaultImage());
     },
-    { refetchOnWindowFocus: false }
+    { refetchOnWindowFocus: false, staleTime: 1000 * 60 * 60}
   );
 }
 
