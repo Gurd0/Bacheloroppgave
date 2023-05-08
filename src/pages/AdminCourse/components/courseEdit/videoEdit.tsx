@@ -22,6 +22,7 @@ const VideoEdit = (props: ToggleProps) => {
     }
   },[props.pageValue])
   React.useEffect(() => {
+    //https://stackoverflow.com/a/19377429
     const pattern = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$/
     if(textField)
     if(pattern.test(textField)){
