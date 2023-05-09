@@ -275,7 +275,7 @@ const Index = () => {
               border: "1px solid black",
               width: "100%",
               maxHeight: "40em",
-              minHeight: "40em",
+              minHeight: "37em",
               overflow: "auto",
               backgroundColor: "whitesmoke",
               display: "flex",
@@ -283,14 +283,13 @@ const Index = () => {
             }}
           >
             <Box>
-            {(feedBack != "none" && feedBack != "Success") && 
-              <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
-              }
-              {feedBack == "Success" &&
-              <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
-              }
+           
               {currentPage?.Type === "Text" && (
+                <div style={{
+                  paddingLeft: "1em"
+                }}>
                 <CourseText currentPage={currentPage} />
+                </div>
               )}
               {currentPage?.Type === "Image" && (
                 <CourseImage currentPage={currentPage} />
@@ -299,21 +298,35 @@ const Index = () => {
                 <CourseVideo currentPage={currentPage} />
               )}
               {currentPage?.Type === "Quiz" && (
+                <>
+                 {(feedBack != "none" && feedBack != "Success") && 
+                 <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+                 }
+                 {feedBack == "Success" &&
+                 <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+                 }
+                 <div style={{
+                  textAlign: 'center',
+                  paddingTop: "3em"
+                 }}>
                 <CourseQuiz
                   currentPage={currentPage}
                   completePage={setPageCompleted}
                   setFeedBack={setFeedBack}
                   feedBack={feedBack}
                 />
+                </div>
+                </>
               )}
             </Box>
-            <div
-              style={{
-                width: "100%",
-                marginTop: "auto",
-              }}
-            >
-              {course && currentPageIndex != null && currentChapter != null && (
+            
+              {course && currentPageIndex != null && currentChapter != null && !open &&  (
+                <div
+                style={{
+                  width: "100%",
+                  marginTop: "auto",
+                }}
+              >
                 <CourseMobileStep
                   currentChapter={currentChapter}
                   currentPageIndex={currentPageIndex}
@@ -323,49 +336,47 @@ const Index = () => {
                   course={course}
                   onPageClick={onPageClick}
                 />
+                </div>
               )}
             </div>
-          </div>
+          
         </Grid>
         <Grid item xs={0.7} style={{
           paddingLeft: 0,
-         
         }}>
-            <Button
-            style={
-            {
-                display: "flex",
-                alignContent: "center",
-                top: "20em",
-                ...( matches ? {display:"none"} : {} ),
-                ...( open ? {transform: "rotate(270deg)",} : {transform: "rotate(90deg)",} ),
-              
+             <Button
+                style={
+                { 
+                    display: "flex",
+                    alignContent: "center",
+                    ...( matches ? {display:"none"} : {} ),
+                   
+                  
+                    }
                 }
-            }
-            onClick={() => {
-              setOpen(!open);
-            }}
-          >
-            {open ? (
-              <ExpandCircleDownIcon
-                style={{ color: "black", fontSize: "3em" }}
-              />
-            ) : (
-              <ExpandCircleDownIcon
-                style={{ color: "black", fontSize: "3em" }}
-              />
-            )}
-          </Button>
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                
+                  <ExpandCircleDownIcon
+                    style={{ color: "black", fontSize: "3em",
+                    ...( open ? {transform: "rotate(225deg)",} : {transform: "rotate(45deg)",} ),
+                   }}
+                  />
+               
+              </Button>
           </Grid>
         <Grid item xs={matches ? 12 : 3.5} style={{
           
           ...( matches ? {paddingRight: "2em",} : {paddingLeft: 0,} ),
         }}>
+          
           <div
             ref={containerRef}
             style={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
             }}
           >
             <Drawer
@@ -400,17 +411,41 @@ const Index = () => {
                   sx={{
                     height: "auto",
                     width: "96%",
-                    borderRadius: "10px",
+                    borderRadius: "1px",
                     borderColor: "black",
                     
                   }}
-                  
                 >
                   <CourseTree
                     tree={tree}
                     ClickHandler={onPageClick}
                     selectedNode={[currentPageId]}
                   />
+                  <div
+                style={{
+                  width: "100%",
+                  marginTop: "auto",
+                }}
+              >
+                {course && currentPageIndex != null && currentChapter != null && open &&  (
+                <div
+                style={{
+                  width: "100%",
+                  marginTop: "auto",
+                }}
+              >
+                <CourseMobileStep
+                  currentChapter={currentChapter}
+                  currentPageIndex={currentPageIndex}
+                  setCurrentPageByIndex={setCurrentPageByIndex}
+                  nexChapter={nextChapter}
+                  preChapter={preChapter}
+                  course={course}
+                  onPageClick={onPageClick}
+                />
+                </div>
+              )}
+                </div>
                 </Paper>
               </div>
             </Drawer>
