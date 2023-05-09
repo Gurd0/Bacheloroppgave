@@ -15,6 +15,7 @@ import { AuthGuard } from "./Components/ProtectedRoute/AuthGuard";
 import { AuthProvider } from "./context/auth-context";
 import ProfilePage from "./pages/Profile";
 import { AuthGuardAdmin } from "./Components/ProtectedRoute/AuthGuardAdmin";
+import ErrorPage from "./pages/Error";
 
 
 function App() {
@@ -69,7 +70,7 @@ function App() {
               
             </Route>
             <Route path="/login" element={<Login />} />
-            <Route path="*" /> {/*Page not found*/}
+            <Route path="error" element={<ErrorPage />}/> 
           </Routes>
           </div>
           <Footer />
