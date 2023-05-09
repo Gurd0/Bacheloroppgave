@@ -280,6 +280,7 @@ const Index = () => {
               backgroundColor: "whitesmoke",
               display: "flex",
               flexDirection: 'column',
+              ...( matches || !open  ? {borderBottom: 0} : {borderBottom: "1px solid black"} ),
             }}
           >
             <Box>
@@ -320,7 +321,7 @@ const Index = () => {
               )}
             </Box>
             
-              {course && currentPageIndex != null && currentChapter != null && !open &&  (
+              {course && currentPageIndex != null && currentChapter != null && (!open || matches) &&  (
                 <div
                 style={{
                   width: "100%",
@@ -370,6 +371,7 @@ const Index = () => {
         <Grid item xs={matches ? 12 : 3.5} style={{
           
           ...( matches ? {paddingRight: "2em",} : {paddingLeft: 0,} ),
+          
         }}>
           
           <div
@@ -377,6 +379,7 @@ const Index = () => {
             style={{
               display: 'flex',
               flexDirection: 'row',
+              
             }}
           >
             <Drawer
@@ -384,17 +387,16 @@ const Index = () => {
               anchor={"right"}
               sx={{
                 overflowY: "hidden",
-                
+                ...( matches ? {width: "97%",} : {width: "100%",} ),
                 backgroundColor: "transparent",
                 "& .MuiBackdrop-root": {
                   display: "none",
                 },
-                "& .MuiDrawer-paper": {
+                "& .MuiDrawer-paper": { 
+                  ...( matches ? {paddingBottom: "1em",  height: '100%'  } : {paddingBottom: 0,maxHeight: "37em"} ),
+                  ...( open ? {position: "relative",} : {position: "none", } ),
+                  
                  
-                  width: "100%",
-                  ...( matches ? {paddingBottom: "1em",} : {paddingBottom: 0,} ),
-                  ...( open ? {position: "relative",} : {position: 'absolute',} ),
-                  height: "auto",
                   transition: "none !important",
                   backgroundColor: "transparent",
                 },
@@ -404,16 +406,17 @@ const Index = () => {
               onClose={() => setOpen(false)}
               PaperProps={{ style: { border: "none" } }}
             >
-              <div style={{ }}>
+              <div >
                 <Paper
                   variant="outlined"
                   elevation={10}
                   sx={{
-                    height: "auto",
-                    width: "96%",
+                   
+                    width: "auto",
                     borderRadius: "1px",
                     borderColor: "black",
                     
+                    ...( matches ? { borderBottom: "1px solid black",} : {borderBottom: 0,} ),
                   }}
                 >
                   <CourseTree
@@ -423,15 +426,18 @@ const Index = () => {
                   />
                   <div
                 style={{
-                  width: "100%",
+
                   marginTop: "auto",
+                  position: 'sticky',
+                  bottom: 0,
                 }}
               >
-                {course && currentPageIndex != null && currentChapter != null && open &&  (
+                {course && currentPageIndex != null && currentChapter != null && open  && !matches &&  (
                 <div
                 style={{
                   width: "100%",
                   marginTop: "auto",
+                  
                 }}
               >
                 <CourseMobileStep

@@ -29,7 +29,8 @@ const CourseMobileStep = (Props: propsInterface) => {
       setActiveStep(Props.currentPageIndex)
     },[Props.currentPageIndex])
   return (
-    <div>
+    <div style={{ borderTop: "1px solid black", borderBottom: "1px solid black"}}>
+
          <MobileStepper
         variant="text"
         steps={maxSteps}
