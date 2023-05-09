@@ -1,4 +1,5 @@
 import { User, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import {
   ReactNode,
   createContext,
@@ -8,7 +9,7 @@ import {
 } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import App from "../App";
-import { auth, signOutUser } from "../firebase";
+import { auth, db, signOutUser } from "../firebase";
 
 interface Props {
   children?: ReactNode;
@@ -19,14 +20,27 @@ export const AuthContext = createContext({
   user: {} as User | undefined,
   isAuthenticated: true || false,
   isLoading: true || false,
+  admin: true || false,
 });
 //checker if loading
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const [admin, setAdmin] = useState<boolean>(false)
   useEffect(() => {
+    const t = async (user: any): Promise<boolean> => {
+      if(user){
+        const docRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(docRef); 
+        const data: any = docSnap.data()
+        setIsLoading(false);
+        return data.admin as boolean
+      }
+      else{
+        return false
+      }
+    }
     if (user && isAuthenticated) {
       return;
     }
@@ -39,10 +53,9 @@ export const AuthProvider = ({ children }: Props) => {
           const user = authenticatedUser;
           setUser(user); // loading false
           setIsAuthenticated(true);
-          setIsLoading(false);
-          // authenticatedUser
-          //   .getIdToken(true)
-          //   .then((token) => console.log("Auth token: " + token));
+          
+          setAdmin(await t(user))
+          
         } else {
           setUser(undefined);
           setIsAuthenticated(false);
@@ -57,8 +70,9 @@ export const AuthProvider = ({ children }: Props) => {
     user,
     isAuthenticated,
     isLoading,
+    admin,
   };
-
+  console.log(admin)
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
