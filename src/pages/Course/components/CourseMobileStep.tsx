@@ -59,9 +59,9 @@ const CourseMobileStep = (Props: propsInterface) => {
             }}
           >
             {(activeStep === maxSteps - 1 && !Props.nexChapter && Props.course.Course.Completed) ?
-            <Link to="/">færdig</Link>
+            <a href="/">færdig</a>
             :  
-            <>next</>
+            <>neste</>
             }
             {theme.direction === 'rtl' ? (
               <KeyboardArrowLeft />
@@ -98,7 +98,7 @@ const CourseMobileStep = (Props: propsInterface) => {
             ) : (
               <KeyboardArrowLeft />
             )}
-            Back
+            forrige
           </Button>
         }
       />
