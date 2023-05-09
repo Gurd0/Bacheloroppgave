@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import { AuthGuard } from "./Components/ProtectedRoute/AuthGuard";
 import { AuthProvider } from "./context/auth-context";
 import ProfilePage from "./pages/Profile";
+import { AuthGuardAdmin } from "./Components/ProtectedRoute/AuthGuardAdmin";
 
 
 function App() {
@@ -50,10 +51,22 @@ function App() {
               }
             />
             <Route path="/admin">
-              {/* Create adminprotected route */}
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/admin/new" element={<AdminCourse />} />
-              <Route path="/admin/edit/:slug" element={<AdminCourse />} />
+              <Route path="/admin" element={
+               <AuthGuardAdmin>
+                <Admin />
+              </AuthGuardAdmin>} 
+              />
+              <Route path="/admin/new" element={
+              <AuthGuardAdmin>
+                <AdminCourse />
+              </AuthGuardAdmin>
+              } />
+              <Route path="/admin/edit/:slug" element={
+              <AuthGuardAdmin>
+                <AdminCourse />
+              </AuthGuardAdmin>
+              } />
+              
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="*" /> {/*Page not found*/}
