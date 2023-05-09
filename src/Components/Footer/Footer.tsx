@@ -48,16 +48,7 @@ export default function Footer(){
             <Box>
                 <p>© Espen&Gard 2023 </p>
             </Box>
-            <Box
-            sx={{
-              maxWidth: "80%",
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-            }}>
-                <Button  variant="contained" style={{width:"50%", background:"black"}}>English</Button>
-                <a href="#">Privacy</a>
-            </Box>
+       
           </Grid>
           </Box>
       );

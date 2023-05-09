@@ -16,24 +16,9 @@ const CourseText = (props: PropsType) => {
     console.log(error)
   }
   
-
-  let options = {
-    inlineStyles: {
-      // Override default element (`strong`).
-      BOLD: {element: 'b'},
-      ITALIC: {
-        // Add custom attributes. You can also use React-style `className`.
-        attributes: {class: 'foo'},
-        // Use camel-case. Units (`px`) will be added where necessary.
-        style: {fontSize: 12}
-      },
-      // Use a custom inline style. Default element is `span`.
-      RED: {style: {color: '#900'}},
-    },
-  };
   let _html 
   if(editorState){
-    const html = stateToHTML(editorState.getCurrentContent(), options)
+    const html = stateToHTML(editorState.getCurrentContent())
     _html = html.replace("", '');
   }
 

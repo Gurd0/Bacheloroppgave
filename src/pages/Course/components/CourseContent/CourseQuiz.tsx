@@ -44,7 +44,7 @@ const CourseQuiz = (Props: ToggleProps) => {
     <div>
       <h5>{currentQuestion + 1}/{Props.currentPage.Value.length }</h5>
       <div>
-        <h2>{Props.currentPage.Value[currentQuestion].question}</h2>
+        <h2>Spørsmål: {Props.currentPage.Value[currentQuestion].question}</h2>
       </div>
       <FormControl>
       <FormLabel id="radio-buttons-group-label">Velg et alternativ</FormLabel>
