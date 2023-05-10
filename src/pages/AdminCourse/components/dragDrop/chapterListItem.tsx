@@ -68,18 +68,20 @@ const DragItem = styled.div`
         
        <h2>
         {Props.chapter.ChapterName} 
-       <Button 
-       title={"Change name"}
-       startIcon={<BorderColorIcon />}
-       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        setOpen(!open)
-        setAnchorEl(event.currentTarget);
-       }}>Change Name</Button>
+      
 
        <div style={{
         display: 'flex',
         alignContent: "space-between",
        }}>
+        <Button 
+       title={"Bytt Navn"}
+       startIcon={<BorderColorIcon />}
+       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        setOpen(!open)
+        setAnchorEl(event.currentTarget);
+       }}></Button>
+
        <Button  title={"Add Chapter"} onClick={() => Props.addPage(Props.chapter.id) } startIcon={<AddIcon />}></Button>
        <Button  title={"Remove Chapter"} startIcon={<RemoveIcon />} onClick={() => {
             Props.removeChapter(Props.chapter.id)

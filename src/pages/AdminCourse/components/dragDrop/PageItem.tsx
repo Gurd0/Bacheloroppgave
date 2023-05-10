@@ -96,14 +96,14 @@ let StyleDiv = styled.div`
         onClick={() => {
           
             Props.removeItem(Props.chapterId, Props.item.id)
-         }}>Remove</Button>
+         }}></Button>
          <Button 
          startIcon={<BorderColorIcon />}
          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
            // Props.changePageName(Props.chapterId, Props.pageId)
            setOpen(!open)
            setAnchorEl(event.currentTarget);
-         }}>Change Name</Button>
+         }}></Button>
           <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
             <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
             <TextField id="standard-basic" label="Page Name" variant="standard" onChange={(event) =>{

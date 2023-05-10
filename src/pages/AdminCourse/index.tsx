@@ -148,8 +148,11 @@ function Index(){
               };
               setCourse({...courseConst})
               
-              if(course.Topic)
-              setTopic(course.Topic)
+              if(courseConst.Topic){
+                console.log(courseConst.Topic)
+                setTopic(courseConst.Topic as string) 
+              }
+              
             })
         });
     } 
@@ -225,35 +228,37 @@ function Index(){
   const handleChangeTopicSelect = (event: SelectChangeEvent) => {
     setTopic(event.target.value as string);
   };
-  const getMenuItem = () => {
+  const getAutoComplete = () => {
+    const pre = course.Prerequisite
+    let value = null
+    coursNameAndId.map((c, index) => {
+      if(c.id == pre){
+        value = c
+      }
+      else{
+        return 
+      }
+    })
     return (
-      <>
-      
-    <FormControl sx={{ m: 1 }} variant="standard">
-      <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
-      <Input defaultValue={topic} onChange={(event) =>{
-        setTopic(event.target.value);
-      }}></Input>
-    </FormControl>
-    <FormControl sx={{ m: 1 }} variant="standard">
-        <InputLabel id="customized-select-label">Topic</InputLabel>
-        <Select
-          labelId="customized-select-label"
-          id="customized-select"
-          defaultValue={topic}
-          onChange={handleChangeTopicSelect}
-        >
-         <MenuItem value="">
-            <em>New</em>
-          </MenuItem>
-          {menuItemTopic.map((topic) => {
-            return ( <MenuItem value={topic}>{topic}</MenuItem>)
-          })}
-        </Select>
-      </FormControl>
-      </>)
-    
+      <Autocomplete
+           onChange={(event, newValue) => {
+            const courseClone = course
+            if(newValue){
+              courseClone.Prerequisite = newValue.id
+              setCourse(courseClone)
+            }
+          }}
+          value={value}
+          disablePortal
+          id="combo-box-demo"
+          options={coursNameAndId}
+
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Prerequisite" />}
+          />
+    )
   }
+ 
   return(
     <>
     <Grid container spacing={2}>
@@ -273,25 +278,34 @@ function Index(){
           {course.image && 
             <img src={course.image}  width="120" height="120" />
           }
-          <Autocomplete
-           onChange={(event, newValue) => {
-            const courseClone = course
-            if(newValue){
-              courseClone.Prerequisite = newValue.id
-              setCourse(courseClone)
-            }
-            
-          }}
-          disablePortal
-          id="combo-box-demo"
-          options={coursNameAndId}
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Prerequisite" />}
-          />
-          {getMenuItem()}
+          
+          {getAutoComplete()}
+          <FormControl sx={{ m: 1 }} variant="standard">
+            <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
+            <Input value={topic} onChange={(event) =>{
+              setTopic(event.target.value);
+            }}></Input>
+          </FormControl>
+          <FormControl sx={{ m: 1 }} variant="standard">
+              <InputLabel id="customized-select-label">Topic</InputLabel>
+              <Select
+                labelId="customized-select-label"
+                id="customized-select"
+                value={topic}
+                onChange={handleChangeTopicSelect}
+              >
+              <MenuItem value="">
+                  <em>New</em>
+                </MenuItem>
+                {menuItemTopic.map((topic) => {
+                  return ( <MenuItem value={topic}>{topic}</MenuItem>)
+                })}
+              </Select>
+      </FormControl>
+
           <p>
           Draft : {course.draft.toString()}
-          <Switch inputProps={{ 'aria-label': 'Size switch demo' }}  defaultChecked size="small" onChange={() => {
+          <Switch checked={course.draft}  inputProps={{ 'aria-label': 'Size switch demo' }}  defaultChecked size="small" onChange={() => {
             changeDraft(course.id, !course.draft)
             const courseClone = course
             courseClone.draft = !course.draft
@@ -327,27 +341,27 @@ function Index(){
     <Grid item xs={4}>
     <Button onClick={() => {
       setOpenSetting(!openSetting)
-    }}><SettingsIcon />Settings</Button>
+    }}><SettingsIcon />Innstillinger</Button>
     <div style={{
       overflow: 'auto',
       maxHeight: "40em",
     }}>
    
     
-    <h2>{course.Name } + {course.id}
+    <h2>{course.Name }
     <Button 
     startIcon={<BorderColorIcon />}
     onClick={(event: React.MouseEvent<HTMLButtonElement>) =>{
       setOpen(!open)
       setAnchorEl(event.currentTarget);
     }}>
-      Change Name
+      Bytt Navn
     </Button>
      <Button 
      startIcon={<AddIcon />}
      onClick = {() =>{
           addChapter()
-        }} >Add Chapter</Button>
+        }} >Legg til kapittel</Button>
      </h2>
 
     <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
@@ -382,7 +396,7 @@ function Index(){
     }}
     onClick={() =>{
       saveToDraft()
-    }}>Save</Button>
+    }}>Lager</Button>
     </Grid>
   </Grid>
     </>
