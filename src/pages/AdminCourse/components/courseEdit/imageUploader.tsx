@@ -162,7 +162,10 @@ const ImageUploader = (props: ToggleProps) => {
       })()}
       <Input type="file" color="primary" onChange={handleEvent} />
       <Button onClick={upload}> Upload to Firebase</Button>
-      {imagePreview ? <img src={imagePreview} alt="" /> : null}
+      {imagePreview ? <img style={{
+        width: "15em",
+        height: "15em"
+      }} src={imagePreview} alt="" /> : null}
     </Box>
   );
 };
