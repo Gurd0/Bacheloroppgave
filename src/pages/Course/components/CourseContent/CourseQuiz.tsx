@@ -89,7 +89,7 @@ const CourseQuiz = (Props: ToggleProps) => {
         Props.setFeedBack(feedBack => "Bedre lykke neste gang")
       }
     }}>
-    fulfør</Button>
+    fullfør</Button>
   }  
     </div>
   </div>

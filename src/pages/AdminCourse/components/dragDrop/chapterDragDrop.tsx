@@ -29,7 +29,7 @@ const ChapterDragDrop = (Props: ToggleProps) => {
         const result = Math.random().toString(36).substring(2,7);
 
         const p: PageType =  {
-            Name: "new",
+            Name: "Ny Side",
             id: result,
             Type: "new",
         }

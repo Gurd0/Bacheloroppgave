@@ -104,11 +104,10 @@ export default function CourseTree(Props: ToggleProps) {
     nodeId={nodes.id} 
     style={Props.selectedNode.join("") == nodes.id ?{
       backgroundColor: "rgba(0,0,0,0.04)",
-      
       overflowX: "hidden",
     }:{
       backgroundColor: 'white',
-      width: "100%"
+      width: "100%",
     }}
     label={
     <div style={{display:'flex', flexDirection: 'row',  margin: "0",
