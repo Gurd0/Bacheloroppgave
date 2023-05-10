@@ -1,8 +1,11 @@
 import { Avatar, Button } from "@mui/material";
 import Box from "@mui/material/Box";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/auth-context";
 
 export default function Header() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   return (
     <Box
@@ -57,7 +60,7 @@ export default function Header() {
         }}
       >
         <Button
-          onClick={() => navigate("/profile/:uid")}
+          onClick={() => navigate("/profile/" + user?.uid)}
           sx={{
             width: "3em",
             height: "100%",
