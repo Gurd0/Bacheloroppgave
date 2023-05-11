@@ -1,7 +1,8 @@
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import FeedBackError from "../../Components/feedBack/feedBackError";
 import { auth, db } from "../../firebase";
 
@@ -39,6 +40,7 @@ const Form = (props: props) => {
 
   //TODO: Need to update profile with given firstname and lastname
   const handleSubmit = async (e: any) => {
+    e.preventDefault()
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const name = firstName + " " + lastName;
@@ -50,7 +52,6 @@ const Form = (props: props) => {
         const error = err.toString().split(/[()]/)
         const userError = error[1].split("/")
         setFeedBack(userError[1])
-        
       })
       .then((userCredentials) => {
         if (auth.currentUser) {
@@ -58,6 +59,7 @@ const Form = (props: props) => {
             displayName: firstName + " " + lastName,
           });
           props.handleClose();
+          
         } else {
           console.log(error);
         }
@@ -74,7 +76,7 @@ const Form = (props: props) => {
     {(feedBack != "none" && feedBack != "Success") && 
           <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
       }
-    <form style={formStyle}>
+    <Box component="form" sx={formStyle} noValidate >
       <TextField
         sx={sxStyleTextField}
         label="First Name"
@@ -98,10 +100,10 @@ const Form = (props: props) => {
         type="email"
         required
         value={email}
-        onChange={(e) => setEmail(e.target.value)} // TODO: Add popup if an invalid email is provided
+        onChange={(e) => setEmail(e.target.value)}
       />
       <TextField
-        sx={sxStyleTextField} //TODO: Add error handling if password is under 6 characters, this is already implemented in firebase libraries.
+        sx={sxStyleTextField} 
         label="Password"
         variant="filled"
         type="password"
@@ -115,18 +117,19 @@ const Form = (props: props) => {
           onClick={props.handleClose}
           sx={sxStyleButton}
         >
-          Cancel
+          avbryt
         </Button>
         <Button
+          type="submit"
           variant="contained"
           color="primary"
           sx={sxStyleButton}
-          onClick={handleSubmit} // TODO: Add popup if an invalid, that implies empty textfields
+          onClick={handleSubmit}
         >
-          Submit
+          fullfør
         </Button>
       </div>
-    </form>
+    </Box>
     </>
   );
 };

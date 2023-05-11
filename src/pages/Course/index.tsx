@@ -255,6 +255,41 @@ const Index = () => {
       });
     }
   };
+  const setPageToFirstInNextChapter = () => {
+    if(nextChapter && currentPageIndex){
+      if(currentChapter?.Pages[currentPageIndex + 1]){
+        onPageClick(currentChapter?.Pages[currentPageIndex + 1].id)
+      }
+      else{
+        course?.Chapters.map((c, index) => {
+          if(currentChapter?.id === c.id){
+            if(course.Chapters[index +1]){
+              for (const [key, value] of Object.entries(course.Chapters[index+1].Pages[0])) {
+                const v = value as any 
+                if (v.id) {
+                  onPageClick(v.id)
+                }
+            }
+          }
+          }
+        })
+      }
+    }else if(currentPageIndex && currentChapter?.Pages[currentPageIndex + 1]){
+      for (const [key, value] of Object.entries(currentChapter?.Pages[currentPageIndex +1])) {
+        const v = value as any 
+        if (v.id) {
+          onPageClick(v.id)
+        }
+      }
+    }else{
+      for (const [key, value] of Object.entries(currentChapter?.Pages[0])) {
+        const v = value as any 
+        if (v.id) {
+          onPageClick(v.id)
+        }
+      }
+    }
+  }
   return (
     <>
       <Grid
@@ -303,9 +338,6 @@ const Index = () => {
                  {(feedBack != "none" && feedBack != "Success") && 
                  <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
                  }
-                 {feedBack == "Success" &&
-                 <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
-                 }
                  <div style={{
                   textAlign: 'center',
                   paddingTop: "3em"
@@ -315,6 +347,8 @@ const Index = () => {
                   completePage={setPageCompleted}
                   setFeedBack={setFeedBack}
                   feedBack={feedBack}
+                  completed={course?.Course.Completed}
+                  setPageToNext={setPageToFirstInNextChapter}
                 />
                 </div>
                 </>
