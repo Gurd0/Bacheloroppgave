@@ -13,8 +13,11 @@ interface ToggleProps {
 const QuizCompleted = (Props: ToggleProps) => {
     return (
       <div>
-        <h2>Gratulerer!</h2>
-        <img src={Props.Gif}/>
+        <h2>Gratulerer, Quiz Fullført!</h2>
+        <img style={{
+          width: "15em",
+          height: "15em"
+        }}src={Props.Gif}/>
         <div>
           <Button onClick={Props.resetQuiz}> TA QUIZ PÅ NYTT</Button>
           <Button onClick={() => {
