@@ -301,7 +301,8 @@ const Index = () => {
           backgroundColor: "#e8e8e8",
           paddingLeft: "1em",
           display: "flex",
-          paddingBottom: "1em"
+          paddingBottom: "1em",
+          minHeight: "85vh"
         }}
       >
         <Grid item xs={xsSize}>
