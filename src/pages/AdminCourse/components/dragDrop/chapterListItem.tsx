@@ -92,7 +92,7 @@ const DragItem = styled.div`
       
        <Popper id={"ChangeChapterName"} open={open} anchorEl={anchorEl}>
             <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper'}}>
-            <TextField id="standard-basic" label="Page Name" variant="standard" onChange={(event) =>{
+            <TextField id="standard-basic" label="Kapittel Navn" variant="standard" onChange={(event) =>{
                 setTextInput(event.target.value);
             }}/>
             <Button onClick={() => {
