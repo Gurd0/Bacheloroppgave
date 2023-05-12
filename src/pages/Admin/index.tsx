@@ -1,8 +1,12 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Card,
   CardActionArea,
+
   CardHeader,
   CardMedia,
   Grid,
@@ -19,6 +23,7 @@ import CardMenu from "./components/cardMenu";
 import SettingsIcon from '@mui/icons-material/Settings';
 import { ModalBox } from "../../Components/modalBox";
 import { setDefaulfImage } from "./helper/firebase";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 
 const StyleDiv = styled.div`
@@ -104,17 +109,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
   })
   
 }
-const onDragEnd = (result: any, topic: string) => {
-  let courseTopicMapClone = courseTopicMap
-  const courseListFromMap: CourseType[] | undefined= courseTopicMap.get(topic)
-  if(courseListFromMap){
-    const [removed] = courseListFromMap.splice(result.source.index, 1)
-    courseListFromMap.splice(result.destination.index, 0, removed)
-    courseTopicMapClone.set(topic, courseListFromMap)
-    setCoursesTopicMap(courseTopicMapClone)
-  }
-  
-};
+
   
   return (
     <Box>
@@ -128,7 +123,7 @@ const onDragEnd = (result: any, topic: string) => {
 
           <Button onClick={() => {
             setOpenSetting(!openSetting)
-          }}><SettingsIcon />Settings</Button>
+          }}><SettingsIcon />Innstillinger</Button>
 
           <ModalBox open={openSetting} setOpen={setOpenSetting}>
             <TextField id="outlined-basic" label="Svg icon" variant="outlined" value={image} onChange={(e: any)=> {
@@ -136,58 +131,40 @@ const onDragEnd = (result: any, topic: string) => {
             }}/>
            <Button onClick={() => {
             setDefaulfImage(image)
-           }}>Sett standar bilde</Button>
+           }}>Sett standard bilde</Button>
             <img src={image} width="120" height="120" />
           </ModalBox>
           
           {[...courseTopicMap.keys()].map((key) => {
             return(
-              <Box
-                key={key}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
+              <Box>
+              <Accordion defaultExpanded={true}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={"panel1a-content-" + key}
+                id={"panel1a-header-" + key}
               >
-             
-            <div>
-              <h1 style={{ textAlign: "center" }}>{key}</h1>
-            </div>
-           
-            
-            <DragDropContext onDragEnd={(result: any ) => {
-              onDragEnd(result, key)
-            }}>  
-            <Droppable droppableId="droppableCourse"  >
-              {(provided) => (  
-              
-              <Grid
-              {...provided.droppableProps}  
-              ref={provided.innerRef}  
-              sx={{
-                padding: "1em",
-              }}
-              container
-              spacing={3}
-              
-            >
-            {courseTopicMap.get(key)?.map((course, index) => {
-              return (
-                <Draggable key={course.id} draggableId={course.id} index={index} >
-                  {(provided) => (  
+                <div>
+                  <h1 style={{ textAlign: "center" }}>{key}</h1>
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid
+                  sx={{
+                    padding: "1em",
+                  }}
+                  container
+                  spacing={3}
+                >
+                {courseTopicMap.get(key)?.map((course, index) => {
+                 return (
                   <Grid item xs={12} sm={6} md={4} key={course.id}>
-                    <StyleDiv 
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    >
-                      <Card style={{backgroundColor: "black"}}></Card>
+                    <Card >
                       <CardActionArea 
                       onClick={(event) => {
                         handleClick(event, course.id)
                       }} >
-                        <Card>
+                        
                           <CardHeader id="cardClickable" title={
                           <span style={{
                             display: "flex",
@@ -199,6 +176,7 @@ const onDragEnd = (result: any, topic: string) => {
                           />
                           {course.image ? (
                             <CardMedia
+                              
                               id="cardClickable"
                               sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
                               component="img"
@@ -216,37 +194,46 @@ const onDragEnd = (result: any, topic: string) => {
                               alt="#"
                             />
                           )}
-                        </Card>
+                        
                       </CardActionArea>
-                      </StyleDiv>
-                 
-                
+                      </Card>
                   </Grid> 
                   )}
-                  </Draggable>
-                  
-              )
-            })}
-            {provided.placeholder}
-            </Grid>
-            
-            
-            )}
-           
-            </Droppable>  
-            </DragDropContext>
-            
+                    
+                    )
+                  }
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+              <Box
+                key={key}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >      
+            </Box>
             </Box>
             )
            })} 
           </>
         )}
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={"panel1a-content-" + "draft"}
+            id={"panel1a-header-" + "draft"}
+          >
          <div>
-          <h1 style={{ textAlign: "center" }}>Draft</h1>
+          <h1 style={{ textAlign: "center" }}>Drafts</h1>
         </div>
+        </AccordionSummary>
+              <AccordionDetails>
         {draftCoursesHook.isLoading ? (
           <CircularProgress />
         ) : (
+          <Box>
           <Grid
             sx={{
               padding: "1em",
@@ -266,7 +253,10 @@ const onDragEnd = (result: any, topic: string) => {
               </Grid>
             ))}
           </Grid>
+          </Box>
         )}
+        </AccordionDetails>
+           </Accordion>
       </Box>
   );
 }
