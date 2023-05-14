@@ -25,14 +25,6 @@ import { ModalBox } from "../../Components/modalBox";
 import { setDefaulfImage } from "./helper/firebase";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-
-const StyleDiv = styled.div`
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  display: flex;
-  gap: 20px;
-  flex-direction: row;
-`;
-
 export default function Home() {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [draftCourses, setDraftCourses] = useState<CourseType[]>([]);
@@ -87,18 +79,6 @@ export default function Home() {
     }
   }, [draftCoursesHook]);
 
-  const handleClick = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>, courseId?: string) => {
-    
-    const target = e.target as HTMLButtonElement
-    if(target.name === 'optionButton') {
-        e.preventDefault();
-        e.stopPropagation();
-    }else {
-        if(courseId && target.id == "cardClickable"){
-          window.location.href = "/admin/edit/" + courseId
-        }
-    }
-}
 const removeCourseLocal = (courseId: string, topic: string) => {
   courses.map((c, index) => {
     if(c.id === courseId){
@@ -137,7 +117,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
           
           {[...courseTopicMap.keys()].map((key) => {
             return(
-              <Box>
+              <Box key={key}>
               <Accordion defaultExpanded={true}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -160,10 +140,8 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                  return (
                   <Grid item xs={12} sm={6} md={4} key={course.id}>
                     <Card >
-                      <CardActionArea 
-                      onClick={(event) => {
-                        handleClick(event, course.id)
-                      }} >
+                      <CardActionArea href={"/admin/edit/" + course.id}
+                      >
                         
                           <CardHeader id="cardClickable" title={
                           <span style={{
@@ -171,7 +149,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                             justifyContent: "space-between",
                           }}>
                             {course.Name} 
-                            <CardMenu key={course.id} courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                            
                           </span>}
                           />
                           {course.image ? (
@@ -197,6 +175,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                         
                       </CardActionArea>
                       </Card>
+                      <CardMenu key={course.id} courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
                   </Grid> 
                   )}
                     
@@ -242,7 +221,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
             spacing={3}
           >
             {draftCourses.map((courses) => (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={4} key={courses.id}>
                 {/* key={courses.id} */}
                 <CardActionArea href={"/admin/edit/" + courses.id}>
                   <Card>
