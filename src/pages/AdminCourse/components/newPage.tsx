@@ -26,7 +26,13 @@ const NewPage = (Props: ToggleProps) => {
     //TODO lægg tel if imput empty
   return (
     <>
-    <Grid display={'flex'} flexDirection={'column'} textAlign={'center'} paddingTop={"20px"}>
+    <Grid  style={{
+        display: 'flex',
+        flexDirection: 'column',
+        textAlign: 'center',
+        paddingTop: "20px",
+        gap: "1em"
+    }}>
         <Box>
             <Button variant="outlined" style={buttonStyle} onClick={() =>{
                 Props.setPageType("Text")
