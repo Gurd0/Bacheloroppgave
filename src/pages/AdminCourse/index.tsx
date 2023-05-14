@@ -396,7 +396,7 @@ function Index(){
     }}
     onClick={() =>{
       saveToDraft()
-    }}>Lager</Button>
+    }}>Lagre</Button>
     </Grid>
   </Grid>
     </>
