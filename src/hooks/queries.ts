@@ -153,7 +153,7 @@ export const useCurrentPage = (id: string, collection: string) => {
 //TODO fiks query key og her brukes fetch course, bør bytt navn
 export const useGetCollection = (collection: string, draft: boolean) => {
   return useQuery(
-    [collection],
+    [collection, draft],
     async () => {
       return await Promise.resolve(fetchCourseContentFromFirebase(collection, draft));
     },

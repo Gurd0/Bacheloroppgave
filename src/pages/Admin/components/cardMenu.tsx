@@ -7,8 +7,7 @@ import { removeCourse } from '../helper/firebase';
 
 interface propsInterface {
   courseId: string
-  removeCourseLocal: (courseId: string, topic: string) => void
-  Topic: string
+  removeCourseLocal: (courseId: string) => void
 }
 
 // https://mui.com/material-ui/react-menu/
@@ -54,7 +53,7 @@ const CardMenu = (Props: propsInterface) => {
       <MenuItem onClick={() => {
         handleClose()
         removeCourse(Props.courseId)
-        Props.removeCourseLocal(Props.courseId, Props.Topic)
+        Props.removeCourseLocal(Props.courseId)
         }
         }>Remove</MenuItem>
       <MenuItem onClick={() => {

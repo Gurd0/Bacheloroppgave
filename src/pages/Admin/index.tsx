@@ -76,10 +76,11 @@ export default function Home() {
   useEffect(() => {
     if (!draftCoursesHook.isLoading) {
       setDraftCourses(draftCoursesHook.data as CourseType[]);
+      console.log(draftCoursesHook.data)
     }
-  }, [draftCoursesHook]);
+  }, [draftCoursesHook.isFetched]);
 
-const removeCourseLocal = (courseId: string, topic: string) => {
+const removeCourseLocal = (courseId: string) => {
   courses.map((c, index) => {
     if(c.id === courseId){
       let coursesClone = courses
@@ -87,7 +88,15 @@ const removeCourseLocal = (courseId: string, topic: string) => {
       setCourses([...coursesClone])
     }
   })
-  
+}
+const removeCourseLocalDraft = (courseId: string) => {
+  draftCourses.map((c, index) => {
+    if(c.id === courseId){
+      let draftCoursesClone = draftCourses
+      draftCoursesClone.splice(index, 1)
+      setDraftCourses([...draftCoursesClone])
+    }
+  })
 }
 
   
@@ -175,7 +184,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                         
                       </CardActionArea>
                       </Card>
-                      <CardMenu key={course.id} courseId={course.id} removeCourseLocal={removeCourseLocal} Topic={key as string}/>
+                      <CardMenu key={course.id} courseId={course.id} removeCourseLocal={removeCourseLocal}/>
                   </Grid> 
                   )}
                     
@@ -220,12 +229,12 @@ const removeCourseLocal = (courseId: string, topic: string) => {
             container
             spacing={3}
           >
-            {draftCourses.map((courses) => (
-              <Grid item xs={12} sm={6} md={4} key={courses.id}>
+            {draftCourses.map((courseDraft) => (
+              <Grid item xs={12} sm={6} md={4} key={courseDraft.id}>
                 {/* key={courses.id} */}
-                <CardActionArea href={"/admin/edit/" + courses.id}>
+                <CardActionArea href={"/admin/edit/" + courseDraft.id}>
                   <Card>
-                    <CardHeader title={courses.Name} />
+                    <CardHeader title={courseDraft.Name} />
                     <CardMedia
                               id="cardClickable"
                               sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
@@ -236,6 +245,7 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                             />
                   </Card>
                 </CardActionArea>
+                <CardMenu key={courseDraft.id} courseId={courseDraft.id} removeCourseLocal={removeCourseLocalDraft}/>
               </Grid>
             ))}
           </Grid>
