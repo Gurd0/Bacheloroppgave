@@ -226,7 +226,14 @@ const removeCourseLocal = (courseId: string, topic: string) => {
                 <CardActionArea href={"/admin/edit/" + courses.id}>
                   <Card>
                     <CardHeader title={courses.Name} />
-                    <CardMedia component="img" height="200" image="#" alt="#" />
+                    <CardMedia
+                              id="cardClickable"
+                              sx={{ padding: "0 2em 2em 0em", objectFit: "contain" }}
+                              component="img"
+                              height="100"
+                              image="https://www.svgrepo.com/show/512190/file-missing-plus-1710.svg"
+                              alt="#"
+                            />
                   </Card>
                 </CardActionArea>
               </Grid>
