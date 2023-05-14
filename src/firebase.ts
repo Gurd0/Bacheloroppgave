@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -25,6 +25,10 @@ export const imagesRef = ref(
 );
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+export const signUpUser = async (email: string, password: string): Promise<any> => {
+  await createUserWithEmailAndPassword(auth, email, password)
+}
 
 export const signInUser = async (e: any, email: string, password: string, userFeedBack: (err: string) => void) => {
   if (!auth.currentUser) {
