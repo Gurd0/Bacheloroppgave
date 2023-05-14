@@ -1,10 +1,10 @@
 import { Box, Button, TextField } from "@mui/material";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, UserCredential } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import FeedBackError from "../../Components/feedBack/feedBackError";
-import { auth, db } from "../../firebase";
+import { auth, db, signUpUser } from "../../firebase";
 
 interface props {
   handleClose: () => void;
@@ -41,8 +41,9 @@ const Form = (props: props) => {
   //TODO: Need to update profile with given firstname and lastname
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
+    
+    await signUpUser(email, password)
+      .then((userCredentials: UserCredential) => {
         const name = firstName + " " + lastName;
         setDoc(doc(db, "Users", userCredentials.user.uid), {
           displayName: name,
