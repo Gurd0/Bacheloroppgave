@@ -80,7 +80,7 @@ const QuizEdit = (Props: ToggleProps) => {
         let pageValueClone = pageValue
         pageValueClone.splice(index, 1)
         setPageValue([...pageValueClone])
-      }}>remove</Button>
+      }}>Fjern</Button>
       </Grid>
       </Grid>
     ))}
@@ -112,7 +112,7 @@ const QuizEdit = (Props: ToggleProps) => {
 
     <Button onClick= {() => {
       saveQuiz()
-    }}> Lager </Button>
+    }}> Lagre </Button>
     </>
   )
 }
