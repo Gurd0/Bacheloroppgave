@@ -59,7 +59,7 @@ const CardMenu = (Props: propsInterface) => {
         }>Remove</MenuItem>
       <MenuItem onClick={() => {
         handleClose()
-        window.location.href = "/edit/" + Props.courseId
+        window.location.href = "/admin/edit/" + Props.courseId
         }}>Edit</MenuItem>
       
     </Menu>
