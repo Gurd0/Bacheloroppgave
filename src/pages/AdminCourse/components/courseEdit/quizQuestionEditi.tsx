@@ -97,7 +97,7 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
       justifyContent: 'space-evenly',
       gap: "20px",      
     }}>
-      <TextField id="outlined-question" label="Question" onChange={onChangeQuestion} variant="outlined" value={question}/>
+      <TextField id="outlined-question" label="Spørsmål" onChange={onChangeQuestion} variant="outlined" value={question}/>
 
       <div style={{
         display: 'flex',
@@ -117,7 +117,7 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
           <TextField id={a.id} label={a.label} value={a.value} onChange={(e: any) => {onChangeAnswer(e, a.id)}} variant="outlined" />
           <Button onClick={() => {
             removeAnswer(a.value)
-          }}> remove </Button>
+          }}> Fjern </Button>
           </>
          }
           </div>
@@ -130,7 +130,7 @@ const QuizQuestionEdit = (Props: ToggleProps) => {
           onChange={(e: any) => {
             setCorrectAnswer(e.target.value)
           }}
-          label="Select"
+          label="Velg"
           defaultValue={correctAnswer}
           value={correctAnswer}
           helperText="Rett svar"
