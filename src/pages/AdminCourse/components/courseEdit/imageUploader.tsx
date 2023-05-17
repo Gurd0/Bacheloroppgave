@@ -28,10 +28,36 @@ const ImageUploader = (props: ToggleProps) => {
   const [success, setSuccess] = useState<boolean>(false);
 
 
- 
+  function CircularProgressWithLabel(
+    props: CircularProgressProps & { value: number }
+  ) {
+    // if (props.value === 100) return <p>No background activity</p>;
+    return (
+      <Box sx={{ position: "relative", display: "inline-flex" }}>
+        <CircularProgress variant="determinate" {...props} />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="caption"
+            component="div"
+            color="text.secondary"
+          >{`${Math.round(props.value)}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
   // 'file' comes from the Blob or File API
-
   React.useEffect(() => {
     if (file) setReference(ref(storage, imagesRef + "/" + file.name));
   }, [file]);
@@ -60,25 +86,17 @@ const ImageUploader = (props: ToggleProps) => {
 
   const upload = () => {
     if (file && reference) {
-      uploadBytes(reference, file).then((snapshot) => {
-        console.log("Uploaded a blob or file! " + file.name);
-        console.log(snapshot.ref);
-      });
-      const uploadTask = uploadBytesResumable(imagesRef, file);
+      //Code inspired from https://firebase.google.com/docs/storage/web/upload-files
+      const uploadTask = uploadBytesResumable(reference, file);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          console.log("Upload is " + progress + "% done");
           switch (snapshot.state) {
             case "paused":
-              console.log("Upload is paused");
               setUploading(false);
               break;
             case "running":
-              console.log("Upload is running");
               setUploading(true);
               break;
           }
@@ -145,8 +163,6 @@ const ImageUploader = (props: ToggleProps) => {
         height: "15em"
       }} src={imagePreview} alt="" /> : null}
           
-    
-      
     </Box>
   );
 };
