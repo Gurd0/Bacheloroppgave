@@ -1,5 +1,8 @@
-import { TextField } from "@mui/material";
-import React from "react";
+import { Button, TextField } from "@mui/material";
+import React, { useState } from "react";
+import FeedBackError from "../../../../Components/feedBack/feedBackError";
+import FeedBackSuccess from "../../../../Components/feedBack/feedBackSuccess";
+import { ModalBox } from "../../../../Components/modalBox";
 import { PageType } from "../../../../context/context";
 import {
   default as ImageUploader,
@@ -12,7 +15,9 @@ interface ToggleProps {
 }
 
 const ImageEdit = (props: ToggleProps) => {
-  const [textField, setTextField] = React.useState<string>();
+  const [textField, setTextField] = useState<string>();
+  const [open, setOpen] = useState<boolean>(false)
+  const [feedBack, setFeedBack] = useState<string>("none")
 
   const handleTextInputChange = (event: {
     target: { value: React.SetStateAction<string | undefined> };
@@ -27,7 +32,10 @@ const ImageEdit = (props: ToggleProps) => {
   }, [props.pageValue]);
 
   React.useEffect(() => {
-    if (textField) props.setPageValue(textField);
+    if (textField){
+       props.setPageValue(textField);
+      
+      }
   }, [textField]);
 
   //TODO: Add the choice between add from source, and add from local storage->db
@@ -37,9 +45,27 @@ const ImageEdit = (props: ToggleProps) => {
         textAlign: "center",
       }}
     >
-      <h2>Image Url</h2>
+      <h2>Bilde Url</h2>
+      <div style={{
+        display: 'flex',
+        alignContent: 'center',
+        justifyContent: 'center',
+        
+      }}>
       <TextField value={props.pageValue} onChange={handleTextInputChange} />
-      <ImageUploader setPageValue={props.setPageValue} />
+      <Button onClick={() => {
+          setOpen(!open)
+      }}>Last Opp Bile</Button>
+      </div>
+    <ModalBox open={open} setOpen={setOpen}>
+        {(feedBack != "none" && feedBack != "success") && 
+        <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+        }
+        {feedBack == "success" &&
+        <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+        }
+      <ImageUploader setPageValue={props.setPageValue} setTextField={setTextField} setFeedBack={setFeedBack} feedBack={feedBack}/>
+      </ModalBox>
     </div>
   );
 };

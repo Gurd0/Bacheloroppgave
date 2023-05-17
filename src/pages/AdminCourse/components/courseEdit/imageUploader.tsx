@@ -10,11 +10,14 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import React, { useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { imagesRef, storage } from "../../../../firebase";
 
 interface ToggleProps {
   setPageValue: (value: any) => void;
+  setTextField: (value: string) => void
+  setFeedBack: Dispatch<React.SetStateAction<string>>
+  feedBack: string
 }
 const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
@@ -24,8 +27,10 @@ const ImageUploader = (props: ToggleProps) => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
+
   // Component inspired by MUI, used to present a circular progress bar
   // We use this to indicate the upload progress
+
   function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number }
   ) {
@@ -77,7 +82,7 @@ const ImageUploader = (props: ToggleProps) => {
       setFile(e.target.files[0]);
       setImagePreview(URL.createObjectURL(e.target.files[0])); //Setting image preview
     } else {
-      console.log("no file");
+      props.setFeedBack("Ingen fil")
     }
   }
 
@@ -99,7 +104,7 @@ const ImageUploader = (props: ToggleProps) => {
           }
         },
         (error) => {
-          console.log(error);
+          props.setFeedBack(feedBack => "error")
           setUploading(false);
         },
         () => {
@@ -110,6 +115,7 @@ const ImageUploader = (props: ToggleProps) => {
             getDownloadURL(ref(storage, imagesRef + "/" + file.name))
               .then((url) => {
                 props.setPageValue(url);
+                props.setTextField(url)
               })
               .catch((error) => {
                 console.log(error);
@@ -132,12 +138,12 @@ const ImageUploader = (props: ToggleProps) => {
         alignItems: "center",
       }}
     >
-      <h2>Upload image to database</h2>{" "}
-      {(() => {
-        if (uploading && progress && !success) {
-          return <CircularProgressWithLabel value={progress} />;
+   
+    {(() => {
+        if (!uploading && !progress && !success) {
+          return <></>;
         } else if (success) {
-          return <p>SUCCESS!</p>;
+          props.setFeedBack(feedBack => "success")
         } else {
           return (
             <Box
@@ -154,16 +160,11 @@ const ImageUploader = (props: ToggleProps) => {
       })()}
       <Input type="file" color="primary" onChange={handleEvent} />
       <Button onClick={upload}> Upload to Firebase</Button>
-      {imagePreview ? (
-        <img
-          style={{
-            width: "15em",
-            height: "15em",
-          }}
-          src={imagePreview}
-          alt=""
-        />
-      ) : null}
+      {imagePreview ? <img style={{
+        width: "15em",
+        height: "15em"
+      }} src={imagePreview} alt="" /> : null}
+          
     </Box>
   );
 };
