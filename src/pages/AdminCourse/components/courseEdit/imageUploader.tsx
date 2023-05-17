@@ -15,9 +15,9 @@ import { imagesRef, storage } from "../../../../firebase";
 
 interface ToggleProps {
   setPageValue: (value: any) => void;
-  setTextField: (value: string) => void
-  setFeedBack: Dispatch<React.SetStateAction<string>>
-  feedBack: string
+  setTextField: (value: string) => void;
+  setFeedBack: Dispatch<React.SetStateAction<string>>;
+  feedBack: string;
 }
 const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
@@ -26,8 +26,6 @@ const ImageUploader = (props: ToggleProps) => {
   const [progress, setProgress] = useState<number>();
   const [uploading, setUploading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
-
-
 
   // 'file' comes from the Blob or File API
   React.useEffect(() => {
@@ -52,7 +50,7 @@ const ImageUploader = (props: ToggleProps) => {
       setFile(e.target.files[0]);
       setImagePreview(URL.createObjectURL(e.target.files[0])); //Setting image preview
     } else {
-      props.setFeedBack("Ingen fil")
+      props.setFeedBack("Ingen fil");
     }
   }
 
@@ -74,7 +72,7 @@ const ImageUploader = (props: ToggleProps) => {
           }
         },
         (error) => {
-          props.setFeedBack(feedBack => "error")
+          props.setFeedBack((feedBack) => "error");
           setUploading(false);
         },
         () => {
@@ -85,7 +83,7 @@ const ImageUploader = (props: ToggleProps) => {
             getDownloadURL(ref(storage, imagesRef + "/" + file.name))
               .then((url) => {
                 props.setPageValue(url);
-                props.setTextField(url)
+                props.setTextField(url);
               })
               .catch((error) => {
                 console.log(error);
@@ -108,12 +106,11 @@ const ImageUploader = (props: ToggleProps) => {
         alignItems: "center",
       }}
     >
-   
-    {(() => {
+      {(() => {
         if (!uploading && !progress && !success) {
           return <></>;
         } else if (success) {
-          props.setFeedBack(feedBack => "success")
+          props.setFeedBack((feedBack) => "success");
         } else {
           return (
             <Box
@@ -129,12 +126,17 @@ const ImageUploader = (props: ToggleProps) => {
         }
       })()}
       <Input type="file" color="primary" onChange={handleEvent} />
-      <Button onClick={upload}> Upload to Firebase</Button>
-      {imagePreview ? <img style={{
-        width: "15em",
-        height: "15em"
-      }} src={imagePreview} alt="" /> : null}
-          
+      <Button onClick={upload}>Last opp bilde til Firebase</Button>
+      {imagePreview ? (
+        <img
+          style={{
+            width: "15em",
+            height: "15em",
+          }}
+          src={imagePreview}
+          alt=""
+        />
+      ) : null}
     </Box>
   );
 };
