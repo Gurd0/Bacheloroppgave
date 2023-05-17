@@ -18,30 +18,33 @@ interface Props {
 export const AuthContext = createContext({
   // "User" comes from firebase auth-public.d.ts
   user: {} as User | undefined,
-  isAuthenticated: true || false,
   isLoading: true || false,
   admin: true || false,
 });
 //checker if loading
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [admin, setAdmin] = useState<boolean>(false)
   useEffect(() => {
-    const t = async (user: any): Promise<boolean> => {
+    const getUserAdmin = async (user: any): Promise<boolean> => {
       if(user){
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef); 
         const data: any = docSnap.data()
         setIsLoading(false);
-        return data.admin as boolean
+        try{
+          return data.admin as boolean
+        }catch{
+          return false
+        }
+        
       }
       else{
         return false
       }
     }
-    if (user && isAuthenticated) {
+    if (user) {
       return;
     }
     const unSubscribeAuth = onAuthStateChanged(
@@ -52,27 +55,24 @@ export const AuthProvider = ({ children }: Props) => {
      
           const user = authenticatedUser;
           setUser(user); // loading false
-          setIsAuthenticated(true);
           
-          setAdmin(await t(user))
+          setAdmin(await getUserAdmin(user))
           
         } else {
           setUser(undefined);
-          setIsAuthenticated(false);
           setIsLoading(false);
+          setAdmin(false)
         }
       }
     );
     return unSubscribeAuth;
-  }, [user, isAuthenticated]);
+  }, [user]);
 
   const value = {
     user,
-    isAuthenticated,
     isLoading,
     admin,
   };
-  console.log(admin)
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

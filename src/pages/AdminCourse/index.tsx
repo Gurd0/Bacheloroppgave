@@ -254,7 +254,7 @@ function Index(){
           options={coursNameAndId}
 
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Prerequisite" />}
+          renderInput={(params) => <TextField {...params} label="Forutsetning" />}
           />
     )
   }
@@ -281,13 +281,13 @@ function Index(){
           
           {getAutoComplete()}
           <FormControl sx={{ m: 1 }} variant="standard">
-            <InputLabel  htmlFor="customized-textbox">Topic</InputLabel>
+            <InputLabel  htmlFor="customized-textbox">Kategori</InputLabel>
             <Input value={topic} onChange={(event) =>{
               setTopic(event.target.value);
             }}></Input>
           </FormControl>
           <FormControl sx={{ m: 1 }} variant="standard">
-              <InputLabel id="customized-select-label">Topic</InputLabel>
+              <InputLabel id="customized-select-label">Kategori</InputLabel>
               <Select
                 labelId="customized-select-label"
                 id="customized-select"
@@ -379,8 +379,8 @@ function Index(){
     </Popper>
     
     {!isLoading ?
-      <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
-    : <h1>hmm</h1>
+      <ChapterDragDrop key={slug} chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
+    : <h1>course</h1>
     }
     
     </div>

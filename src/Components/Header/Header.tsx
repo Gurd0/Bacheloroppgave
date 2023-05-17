@@ -42,6 +42,7 @@ export default function Header() {
           startIcon={
             <Avatar
               src="https://ec-play.com/static/media/ECPlayLogo.4d6cf161.svg"
+              alt="EC-play logo"
               variant="square"
               sx={{
                 width: "100%",

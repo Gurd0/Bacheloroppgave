@@ -5,7 +5,6 @@ import { AuthContext, UserAuth } from "../../context/auth-context";
 
 export const AuthGuardAdmin = ({ children }: { children: ReactNode }) => {
   const { user, isLoading, admin} = useContext(AuthContext);
-    console.log(admin)
   if (isLoading) {
     return <LinearProgress />;
   } else if (!user) {

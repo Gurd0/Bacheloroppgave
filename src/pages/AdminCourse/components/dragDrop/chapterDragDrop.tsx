@@ -105,21 +105,22 @@ const ChapterDragDrop = (Props: ToggleProps) => {
                     {Props.chapters.map((chapter: ChapterType, index: number) => (  
                         <Draggable key={chapter.id} draggableId={chapter.id} index={index} >  
                             {(provided, snapshot) => (  
-                                <ChapterListItem
-                                chapters={Props.chapters}
-                                setChapters={Props.setChapters}
-                                provided={provided}
-                                snapshot={snapshot}
-                                addPage={addPage}
-                                chapter={chapter}
-                                changeChapterName={changeChapterName}
-                                removePage={removePage}
-                                setSelectedPage={Props.setSelectedPage}
-                                selectedPage={Props.selectedPage}
-                                changePageName={changePageName}
-                                removeChapter={removeChapter}
-                                />
-                            )}  
+                                    <ChapterListItem
+                                    key={chapter.id}
+                                    chapters={Props.chapters}
+                                    setChapters={Props.setChapters}
+                                    provided={provided}
+                                    snapshot={snapshot}
+                                    addPage={addPage}
+                                    chapter={chapter}
+                                    changeChapterName={changeChapterName}
+                                    removePage={removePage}
+                                    setSelectedPage={Props.setSelectedPage}
+                                    selectedPage={Props.selectedPage}
+                                    changePageName={changePageName}
+                                    removeChapter={removeChapter}
+                                    />
+                                )}  
                         </Draggable>  
                     ))}  
                     {provided.placeholder}

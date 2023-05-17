@@ -27,7 +27,7 @@ export const ModalBox = (props : ToggleProps) => {
              {props.children}   
              <Button onClick={() => {
                 props.setOpen(!props.open)
-             }}>close</Button>   
+             }}>Lukk</Button>   
             </div>
             </Box>
         </Modal>
