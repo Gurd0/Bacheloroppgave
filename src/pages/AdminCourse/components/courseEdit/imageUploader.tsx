@@ -15,6 +15,7 @@ import { imagesRef, storage } from "../../../../firebase";
 
 interface ToggleProps {
   setPageValue: (value: any) => void;
+  setTextField: (value: string) => void;
 }
 const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
@@ -23,6 +24,7 @@ const ImageUploader = (props: ToggleProps) => {
   const [progress, setProgress] = useState<number>();
   const [uploading, setUploading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+
 
   function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number }
@@ -118,6 +120,7 @@ const ImageUploader = (props: ToggleProps) => {
             getDownloadURL(ref(storage, imagesRef + "/" + file.name))
               .then((url) => {
                 props.setPageValue(url);
+                props.setTextField(url)
               })
               .catch((error) => {
                 console.log(error);
@@ -140,10 +143,10 @@ const ImageUploader = (props: ToggleProps) => {
         alignItems: "center",
       }}
     >
-      <h2>Upload image to database</h2>{" "}
-      {(() => {
-        if (uploading && progress && !success) {
-          return <CircularProgressWithLabel value={progress} />;
+   
+    {(() => {
+        if (!uploading && !progress && !success) {
+          return <></>;
         } else if (success) {
           return <p>SUCCESS!</p>;
         } else {
@@ -166,6 +169,9 @@ const ImageUploader = (props: ToggleProps) => {
         width: "15em",
         height: "15em"
       }} src={imagePreview} alt="" /> : null}
+          
+    
+      
     </Box>
   );
 };
