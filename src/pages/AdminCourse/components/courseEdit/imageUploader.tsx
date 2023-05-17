@@ -24,10 +24,11 @@ const ImageUploader = (props: ToggleProps) => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
+  // Component inspired by MUI, used to present a circular progress bar
+  // We use this to indicate the upload progress
   function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number }
   ) {
-    // if (props.value === 100) return <p>No background activity</p>;
     return (
       <Box sx={{ position: "relative", display: "inline-flex" }}>
         <CircularProgress variant="determinate" {...props} />
@@ -54,7 +55,6 @@ const ImageUploader = (props: ToggleProps) => {
   }
 
   // 'file' comes from the Blob or File API
-
   React.useEffect(() => {
     if (file) setReference(ref(storage, imagesRef + "/" + file.name));
   }, [file]);
