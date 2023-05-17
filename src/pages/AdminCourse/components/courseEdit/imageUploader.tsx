@@ -83,11 +83,7 @@ const ImageUploader = (props: ToggleProps) => {
 
   const upload = () => {
     if (file && reference) {
-      uploadBytes(reference, file).then((snapshot) => {
-        console.log("Uploaded a blob or file! " + file.name);
-        console.log(snapshot.ref);
-      });
-      const uploadTask = uploadBytesResumable(imagesRef, file);
+      const uploadTask = uploadBytesResumable(reference, file);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -95,6 +91,7 @@ const ImageUploader = (props: ToggleProps) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           console.log("Upload is " + progress + "% done");
+
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
@@ -162,10 +159,16 @@ const ImageUploader = (props: ToggleProps) => {
       })()}
       <Input type="file" color="primary" onChange={handleEvent} />
       <Button onClick={upload}> Upload to Firebase</Button>
-      {imagePreview ? <img style={{
-        width: "15em",
-        height: "15em"
-      }} src={imagePreview} alt="" /> : null}
+      {imagePreview ? (
+        <img
+          style={{
+            width: "15em",
+            height: "15em",
+          }}
+          src={imagePreview}
+          alt=""
+        />
+      ) : null}
     </Box>
   );
 };
