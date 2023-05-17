@@ -1,5 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
+import FeedBackError from "../../../../Components/feedBack/feedBackError";
+import FeedBackSuccess from "../../../../Components/feedBack/feedBackSuccess";
 import { ModalBox } from "../../../../Components/modalBox";
 import { PageType } from "../../../../context/context";
 import {
@@ -13,8 +15,9 @@ interface ToggleProps {
 }
 
 const ImageEdit = (props: ToggleProps) => {
-  const [textField, setTextField] = React.useState<string>();
+  const [textField, setTextField] = useState<string>();
   const [open, setOpen] = useState<boolean>(false)
+  const [feedBack, setFeedBack] = useState<string>("none")
 
   const handleTextInputChange = (event: {
     target: { value: React.SetStateAction<string | undefined> };
@@ -55,7 +58,13 @@ const ImageEdit = (props: ToggleProps) => {
       }}>Last Opp Bile</Button>
       </div>
     <ModalBox open={open} setOpen={setOpen}>
-      <ImageUploader setPageValue={props.setPageValue} setTextField={setTextField}/>
+        {(feedBack != "none" && feedBack != "success") && 
+        <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+        }
+        {feedBack == "success" &&
+        <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
+        }
+      <ImageUploader setPageValue={props.setPageValue} setTextField={setTextField} setFeedBack={setFeedBack} feedBack={feedBack}/>
       </ModalBox>
     </div>
   );

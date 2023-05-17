@@ -10,12 +10,14 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import React, { useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { imagesRef, storage } from "../../../../firebase";
 
 interface ToggleProps {
   setPageValue: (value: any) => void;
-  setTextField: (value: string) => void;
+  setTextField: (value: string) => void
+  setFeedBack: Dispatch<React.SetStateAction<string>>
+  feedBack: string
 }
 const ImageUploader = (props: ToggleProps) => {
   const [file, setFile] = useState<File>();
@@ -79,7 +81,7 @@ const ImageUploader = (props: ToggleProps) => {
       setFile(e.target.files[0]);
       setImagePreview(URL.createObjectURL(e.target.files[0])); //Setting image preview
     } else {
-      console.log("no file");
+      props.setFeedBack("Ingen fil")
     }
   }
 
@@ -109,7 +111,7 @@ const ImageUploader = (props: ToggleProps) => {
           }
         },
         (error) => {
-          console.log(error);
+          props.setFeedBack(feedBack => "error")
           setUploading(false);
         },
         () => {
@@ -148,7 +150,7 @@ const ImageUploader = (props: ToggleProps) => {
         if (!uploading && !progress && !success) {
           return <></>;
         } else if (success) {
-          return <p>SUCCESS!</p>;
+          props.setFeedBack(feedBack => "success")
         } else {
           return (
             <Box
