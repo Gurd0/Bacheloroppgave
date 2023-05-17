@@ -27,13 +27,18 @@ export const AuthProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [admin, setAdmin] = useState<boolean>(false)
   useEffect(() => {
-    const t = async (user: any): Promise<boolean> => {
+    const getUserAdmin = async (user: any): Promise<boolean> => {
       if(user){
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef); 
         const data: any = docSnap.data()
         setIsLoading(false);
-        return data.admin as boolean
+        try{
+          return data.admin as boolean
+        }catch{
+          return false
+        }
+        
       }
       else{
         return false
@@ -51,11 +56,12 @@ export const AuthProvider = ({ children }: Props) => {
           const user = authenticatedUser;
           setUser(user); // loading false
           
-          setAdmin(await t(user))
+          setAdmin(await getUserAdmin(user))
           
         } else {
           setUser(undefined);
           setIsLoading(false);
+          setAdmin(false)
         }
       }
     );
@@ -67,7 +73,6 @@ export const AuthProvider = ({ children }: Props) => {
     isLoading,
     admin,
   };
-  console.log(admin)
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

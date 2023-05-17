@@ -444,7 +444,6 @@ const Index = () => {
               <div >
                 <Paper
                   variant="outlined"
-                  elevation={10}
                   sx={{
                    
                     width: "auto",

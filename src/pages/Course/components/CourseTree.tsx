@@ -53,7 +53,7 @@ export default function CourseTree(Props: ToggleProps) {
           Props.ClickHandler(Props.tree.children[0].children[0].id)
         } 
       }catch (err){
-        console.log(err)
+        //console.log(err)
       } 
    
   },[Props.selectedNode])

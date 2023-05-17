@@ -379,8 +379,8 @@ function Index(){
     </Popper>
     
     {!isLoading ?
-      <ChapterDragDrop chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
-    : <h1>hmm</h1>
+      <ChapterDragDrop key={slug} chapters={chapters} setChapters={setChapters} setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
+    : <h1>course</h1>
     }
     
     </div>

@@ -22,7 +22,6 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <MakeAdmin /> */}
         <AuthProvider>
           <Header />
           <div style={{paddingTop: "4em"}}>
