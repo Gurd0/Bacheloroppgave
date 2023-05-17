@@ -18,14 +18,12 @@ interface Props {
 export const AuthContext = createContext({
   // "User" comes from firebase auth-public.d.ts
   user: {} as User | undefined,
-  isAuthenticated: true || false,
   isLoading: true || false,
   admin: true || false,
 });
 //checker if loading
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [admin, setAdmin] = useState<boolean>(false)
   useEffect(() => {
@@ -41,7 +39,7 @@ export const AuthProvider = ({ children }: Props) => {
         return false
       }
     }
-    if (user && isAuthenticated) {
+    if (user) {
       return;
     }
     const unSubscribeAuth = onAuthStateChanged(
@@ -52,23 +50,20 @@ export const AuthProvider = ({ children }: Props) => {
      
           const user = authenticatedUser;
           setUser(user); // loading false
-          setIsAuthenticated(true);
           
           setAdmin(await t(user))
           
         } else {
           setUser(undefined);
-          setIsAuthenticated(false);
           setIsLoading(false);
         }
       }
     );
     return unSubscribeAuth;
-  }, [user, isAuthenticated]);
+  }, [user]);
 
   const value = {
     user,
-    isAuthenticated,
     isLoading,
     admin,
   };
