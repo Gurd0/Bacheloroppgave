@@ -175,9 +175,9 @@ function Index(){
     }
 
     if(!c.Topic){
-      setFeedBack(feedBack => "Missing Topic")
+      setFeedBack(feedBack => "Mangler Kategori")
     }else if(c.Chapters.length == 0){
-      setFeedBack(feedBack => "Missing Chapter")
+      setFeedBack(feedBack => "Mangler Kapittel")
     }
     else{
       setFeedBack(feedBack => "success")
@@ -261,14 +261,19 @@ function Index(){
  
   return(
     <>
-    <Grid container spacing={2}>
-    
+     <div style={{
+      
+    }}>
     {(feedBack != "none" && feedBack != "success") && 
     <FeedBackError feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
     }
     {feedBack == "success" &&
     <FeedBackSuccess feedBack={feedBack} open={true} setFeedBack={setFeedBack}/>
     }
+    </div>
+    <Grid container spacing={2}>
+   
+    
     <ModalBox open={openSetting} setOpen={setOpenSetting}>
           <TextField id="outlined-basic" value={course.image} label="Svg icon" variant="outlined" onChange={(e: any)=> {
             let courseClone = course
