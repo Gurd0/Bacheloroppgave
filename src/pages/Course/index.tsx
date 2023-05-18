@@ -356,11 +356,16 @@ const Index = () => {
               )}
             </Box>
             
-              {course && currentPageIndex != null && currentChapter != null && (!open || matches) &&  (
+              
+            </div>
+            {course && currentPageIndex != null && currentChapter != null && (!open || matches) &&  (
                 <div
                 style={{
                   width: "100%",
                   marginTop: "auto",
+                  display: "sticky",
+                  borderRight:  "1px solid black",
+                  borderLeft:  "1px solid black",
                 }}
               >
                 <CourseMobileStep
@@ -374,8 +379,6 @@ const Index = () => {
                 />
                 </div>
               )}
-            </div>
-          
         </Grid>
         <Grid item xs={0.7} style={{
           paddingLeft: 0,
