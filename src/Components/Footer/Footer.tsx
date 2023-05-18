@@ -26,26 +26,27 @@ export default function Footer(){
                 
                
                 alignItems: "center",
-                gridTemplateColumns: "1fr 1fr 1fr",
+                gridTemplateColumns: "5fr 1fr",
           }}> 
             <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-evenly',
+              justifyContent: 'space-around',
             }}>
               <Grid 
               sx={{
                 width: "95%",
-                display: "flex",
-                justifyContent: 'space-evenly',
+                
               }}>
-                <IconButton href="#"><FacebookIcon sx={styledIcon}/></IconButton>
-                <IconButton href="#"><InstagramIcon sx={styledIcon}/></IconButton>
-                <IconButton href="#"><LinkedInIcon sx={styledIcon}/></IconButton>
-                <IconButton href="#"><YouTubeIcon sx={styledIcon}/></IconButton>
+                <div style={{flexGrow: "5"}}>
+                  <IconButton href="#"><FacebookIcon sx={styledIcon}/></IconButton>
+                  <IconButton href="#"><InstagramIcon sx={styledIcon}/></IconButton>
+                  <IconButton href="#"><LinkedInIcon sx={styledIcon}/></IconButton>
+                  <IconButton href="#"><YouTubeIcon sx={styledIcon}/></IconButton>
+                </div>
               </Grid>
             </Box>
-            <Box>
+            <Box style={{flexGrow: "1"}}>
                 <p>© Espen&Gard 2023 </p>
             </Box>
        
