@@ -80,7 +80,7 @@ const Form = (props: props) => {
     <Box component="form" sx={formStyle} noValidate >
       <TextField
         sx={sxStyleTextField}
-        label="First Name"
+        label="Fornavn"
         variant="filled"
         required
         value={firstName}
@@ -88,7 +88,7 @@ const Form = (props: props) => {
       />
       <TextField
         sx={sxStyleTextField}
-        label="Last Name"
+        label="Etternavn"
         variant="filled"
         required
         value={lastName}
@@ -105,7 +105,7 @@ const Form = (props: props) => {
       />
       <TextField
         sx={sxStyleTextField} 
-        label="Password"
+        label="Passord"
         variant="filled"
         type="password"
         required
@@ -118,7 +118,7 @@ const Form = (props: props) => {
           onClick={props.handleClose}
           sx={sxStyleButton}
         >
-          avbryt
+          Avbryt
         </Button>
         <Button
           type="submit"
@@ -127,7 +127,7 @@ const Form = (props: props) => {
           sx={sxStyleButton}
           onClick={handleSubmit}
         >
-          fullfør
+          Fullfør
         </Button>
       </div>
     </Box>
