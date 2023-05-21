@@ -3,6 +3,7 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
+  Navigate,
 } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Header from "./Components/Header/Header";
@@ -70,6 +71,7 @@ function App() {
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="error" element={<ErrorPage />}/> 
+            <Route path="/*" element={<Navigate to="/error" state={"Siden finns ikke."}/>}/> 
           </Routes>
           </div>
           <Footer />
