@@ -39,7 +39,7 @@ export default function Home() {
   const [defaultImage, setDefaultImage] = useState<string>("")
   const defaultImageHook = useGetDefaultImage()
  
-  
+  //set default image to state
   useEffect(() => {
     if(defaultImageHook.data && defaultImageHook.status == "success"){
       const img: any = defaultImageHook.data 
@@ -56,7 +56,7 @@ export default function Home() {
       setCourses(fullCourse.data as CourseType[]);
     }
   }, [fullCourse]);
-
+  //puts all courses into a map with the topic as key. 
   useEffect(() => {
     let myMap = new Map<string, CourseType[]>();
       courses.map((c) =>{
@@ -72,14 +72,13 @@ export default function Home() {
       })
       setCoursesTopicMap(myMap)
   },[courses])
-
+  //gets all courses with course.draft == true, and puts them in a useState
   useEffect(() => {
     if (!draftCoursesHook.isLoading) {
       setDraftCourses(draftCoursesHook.data as CourseType[]);
-      console.log(draftCoursesHook.data)
     }
   }, [draftCoursesHook.isFetched]);
-
+//Removes a course from the courses state. 
 const removeCourseLocal = (courseId: string) => {
   courses.map((c, index) => {
     if(c.id === courseId){
@@ -89,6 +88,7 @@ const removeCourseLocal = (courseId: string) => {
     }
   })
 }
+//removes draft courses from the draft course state.
 const removeCourseLocalDraft = (courseId: string) => {
   draftCourses.map((c, index) => {
     if(c.id === courseId){

@@ -68,13 +68,13 @@ function Index(){
   const fullCourse = useGetCollection("Courses", false);
   const [coursNameAndId, setCourseNameAndId] = useState<autoFill[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
+  //Sets a list of all topic names, to be used in dropdown for topic select.
   useEffect(() => {
     if (!topicName.isLoading && topicName.status == "success") {
       setMenuItemTopic([...topicName.data as unknown as string[]]);
     }
   }, [topicName.data]);
- 
+  //Sets all all courses and ids to a list of objects to be used for prerequisite autocomplete. 
   useEffect(() => {
     if(!fullCourse.isLoading && fullCourse.status == "success"){
       let list: autoFill[] = []
@@ -90,7 +90,9 @@ function Index(){
     }
   },[fullCourse.data])
    
-  //Ved bedre tid ville dette blitt gjort om til en react query
+  //TODO, implement react query
+  //Gets all chapters and pages and put them in the course state if a slug with a correct page id is given.
+  //Else make a new page id with an empty course. 
   useEffect(() => {
     const test = async () => {
         let chaptersLet: ChapterType[] = [];
@@ -162,7 +164,7 @@ function Index(){
       test()
     }
   },[slug])
-
+  //saves the course to firebase, and checks for missing input from user. 
   const saveToDraft = async () => {
     const c: CourseType = {
       Name: course.Name,
@@ -184,6 +186,7 @@ function Index(){
       addCourseToFirebase(c)
     }
   }
+  //adds an empty chapter to the course.
   const addChapter = () =>{
     const t: ChapterType =  {
       Pages:  [],
@@ -194,6 +197,7 @@ function Index(){
     chapterClone.push(t)
     setChapters([...chapterClone])
   }
+  //Sets the page type of the selected page. 
   const setPageType = (type: string) => {
     if(selectedPage){
       let chapterClone = chapters
@@ -211,6 +215,7 @@ function Index(){
       })
     }
   }
+  //updates the page value. 
   const setPageValue = (value: any) => {
     if(selectedPage){
       let chapterClone = chapters
@@ -224,10 +229,11 @@ function Index(){
       })
     }
   }
- 
+  //handler for setting the page value.
   const handleChangeTopicSelect = (event: SelectChangeEvent) => {
     setTopic(event.target.value as string);
   };
+  //function that returns the autocomplete component. 
   const getAutoComplete = () => {
     const pre = course.Prerequisite
     let value = null

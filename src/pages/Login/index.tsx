@@ -1,4 +1,4 @@
-import { LinearProgress } from "@mui/material";
+import { Dialog, LinearProgress } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,7 +13,7 @@ import FeedBackError from "../../Components/feedBack/feedBackError";
 import { AuthContext } from "../../context/auth-context";
 import { auth, signInUser, signOutUser } from "../../firebase";
 import Home from "../Home";
-import Signup from "../SignUp";
+import Form from "./SignUp/Form";
 
 
 export default function LogIn() {
@@ -24,6 +24,15 @@ export default function LogIn() {
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const [feedBack, setFeedBack] = useState<string>("none")
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -115,7 +124,15 @@ export default function LogIn() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Signup />
+                <div>
+                <Button variant="contained" color="primary" onClick={handleOpen}>
+                  Registrer deg!
+                </Button>
+                <Dialog open={open} onClose={handleClose}>
+                <h1> Welcome to Sign up page</h1>
+                <Form handleClose={handleClose} />
+              </Dialog>
+              </div>
                 </Grid>
               </Grid>
             </Box>

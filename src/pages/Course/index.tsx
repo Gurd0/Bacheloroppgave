@@ -61,7 +61,7 @@ const Index = () => {
   const prevPageRef = useRef<PageType>();
 
   const matches = useMediaQuery('(max-width:740px)');
-
+  
   useEffect(() => {
     const asyncArrow = async () => {
       if (prevPageRef.current && prevPageRef.current?.Type !== "Quiz") {
@@ -79,6 +79,8 @@ const Index = () => {
     type: "error",
     children: [],
   });
+  //sets the size of content page view based on the screen width, 
+  //and state to view course tree view or not.
   useEffect(() => {
     if(matches){
       setXsSize(xsSize => 11);
@@ -88,7 +90,7 @@ const Index = () => {
       setXsSize(7.5)
     }
   },[matches])
-
+  //sets the size of the content page view based on if course tree is displayed or not.
   useEffect(() => {
     if (
       (open && !matches) &&
@@ -217,6 +219,8 @@ const Index = () => {
       setCurrentPageIndex(index);
     }
   };
+  //Sets the previous page to completed, in firestore and localy.
+  //If all pages are completed, also set course to complete.
   const setPageCompleted = async (pageId: string) => {
     if (prevPageRef.current && user && course) {
       await completePage(user.uid, pageId, slug).then(() => {
@@ -255,6 +259,7 @@ const Index = () => {
       });
     }
   };
+  //Function to go to the next page if the current page is the last in the chapter. 
   const setPageToFirstInNextChapter = () => {
     if(nextChapter && currentPageIndex){
       if(currentChapter?.Pages[currentPageIndex + 1]){

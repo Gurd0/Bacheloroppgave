@@ -34,7 +34,8 @@ export default function Home() {
   const coursesHook = useGetCollection("Courses", false);
   const defaultImageHook = useGetDefaultImage()
   const completedCourses = useGetCompletedCourses(user?.uid || "");
-  
+
+  // Gets the default image and puts it in a useState.
   useEffect(() => {
     if(defaultImageHook.data && defaultImageHook.status == "success"){
       const img: any = defaultImageHook.data 
@@ -46,7 +47,6 @@ export default function Home() {
   useEffect(() => {
     if (coursesHook.status == "success") {
       const coursesData = coursesHook.data as CourseType[];
-
       if (
         !coursesHook.isLoading &&
         completedCourses.status == "success" &&
