@@ -45,7 +45,6 @@ const [gif, setGif] = useState(gifList[Math.floor(Math.random() * gifList.length
     }
   },[Props.currentPage.id])
   const onChangeRadio = (e: any) => {
-    console.log(e.target.value)
     let correctString
     Props.currentPage.Value[currentQuestion].answer.map((a: string, index: number) => {
       if(index === Props.currentPage.Value[currentQuestion].correctAnswer)
@@ -60,7 +59,6 @@ const [gif, setGif] = useState(gifList[Math.floor(Math.random() * gifList.length
       correctAnsClone[currentQuestion] = 0 
       setCorrectAns([...correctAnsClone])
     }
-    console.log(correctAns)
   }
   const resetQuiz = () => {
     setCompleted(false)
@@ -81,8 +79,8 @@ const [gif, setGif] = useState(gifList[Math.floor(Math.random() * gifList.length
           aria-labelledby="radio-buttons-group-label"
           name="radio-buttons-group"
         >
-        {Props.currentPage.Value[currentQuestion].answer.map((a: string) => (
-          <FormControlLabel value={a} control={<Radio />} label={a} onChange={onChangeRadio}/>
+        {Props.currentPage.Value[currentQuestion].answer.map((a: string, index: number) => (
+          <FormControlLabel value={a} control={<Radio />} label={a} onChange={onChangeRadio} key={index}/>
         ))}
         </RadioGroup>
       </FormControl>
@@ -90,13 +88,13 @@ const [gif, setGif] = useState(gifList[Math.floor(Math.random() * gifList.length
       <Button disabled={currentQuestion ==  0} onClick={()=>{
         setCurrentQuestion(currentQuestion-1)
       }}>
-      tilbake</Button>
+      Tilbake</Button>
   
       {currentQuestion+1 !==  Props.currentPage.Value.length ? 
       <Button onClick={()=>{
         setCurrentQuestion(currentQuestion+1)
       }}>
-      next</Button>
+      Neste</Button>
       :
       <Button onClick={()=>{
         let count = 0
@@ -105,21 +103,18 @@ const [gif, setGif] = useState(gifList[Math.floor(Math.random() * gifList.length
             count ++
           }
         })
-        console.log((count/Props.currentPage.Value.length) * 100)
         if((count/Props.currentPage.Value.length) * 100 >= 80){
-          console.log("over 100 %")
           Props.completePage(Props.currentPage.id)
           Props.setFeedBack(feedBack => "Success")
           setCompleted(true)
         }else{
-          console.log("Under 80 %")
           setCurrentQuestion(0)
           setCorrectAns([])
           setCorrectTotal(0)
           Props.setFeedBack(feedBack => "Bedre lykke neste gang")
         }
       }}>
-      fullfør</Button>
+      Fullfør</Button>
     }  
       </div>
     </div>
