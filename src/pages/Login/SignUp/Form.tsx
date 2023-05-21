@@ -3,8 +3,8 @@ import { createUserWithEmailAndPassword, updateProfile, UserCredential } from "f
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
-import FeedBackError from "../../Components/feedBack/feedBackError";
-import { auth, db, signUpUser } from "../../firebase";
+import FeedBackError from "../../../Components/feedBack/feedBackError";
+import { auth, db, signUpUser } from "../../../firebase";
 
 interface props {
   handleClose: () => void;
