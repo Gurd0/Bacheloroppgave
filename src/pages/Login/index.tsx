@@ -128,10 +128,13 @@ export default function LogIn() {
                 <Button variant="contained" color="primary" onClick={handleOpen}>
                   Registrer deg!
                 </Button>
+                
                 <Dialog open={open} onClose={handleClose}>
-                <h1> Welcome to Sign up page</h1>
-                <Form handleClose={handleClose} />
+                  <h1>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Registrer deg her!  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </h1>
+                  <Form handleClose={handleClose} />
               </Dialog>
+              
+              
               </div>
                 </Grid>
               </Grid>
