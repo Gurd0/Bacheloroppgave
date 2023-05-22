@@ -9,8 +9,6 @@ The Modular E-learning Platform is a TypeScript-based project that provides a fl
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
